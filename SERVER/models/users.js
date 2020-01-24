@@ -20,7 +20,7 @@ const Users = new Schema({
     }
   ],
   avatar: String,
-  preferences: [ //how to create an array to show different preferences
+  preferences: [ //how to create an array to show different preferences //NOT NECESSARY*******
     {
       type: String,
       enum: ["Videos", "Photos", "Articles"]
