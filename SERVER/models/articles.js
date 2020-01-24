@@ -21,7 +21,7 @@ const Article = new Schema({
       "Other"
     ]
   },
-  comments: [
+  comments: [ //TAKE OUT COMMENTS WON´T
     {
       commentUserID: String,
       commentUsername:  String ,
