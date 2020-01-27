@@ -9,12 +9,12 @@ let jwt = require("jsonwebtoken");
 const connection = require("../config/db.js");
 
 //CONSTANTS
-const jwtKey = "mySecretKey";
+const myPrivateKey = "mySecretKey";
 
 //NEW USER REGISTER
 usersController.createUser = (req, res) => {
-  let {name, surname, email, password} = req.body;
-  console.log(password)
+  let { name, surname, email, password } = req.body;
+  console.log(password);
   connection.query(
     `
     INSERT
@@ -38,10 +38,10 @@ usersController.createUser = (req, res) => {
 };
 
 //LOGIN USER
-usersController.login = (req, res) => {
+usersController.login = (request, response) => {
   const { email, password } = request.body;
   connection.query(
-  `SELECT * FROM users 
+    `SELECT * FROM users 
   WHERE email = '${email}' 
   AND password = sha1('${password}')`,
     (error, results) => {
@@ -51,10 +51,10 @@ usersController.login = (req, res) => {
         const token = jwt.sign(
           {
             id,
-            username,
-            isAdmin: Boolean(isAdmin) //para que te tire un true or false
+            email,
+            isAdmin: Boolean(isAdmin)
           },
-          jwtKey
+          myPrivateKey
         );
         response.send({
           token,
@@ -68,13 +68,7 @@ usersController.login = (req, res) => {
 };
 
 //GET ALL USERS
-usersController.getUsers = (req, res) => {
-  let sql = "SELECT * FROM users";
-  connection.query(sql, (error, results) => {
-    if (error) console.log(error);
-    res.send(results);
-  });
-};
+usersController.getUsers = (req, res) => {};
 
 //GET USER BY ID
 usersController.getUser = (req, res) => {};
@@ -83,7 +77,41 @@ usersController.getUser = (req, res) => {};
 usersController.editUser = (req, res) => {};
 
 //DELETE USER
-usersController.deleteUser = (req, res) => {};
+usersController.deleteUser = (request, response) => {
+  const { id } = request.params;
+  try {
+    const token = request.headers.authorization.replace("Bearer ", "");
+    const { isAdmin } = jwt.verify(token, myPrivateKey);
+    const { id: tokenId } = jwt.verify(token, myPrivateKey);
+    console.log(tokenId);
+    console.log(isAdmin);
+    let sql = `DELETE FROM users WHERE id = ${id}`;
+    if (isAdmin) {
+      connection.query(sql, (error, results) => {
+        console.log(error)
+        if (error | error == null) response.sendStatus(404).end();
+        else {
+          response.sendStatus(200);
+          console.log("Borro a cualquiera");
+        }
+      });
+    } else if (tokenId == id) {
+      //you can only delete yourself
+      connection.query(sql, (error, results) => {
+        if (error) console.log(error);
+        else {
+          response.sendStatus(200);
+          console.log("te borro a ti mismo");
+        }
+      });
+    } else {
+      response.sendStatus(401);
+      console.log("no te borro");
+    }
+  } catch {
+    response.sendStatus(404);
+  }
+};
 
 //SAVE ARTICLE
 usersController.saveArticle = (req, res) => {};
@@ -96,6 +124,5 @@ usersController.followUser = (req, res) => {};
 
 //UNFOLLOW ANOTHER USER
 usersController.unfollowUser = (req, res) => {};
-
 
 module.exports = usersController;
