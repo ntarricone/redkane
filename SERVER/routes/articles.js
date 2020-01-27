@@ -6,7 +6,7 @@ const articles = require('../controllers/articlesController.js')
 router.get('/', articles.getArticles);
 router.post('/create', articles.createArticle);
 router.get('/:id', articles.getArticle);
-router.get('/likedByUser/:id', articles.getArticleLikedByUser); //the id here is for the user
+router.get('/likedByUser/:id', articles.getArticleLikedByUser); 
 router.put('/update/:id', articles.editArticle);
 router.put('/like/:id', articles.likeArticle);
 router.put('/dislike/:id', articles.dislikeArticle);

@@ -1,36 +1,31 @@
-const express = require('express');
-var logger = require('morgan');
-var path = require('path');
+const express = require("express");
+var logger = require("morgan");
+var path = require("path");
 const app = express();
-const bodyParser = require('body-parser');
-const { mongoose } = require('./db.js'); //necessary to connect to ddbb even though it seems not in use
-var cors = require('cors')
+const bodyParser = require("body-parser");
 
-app.use(cors())
+var cors = require("cors");
 
+app.use(cors());
 
 // Settings
-app.set('port', 3000);
+app.set("port", 3000);
 
 // Middlewares
-app.use(logger('dev'));
+app.use(logger("dev"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(cors({origin: 'http://localhost:4200'}));
+app.use(express.static(path.join(__dirname, "public")));
+app.use(cors({ origin: "http://localhost:3000" })); //DO WE NEED TO CHANGE IT TO 4200?
 
 // Routes
-app.use('/users',require('./routes/users.js'));
-app.use('/articles',require('./routes/articles.js'));
-app.use('/images',require('./routes/images.js'));
-app.use('/videos',require('./routes/videos.js'));
+app.use("/users", require("./routes/users.js"));
+app.use("/articles", require("./routes/articles.js"));
 
 // Starting the server
-app.listen(app.get('port'), () => {
-    console.log('server working on', app.get('port'))
-})
+app.listen(app.get("port"), () => {
+  console.log("server working on", app.get("port"));
+});
 
-
-
-
-
+const connection = require('./config/db.js');
+connection.connect(console.log("Conexión correcta"));
