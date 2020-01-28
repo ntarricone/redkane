@@ -14,27 +14,30 @@ const myPrivateKey = "mySecretKey";
 //NEW USER REGISTER
 usersController.createUser = (req, res) => {
   let { name, surname, email, password } = req.body;
-  console.log(password);
-  connection.query(
-    `
+  if (validator.validate(email) && name && surname && password) {
+    connection.query(
+      `
     INSERT
     INTO users (name, surname, email, password)
     VALUES('${name}','${surname}', '${email}', sha1('${password}'))
   `,
-    (err, results) => {
-      if (err) {
-        res.status(400).send("El usuario ya existe");
-      } else {
-        connection.query(
-          `SELECT id, email FROM users WHERE email = '${email}'`,
-          (err, [newUser]) => {
-            //el newUser es results[0]
-            res.send(newUser);
-          }
-        );
+      (err, results) => {
+        if (err) {
+          res.status(400).send("El usuario ya existe");
+        } else {
+          connection.query(
+            `SELECT id, email FROM users WHERE email = '${email}'`,
+            (err, [newUser]) => {
+              //el newUser es results[0]
+              res.send(newUser);
+            }
+          );
+        }
       }
-    }
-  );
+    );
+  } else {
+    res.sendStatus(404);
+  }
 };
 
 //LOGIN USER
@@ -47,7 +50,7 @@ usersController.login = (request, response) => {
     (error, results) => {
       if (error) console.log("error");
       else if (results && results.length) {
-        var [{ isAdmin, id, avatar }] = results;
+        var [{ isAdmin, id }] = results;
         const token = jwt.sign(
           {
             id,
@@ -57,8 +60,7 @@ usersController.login = (request, response) => {
           myPrivateKey
         );
         response.send({
-          token,
-          avatar
+          token
         });
       } else {
         response.sendStatus(400);
@@ -68,13 +70,94 @@ usersController.login = (request, response) => {
 };
 
 //GET ALL USERS
-usersController.getUsers = (req, res) => {};
+usersController.getUsers = (req, res) => {
+  try {
+    const token = req.headers.authorization.replace("Bearer ", "");
+    jwt.verify(token, myPrivateKey);
+    let sql = "SELECT id, name, email, isAdmin FROM users";
+    connection.query(sql, (error, results) => {
+      if (error) console.log(error);
+      res.send(results);
+    });
+  } catch {
+    res.sendStatus(401);
+  }
+};
 
 //GET USER BY ID
-usersController.getUser = (req, res) => {};
+usersController.getUser = (req, res) => {
+  const { id } = req.params;
+  console.log(id);
+  try {
+    const token = req.headers.authorization.replace("Bearer ", ""); //le quitas el Bearer que viene predeterminado
+    console.log(token);
+    jwt.verify(token, myPrivateKey);
+    let sql = `SELECT id, name, email FROM users where id = ${id}`;
+    connection.query(sql, (error, results) => {
+      if (error) console.log(error);
+      res.send(results[0]);
+    });
+  } catch {
+    res.sendStatus(401);
+  }
+};
 
 //EDIT USER
-usersController.editUser = (req, res) => {};
+usersController.editUser = (request, response) => {
+  const { id } = request.params;
+  const password = sha1(request.body.password);
+  const {
+    name,
+    surname,
+    email,
+    profession,
+    about_me,
+    avatar,
+    facebook,
+    linkedin,
+    twitter,
+    youtube
+  } = request.body;
+
+  try {
+    const token = request.headers.authorization.replace("Bearer ", "");
+    const { isAdmin } = jwt.verify(token, myPrivateKey);
+    let sql = `UPDATE users SET? where id = ${id}`;
+    if (isAdmin) {
+      connection.query(
+        sql,
+        {
+          password,
+          name,
+          surname,
+          email,
+          profession,
+          about_me,
+          avatar,
+          facebook,
+          linkedin,
+          twitter,
+          youtube
+        },
+        (error, results) => {
+          if (error | (error == null)) console.log(error);
+          console.log("actualizo por Admin");
+          response.sendStatus(200);
+        }
+      );
+    } else {
+      connection.query(sql, { password }, (error, results) => {
+        if (error | (error == null)) response.sendStatus(401);
+        else {
+          response.sendStatus(200);
+        }
+        console.log("me actualizo");
+      });
+    }
+  } catch {
+    response.sendStatus(401);
+  }
+};
 
 //DELETE USER
 usersController.deleteUser = (request, response) => {
@@ -88,8 +171,8 @@ usersController.deleteUser = (request, response) => {
     let sql = `DELETE FROM users WHERE id = ${id}`;
     if (isAdmin) {
       connection.query(sql, (error, results) => {
-        console.log(error)
-        if (error | error == null) response.sendStatus(404).end();
+        console.log(error);
+        if (error | (error == null)) response.sendStatus(404).end();
         else {
           response.sendStatus(200);
           console.log("Borro a cualquiera");
@@ -113,11 +196,50 @@ usersController.deleteUser = (request, response) => {
   }
 };
 
-//SAVE ARTICLE
-usersController.saveArticle = (req, res) => {};
-
-//UNSAVE ARTICLE
-usersController.unsaveArticle = (req, res) => {};
+//SAVE / UNSAVE MULTIMEDIA
+usersController.saveUnsaveMultimedia = (req, res) => {
+  try {
+    const { multimediaId } = req.body;
+    const token = req.headers.authorization.replace("Bearer ", "");
+    const {id} = jwt.verify(token, myPrivateKey);
+    connection.query(
+      `SELECT * FROM user_saved_multimedia
+      WHERE id = ${id}
+      AND multimediaId = ${multimediaId} `,
+      (_, results) => {
+         if (!results.length) {
+          connection.query(
+            `
+            INSERT INTO user_saved_multimedia (id, multimediaId)
+            VALUES('${id}','${multimediaId}')`,
+            (err) => {
+              if (err) {
+                res.sendStatus(404);
+              } else {
+                res.sendStatus(200);
+              }
+            }
+          );
+        } else {
+          connection.query(
+            `DELETE FROM user_saves_multimedia
+             WHERE  id = ${id} 
+             AND multimediaId = ${multimediaId}`,
+            (err, results) => {
+              if (err) {
+                res.sendStatus(404);
+              } else {
+                res.sendStatus(200);
+              }
+            }
+          );
+        }
+      }
+    );
+  } catch {
+    res.sendStatus(404);
+  }
+};
 
 //FOLLOW USER
 usersController.followUser = (req, res) => {};
