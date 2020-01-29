@@ -1,25 +1,50 @@
-import React from 'react';
-import './App.css';
-import AppUnlogged from './AppUnlogged';
-import UploadMultimedia from './UploadMltimedia'
+import React from "react";
+import "./App.css";
+import AppUnlogged from "./AppUnlogged/AppUnlogged";
+import { connect } from "react-redux";
+import { SetAccountAction } from "../../redux/actions";
+import { IStore } from "../../interfaces/IStore";
+import { IAccount } from "../../interfaces/IAccount";
+import { generateAccountFromToken } from "../../utils";
+import AppLogged from "./AppLogged/AppLogged";
 
-
-interface IGlobalStateProps{
-
+interface IGlobalStateProps {
+  account: IAccount | null;
 }
 
-type TProps = IGlobalStateProps;
+interface IGlobalActionProps {
+  setAccount(account: IAccount): void;
+}
 
-class App extends React.PureComponent<TProps>{
-  render(){
-    return(
+type TProps = IGlobalStateProps & IGlobalActionProps;
+
+class App extends React.Component<TProps> {
+  componentWillMount() {
+    const { setAccount } = this.props;
+    const token = localStorage.getItem("token");
+    const avatar = localStorage.getItem("avatar");
+    if (token) {
+      setAccount(generateAccountFromToken(token, avatar));
+    }
+  }
+  render() {
+    const { account } = this.props;
+    return (
       <>
-    {/* <AppUnlogged></AppUnlogged> */}
-    <UploadMultimedia />
-    
+       {!account && <AppUnlogged></AppUnlogged>} 
+        {/* <UploadMultimedia></UploadMultimedia> CREAR COMPONENTE*/}
+        {account && <AppLogged></AppLogged>}
       </>
-    )
+    );
   }
 }
 
-export default App;
+const mapStateToProps = ({ account }: IStore): IGlobalStateProps => ({
+  account
+});
+
+const mapDispatchToProps: IGlobalActionProps = {
+  setAccount: SetAccountAction
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

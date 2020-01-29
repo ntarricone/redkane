@@ -5,7 +5,6 @@ const app = express();
 const bodyParser = require("body-parser");
 
 var cors = require("cors");
-
 app.use(cors());
 
 // Settings
@@ -16,7 +15,6 @@ app.use(logger("dev"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
-app.use(cors({ origin: "http://localhost:3000" })); //DO WE NEED TO CHANGE IT TO 4200?
 
 // Routes
 app.use("/users", require("./routes/users.js"));

@@ -26,10 +26,28 @@ usersController.createUser = (req, res) => {
           res.status(400).send("El usuario ya existe");
         } else {
           connection.query(
-            `SELECT id, email FROM users WHERE email = '${email}'`,
-            (err, [newUser]) => {
-              //el newUser es results[0]
-              res.send(newUser);
+            `SELECT * FROM users 
+          WHERE email = '${email}' 
+          AND password = sha1('${password}')`,
+            (error, results) => {
+              if (error) console.log("error");
+              else if (results && results.length) {
+                var [{ isAdmin, id }] = results;
+                const token = jwt.sign(
+                  {
+                    id,
+                    email,
+                    isAdmin: Boolean(isAdmin)
+                  },
+                  myPrivateKey
+                );
+
+                res.send({
+                  token
+                });
+              } else {
+                res.sendStatus(400);
+              }
             }
           );
         }
