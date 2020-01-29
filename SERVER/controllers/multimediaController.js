@@ -209,9 +209,11 @@ const { multimediaId } = request.params;
 const { isDeleted } = request.body;
 console.log(multimediaId)
 const { authorization } = request.headers;
-if (authorization) {
-  const token = authorization.replace("Bearer ", "");
-  jwt.verify(token, myPrivateKey);
+const token = authorization.replace("Bearer ", "");
+const { isAdmin } = jwt.verify(token, myPrivateKey);
+jwt.verify(token, myPrivateKey);
+if (authorization | isAdmin) {
+  
   connection.query(
     `
     UPDATE 

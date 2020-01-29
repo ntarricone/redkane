@@ -9,8 +9,7 @@ router.post('/login', users.login);
 router.get('/:id', users.getUser);
 router.put('/edit/:id', users.editUser);
 router.delete('/delete/:id', users.deleteUser);
-router.put('/saveArticle/:id', users.saveArticle);
-router.put('/unsaveArticle/:id', users.unsaveArticle);
+router.post('/saveUnsaveMultimedia', users.saveUnsaveMultimedia);
 router.put('/followUser/:id', users.followUser);
 router.put('/unfollowUser/:id', users.unfollowUser);
 
