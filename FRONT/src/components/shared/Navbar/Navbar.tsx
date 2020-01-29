@@ -66,7 +66,9 @@ class Navbar extends React.PureComponent<TProps> {
                   Action
                 </a>
                 <a className="dropdown-item" href="">
-                  Another action
+                  {!account?.avatar? <span>***</span>: ""}
+                  Update your profile 
+                  {/* TODO - add red asterix if avatar doesn´t exist */}
                 </a>
                 <a className="dropdown-item" href="" onClick={this.logout}>
                   Logout

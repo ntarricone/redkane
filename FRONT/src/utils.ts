@@ -1,6 +1,5 @@
 import { API_URL } from "./constants";
 import { IAccount } from "./interfaces/IAccount";
-import { ITokenPayload } from "./interfaces/ITokenPayload";
 import { decode } from "jsonwebtoken";
 
 export const myFetch = async ({
@@ -42,9 +41,29 @@ export const myFetch = async ({
   }
 };
 
-export const generateAccountFromToken = (token: string, avatar?: any): IAccount => {
-  const { id, email, isAdmin } = decode(token) as ITokenPayload;
-  return { token, id, email, isAdmin, avatar };
+
+
+export const generateAccountFromToken = ({
+  name,
+  surname,
+  profession,
+  password,
+  token,
+  avatar,
+  banner,
+  about_me
+}:{
+  name: string;
+  surname: string;  
+  password: string;
+  token: string;
+  avatar?: any ;
+  profession?: any;
+  banner?: string | undefined;
+  about_me?: any;
+}): IAccount => {
+  const { id, email, isAdmin }: any = decode(token);
+  return { token, id, email, isAdmin, name, avatar, banner, surname, profession, password, about_me };
 };
 
 

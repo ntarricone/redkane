@@ -2,18 +2,30 @@ import { IAccount } from "../../interfaces/IAccount";
 import { TAction } from "../types";
 import produce from "immer";
 
-type TState = IAccount | null;
+const initialState: IAccount = {
+  name: "",
+  surname: "",
+  profession: "",
+  password: "",
+  token: "",
+  avatar: "",
+  id: null,
+  email: "",
+  isAdmin: false,
+  banner: "",
+  about_me: ""
+};
 
-const initialState: TState = null;
-
-export default (state: TState = initialState, action: TAction): TState =>
+export default (state: IAccount = initialState, action: TAction): IAccount =>
   produce(state, draftState => {
     switch (action.type) {
       case "SET_ACCOUNT":
         return action.payload;
       case "LOGOUT":
         return initialState;
-      default:
+      case "SET_BANNER":
+         return {...state, banner: action.payload}
+        default:
         return state;
     }
   });
