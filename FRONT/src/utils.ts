@@ -16,6 +16,7 @@ export const myFetch = async ({
   formData?: FormData;
   token?: string;
 }) => {
+  
   let headers = new Headers();
   let body = undefined;
   if (json) {
@@ -27,6 +28,7 @@ export const myFetch = async ({
   if (token) {
     headers.set("Authorization", `Bearer ${token}`);
   }
+  console.log("response")
   const response = await fetch(API_URL + path, {
     method,
     headers,
@@ -40,9 +42,9 @@ export const myFetch = async ({
   }
 };
 
-export const generateAccountFromToken = (token: string): IAccount => {
+export const generateAccountFromToken = (token: string, avatar?: any): IAccount => {
   const { id, email, isAdmin } = decode(token) as ITokenPayload;
-  return { token, id, email, isAdmin };
+  return { token, id, email, isAdmin, avatar };
 };
 
 
