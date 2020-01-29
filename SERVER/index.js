@@ -18,7 +18,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // Routes
 app.use("/users", require("./routes/users.js"));
-app.use("/articles", require("./routes/articles.js"));
+app.use("/multimedia", require("./routes/multimedia.js"));
 
 // Starting the server
 app.listen(app.get("port"), () => {
@@ -27,3 +27,4 @@ app.listen(app.get("port"), () => {
 
 const connection = require('./config/db.js');
 connection.connect(console.log("Conexión correcta"));
+
