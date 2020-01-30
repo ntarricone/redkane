@@ -10,6 +10,12 @@ interface ILogoutAction {
   type: "LOGOUT";
 }
 
+interface ISetBannerAction{
+  type: "SET_BANNER";
+  payload: string
+}
+
 export type TAction =
   | ISetAccountAction
-  | ILogoutAction;
+  | ILogoutAction
+  | ISetBannerAction;

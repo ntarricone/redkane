@@ -5,11 +5,13 @@ import { connect } from "react-redux";
 import { SetAccountAction } from "../../redux/actions";
 import { IStore } from "../../interfaces/IStore";
 import { IAccount } from "../../interfaces/IAccount";
-import { generateAccountFromToken } from "../../utils";
+import { generateAccountFromToken, myFetch } from "../../utils";
 import AppLogged from "./AppLogged/AppLogged";
+import UpdateProfile from "./AppLogged/UpdateProfile/UpdateProfile";
+import { decode } from "jsonwebtoken";
 
 interface IGlobalStateProps {
-  account: IAccount | null;
+  account: IAccount;
 }
 
 interface IGlobalActionProps {
@@ -19,20 +21,42 @@ interface IGlobalActionProps {
 type TProps = IGlobalStateProps & IGlobalActionProps;
 
 class App extends React.Component<TProps> {
+  constructor(props: any) {
+    super(props);
+
+    this.restartAccount = this.restartAccount.bind(this);
+  }
   componentWillMount() {
-    const { setAccount } = this.props;
     const token = localStorage.getItem("token");
-    const avatar = localStorage.getItem("avatar");
     if (token) {
-      setAccount(generateAccountFromToken(token, avatar));
+      const { id }: any = decode(token);
+      this.restartAccount(id);
     }
   }
+
+  restartAccount(id: any){
+    const { setAccount } = this.props;
+    
+    myFetch({
+      path: `/users/${id}`,
+    }).then(json => {
+      if (json) {
+        const { token, avatar, banner, surname, profession, about_me, name, password } = json;
+        setAccount(generateAccountFromToken({token, avatar, banner, name, surname, profession, password, about_me}));
+        
+      } else {
+
+      }
+    });
+  }
+
   render() {
-    const { account } = this.props;
+    const {account} = this.props;
     return (
       <>
-       {!account && <AppUnlogged></AppUnlogged>} 
-        {account && <AppLogged></AppLogged>}
+       {account.token === "" && <AppUnlogged></AppUnlogged>} 
+        <UpdateProfile></UpdateProfile>
+        {account.token !== "" && <AppLogged></AppLogged>}
       </>
     );
   }
@@ -46,4 +70,4 @@ const mapDispatchToProps: IGlobalActionProps = {
   setAccount: SetAccountAction
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(mapStateToProps , mapDispatchToProps)(App);

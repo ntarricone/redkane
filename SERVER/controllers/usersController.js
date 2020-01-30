@@ -68,7 +68,7 @@ usersController.login = (request, response) => {
     (error, results) => {
       if (error) console.log("error");
       else if (results && results.length) {
-        var [{ isAdmin, id }] = results;
+        var [{ isAdmin, id, avatar, banner,surname, profession, about_me, name }] = results;
         const token = jwt.sign(
           {
             id,
@@ -78,7 +78,13 @@ usersController.login = (request, response) => {
           myPrivateKey
         );
         response.send({
-          token
+          token,
+          avatar,
+          banner,
+          surname,
+          profession,
+          about_me,
+          name
         });
       } else {
         response.sendStatus(400);
@@ -110,7 +116,7 @@ usersController.getUser = (req, res) => {
     const token = req.headers.authorization.replace("Bearer ", ""); //le quitas el Bearer que viene predeterminado
     console.log(token);
     jwt.verify(token, myPrivateKey);
-    let sql = `SELECT id, name, email FROM users where id = ${id}`;
+    let sql = `SELECT * FROM users where id = ${id}`;
     connection.query(sql, (error, results) => {
       if (error) console.log(error);
       res.send(results[0]);
@@ -218,19 +224,17 @@ usersController.deleteUser = (request, response) => {
 usersController.saveUnsaveMultimedia = (req, res) => {
   try {
     const { multimediaId } = req.body;
-    const token = req.headers.authorization.replace("Bearer ", "");
-    const {id} = jwt.verify(token, myPrivateKey);
     connection.query(
       `SELECT * FROM user_saved_multimedia
       WHERE id = ${id}
       AND multimediaId = ${multimediaId} `,
       (_, results) => {
-         if (!results.length) {
+        if (!results.length) {
           connection.query(
             `
             INSERT INTO user_saved_multimedia (id, multimediaId)
             VALUES('${id}','${multimediaId}')`,
-            (err) => {
+            err => {
               if (err) {
                 res.sendStatus(404);
               } else {
@@ -256,6 +260,65 @@ usersController.saveUnsaveMultimedia = (req, res) => {
     );
   } catch {
     res.sendStatus(404);
+  }
+};
+
+//UPLOAD BANNER
+usersController.uploadBanner = (req, response) => {
+  const { authorization } = req.headers;
+  if (authorization) {
+    const token = req.headers.authorization.replace("Bearer ", "");
+    const { id } = jwt.verify(token, myPrivateKey);
+    const banner = req.file.originalname;
+    connection.query(
+      `UPDATE users
+       SET banner = '${banner}'
+       WHERE id = ${id}`,
+      (err) => {
+        if (err) {
+          response.sendStatus(400);
+        } else {
+          connection.query(
+            `SELECT banner
+             FROM users 
+             WHERE id = ${id}`,
+            (err, [results]) => {
+              err? console.log(err) : response.send(results);
+            }
+          );
+        }
+      }
+    );
+  }
+};
+
+//UPLOAD AVATAR
+usersController.uploadAvatar = (req, response) => {
+  console.log("entroooooo")
+  const { authorization } = req.headers;
+  if (authorization) {
+    const token = req.headers.authorization.replace("Bearer ", "");
+    const { id } = jwt.verify(token, myPrivateKey);
+    const avatar = req.file.originalname;
+    connection.query(
+      `UPDATE users
+       SET avatar = '${avatar}'
+       WHERE id = ${id}`,
+      (err) => {
+        if (err) {
+          response.sendStatus(400);
+        } else {
+          connection.query(
+            `SELECT avatar
+             FROM users 
+             WHERE id = ${id}`,
+            (err, [results]) => {
+              err? console.log(err) : response.send(results);
+            }
+          );
+        }
+      }
+    );
   }
 };
 
