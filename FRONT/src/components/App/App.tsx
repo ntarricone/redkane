@@ -32,7 +32,6 @@ class App extends React.Component<TProps> {
     return (
       <>
        {!account && <AppUnlogged></AppUnlogged>} 
-        {/* <UploadMultimedia></UploadMultimedia> CREAR COMPONENTE*/}
         {account && <AppLogged></AppLogged>}
       </>
     );

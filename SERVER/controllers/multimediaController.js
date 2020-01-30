@@ -5,60 +5,31 @@ const myPrivateKey = "mySecretKey";
 const connection = require("../config/db.js")
 const multer = require("multer");
 
+
+
 // ERROR MESSAGE
 const msg = "REQUIRED FILE IS MISSING";
 
 //CREATE MULTIMEDIA
-// multimediaController.createMultimedia = (request, response) => {    const { authorization } = request.headers;
-// if (authorization) {
-//   const token = authorization.replace("Bearer ", "");
-//   const { id } = jwt.verify(token, myPrivateKey);
-//   const { filename: path, originalname } = request.file;
-//   connection.query(
-//     `
-//     INSERT
-//     INTO multimedia (path, title, type, price, category, id )
-//     VALUES('${path}', '${title}', '${type}', '${price}', '${category}', ${id})
-//   `,
-//     error => {
-//       if (error) {
-//         console.log(error);
-//         response.sendStatus(400);
-//       } else {
-//         connection.query(
-//           `
-//             SELECT *
-//             FROM multimedia
-//             WHERE path = '${path}'
-//           `,
-//           (error, results) => {
-//             if (error) {
-//               console.log(error);
-//               response.sendStatus(400);
-//             } else {
-//               const [file] = results;
-//               response.send(file);
-//             }
-//           }
-//         );
-//       }
-//     }
-//   );
-// }};
-
-//CREATE MULTIMEDIA.
-//TODO, ADD MULTER 
 multimediaController.createMultimedia = (request, response) => { 
-const { authorization } = request.headers;
-const { path, title, type, price, category } = request.body;
-if (authorization) {
-  const token = authorization.replace("Bearer ", "");
-  const { id } = jwt.verify(token, myPrivateKey);
+  console.log("entro")
+  const token = request.headers.authorization.replace("Bearer ", "");
+ const { id } = jwt.verify(token, myPrivateKey);
+ if (token) {
+  
+  const path = request.file. originalname;
+  // const title = request.title;
+  // const type = request.file. originalname;
+  const {title, category, type,price, textArea} = request.body;
+  // const price = request.file. originalname;
+  // const textArea = request.file. originalname;
+ 
+ console.log(request.body.title)
   connection.query(
     `
     INSERT
-    INTO multimedia (path, title, type, price, category, id )
-    VALUES('${path}', '${title}', '${type}', '${price}', '${category}', '${id}')
+    INTO multimedia (path, title, type, category, price, textArea, id)
+    VALUES('${path}', '${title}', '${type}', '${category}', '${price}', '${textArea}', ${id})
   `,
     error => {
       if (error) {
@@ -84,7 +55,20 @@ if (authorization) {
       }
     }
   );
-}};
+}
+  // const avatar = request.file.originalname;
+  // connection.query(
+  //   `INSERT INTO avatar (avatar) VALUES ('${avatar}')`,
+  //   (err, results) => {
+  //     console.log(results);
+  //     if (err) {
+  //       return response.sendStatus(400);
+  //     } 
+  //   }
+  // );
+ 
+  };
+
 
 //GET ALL MULTIMEDIA FILES BY TYPE
 multimediaController.getMultimedia = (request, response) => {

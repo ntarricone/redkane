@@ -1,116 +1,144 @@
 import React from "react";
-​
+import { IStore } from "../../../interfaces/IStore";
+import { myFetch, generateAccountFromToken } from "../../../utils";
+import { connect } from "react-redux";
+import { IAccount } from "../../../interfaces/IAccount";
+
 interface IState {
   title: string;
   type: string;
   price: string;
   category: string;
+  textArea: string;
 }
-​
-interface IGlobalStateProps {}
-​
+
+interface IGlobalStateProps {
+  account: IAccount | null;
+}
+
+
+
 type TProps = IGlobalStateProps;
-​
-class UploadMultimedia extends React.PureComponent<TProps, IState> {
-  inputFileRef: React.RefObject<HTMLInputElement>;
+
+class AploadMultimedia extends React.PureComponent<TProps, IState> {
+  fileInputRef: React.RefObject<HTMLInputElement>;
   constructor(props: any) {
     super(props);
     this.state = {
       title: "",
       type: "",
       price: "",
-      category: ""
+      category: "",
+      textArea: ""
     };
-​
-    this.inputFileRef = React.createRef();
+
+    this.fileInputRef = React.createRef();
     this.uploadFile = this.uploadFile.bind(this);
   }
+  
+
   uploadFile() {
-    if (this.inputFileRef.current?.files) {
-      const path = this.inputFileRef.current.files[0];
+    const { account } = this.props;
+    const initialState = {title: "", type: "", price: "", category: "", textArea: "" }
+    if (this.fileInputRef.current?.files?.length && account) {
+      const { token } = account;
+      const path = this.fileInputRef.current.files[0];
       const formData = new FormData();
-      formData.append("path", path);
-      formData.append("title", this.state.title)
-      formData.append("type", this.state.type)
-      formData.append("price", this.state.price)
-      formData.append("category", this.state.category)
-      
-​
-      fetch("http://localhost:3000/multimedia/create", {
-        method: "POST",
-        body: formData
-      });
+      formData.append("file", path);
+      formData.append("title", this.state.title);
+      formData.append("type", this.state.type);
+      formData.append("price", this.state.price);
+      formData.append("category", this.state.category);
+      formData.append("textArea", this.state.textArea);
+      console.log(formData)
+      myFetch({ method: "POST", path: "/multimedia/create", token, formData }).then(
+        json => {
+          if (json) {
+            console.log ('ok')
+            //addFile(json);
+          }
+        }
+      );
+      this.setState(initialState)
+      this.fileInputRef.current.value = "";
     }
   }
   render() {
     return (
       <>
-        <div className="container">
-          <div className="row">
-            <div className="col-12">
-              <div className="card">
-                <div className="card-body">
-                  <div>
-                    <label>
-                      File
-                      <input type="file" ref={this.inputFileRef} />
-                    </label>
-                  </div>
-                  <div>
-                    <label>
-                      title
-                      <input
-                        type="text"
-                        value={this.state.title}
-                        onChange={e => this.setState({ title: e.target.value })}
-                      />
-                    </label>
-                  </div>
-                  <div>
-                    <label>
-                    type
-                      <input
-                        type="text"
-                        value={this.state.type}
-                        onChange={e => this.setState({ type: e.target.value })}
-                      />
-                    </label>
-                  </div>
-                  <div>
-                    <label>
-                    price
-                      <input
-                        type="text"
-                        value={this.state.price}
-                        onChange={e => this.setState({ price: e.target.value })}
-                      />
-                    </label>
-                  </div>
-                  <div>
-                    <label>
-                    category
-                      <input
-                        type="text"
-                        value={this.state.title}
-                        onChange={e => this.setState({ category: e.target.value })}
-                      />
-                    </label>
-                  </div>
-                  <div>
-                    <button onClick={this.uploadFile}>Upload multimedia</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="row">
-            <div className="col-6"></div>
-            <div className="col-6">Hola</div>
-          </div>
+        <div >
+          <label >File:</label>
+          <input  type="file" ref={this.fileInputRef} id="recipient-name" />
+        </div>
+        <div>
+          <label>Title:</label>
+          <input
+            type="text" className="form-control"
+            value={this.state.title}
+            onChange={e => this.setState({ title: e.target.value })}
+            id="recipient-name"
+          />
+        </div>
+        <div>
+          <label >Type:</label>
+          <input className="form-control"
+            type="text"
+            value={this.state.type}
+            onChange={e => this.setState({ type: e.target.value })}
+            id="recipient-name"
+          />
+        </div>
+        <div>
+          <label >Category:</label>
+          <input className="form-control"
+            type="text"
+            value={this.state.category}
+            onChange={e => this.setState({ category: e.target.value })}
+            id="recipient-name"
+          />
+        </div>
+        <div>
+          <label >Price:</label>
+          <input className="form-control"
+            type="number"
+            value={this.state.price}
+            onChange={e => this.setState({ price: e.target.value })}
+            id="recipient-name"
+          />
+        </div>
+        <div>
+          <label >Text:</label>
+          <textarea className="form-control"
+            
+            value={this.state.textArea}
+            onChange={e => this.setState({ textArea: e.target.value })}
+            id="recipient-name"
+          />
+        </div>
+        <div className="modal-footer">
+          <button
+            type="button"
+            className="btn btn-secondary"
+            data-dismiss="modal"
+          >
+            Close
+          </button>
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={this.uploadFile}
+          >
+            Upload multimedia
+          </button>
         </div>
       </>
     );
   }
 }
-​
-export default UploadMultimedia;
+const mapStateToProps = ({ account }: IStore): IGlobalStateProps => ({
+  account
+});
+
+
+
+export default connect(mapStateToProps)(AploadMultimedia);
