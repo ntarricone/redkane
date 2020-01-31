@@ -9,6 +9,9 @@ import { generateAccountFromToken, myFetch } from "../../utils";
 import AppLogged from "./AppLogged/AppLogged";
 import UpdateProfile from "./AppLogged/UpdateProfile/UpdateProfile";
 import { decode } from "jsonwebtoken";
+import { BrowserRouter, Switch, Route } from "react-router-dom";
+import UploadArticle from "./AppLogged/UploadArticle";
+import Home from "./AppLogged/Home";
 
 interface IGlobalStateProps {
   account: IAccount;
@@ -33,10 +36,9 @@ class App extends React.Component<TProps> {
       this.restartAccount(id);
     }
   }
-
-  restartAccount(id: any){
+  restartAccount(id: any) {
     const { setAccount } = this.props;
-    
+
     myFetch({
       path: `/users/${id}`,
     }).then(user => {
@@ -46,20 +48,28 @@ class App extends React.Component<TProps> {
         setAccount({token, avatar, banner, name, surname, profession, password, about_me, id, email, isAdmin});
         
       } else {
-
       }
     });
   }
 
   render() {
-
     const token = localStorage.getItem("token");
-
     return (
       <>
-       {!token && <AppUnlogged></AppUnlogged>} 
-        {token && <UpdateProfile></UpdateProfile>}
-        {token && <AppLogged></AppLogged>}
+        <BrowserRouter>
+          {/* <UpdateProfile></UpdateProfile> */}
+          <Switch>
+            <Route path="/uploadArticle">
+              <UploadArticle type={"article"} />
+            </Route>
+
+            <Route path="/">
+              {!token && <AppUnlogged></AppUnlogged>}
+
+              {token && <AppLogged></AppLogged>}
+            </Route>
+          </Switch>
+        </BrowserRouter>
       </>
     );
   }
@@ -73,4 +83,4 @@ const mapDispatchToProps: IGlobalActionProps = {
   setAccount: SetAccountAction
 };
 
-export default connect(mapStateToProps , mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);
