@@ -3,8 +3,11 @@ import { myFetch, generateAccountFromToken } from "../../../utils";
 import { connect } from "react-redux";
 import { SetAccountAction } from "../../../redux/actions";
 import { IAccount } from "../../../interfaces/IAccount";
+import "./Register.css";
 
-interface IProps {}
+interface IProps {
+  notRegister():void
+}
 
 interface IGlobalActionProps {
   setAccount(account: IAccount): void;
@@ -95,14 +98,13 @@ class Register extends React.PureComponent<TProps, IState> {
 
   render() {
     const { name, surname, email, password, passwordControl } = this.state;
+    const { notRegister } = this.props;
     return (
       <div className="container animated bounceInLeft delay-0.5s slow">
         <div className="row centered-form">
-          <div className="panel panel-default">
-            <div className="panel-heading">
-              <h3 className="panel-title">Register!</h3>
-            </div>
-            <div className="panel-body">
+          <div className="card registerCard">
+            <div className="card-body">
+              <h3>Sign up</h3>
               <div className="row">
                 <div className="col-xs-6 col-sm-6 col-md-6">
                   <div className="form-group">
@@ -162,10 +164,9 @@ class Register extends React.PureComponent<TProps, IState> {
                   </div>
                 </div>
               </div>
-
-            {password !== passwordControl && (
-              <span style={{ color: "red" }}>Passwords don´t match</span>
-            )}
+              {password !== passwordControl && (
+                <span style={{ color: "red" }}>Passwords don´t match</span>
+              )}
 
               <button
                 disabled={
@@ -177,10 +178,13 @@ class Register extends React.PureComponent<TProps, IState> {
                   password != passwordControl
                 }
                 onClick={this.register}
-                className="btn btn-info btn-block"
+                className="btn text-light registerButton btn-block my-2 my-sm-0"
               >
                 Register
               </button>
+              <p className="forgot-password text-right">
+                Already have an account? <a href="#" onClick={() =>notRegister()}>Login!</a>
+              </p>
             </div>
           </div>
         </div>
