@@ -4,6 +4,9 @@ import ArticlesView from "./MultimediaViews/ArticlesView";
 import ImagesView from "./MultimediaViews/ImagesView";
 import VideosView from "./MultimediaViews/VideosView";
 import Filter from "../../shared/Filter/Filter";
+import AppUnlogged from "../AppUnlogged/AppUnlogged";
+import UpdateProfile from "./UpdateProfile/UpdateProfile";
+import AppLogged from "./AppLogged";
 
 interface IGlobalStateProps {}
 
@@ -22,8 +25,12 @@ class Home extends React.PureComponent<TProps, IState> {
     };
   }
   render() {
+    const token = localStorage.getItem("token");
     return (
       <>
+      {/* {!token && <AppUnlogged></AppUnlogged>} 
+        <UpdateProfile></UpdateProfile>
+        { token && <AppLogged></AppLogged>} */}
         <div className="continer-fluid">
           <div className="row">
             <div className="col-12 col-sm d-flex justify-content-center mt-5">

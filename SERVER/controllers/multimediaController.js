@@ -17,13 +17,9 @@ multimediaController.createMultimedia = (request, response) => {
  const { id } = jwt.verify(token, myPrivateKey);
  if (token) {
   
-  const path = request.file. originalname;
-  // const title = request.title;
-  // const type = request.file. originalname;
+  const path = request.file.originalname;
   const {title, category, type,price, textArea} = request.body;
-  // const price = request.file. originalname;
-  // const textArea = request.file. originalname;
- 
+  
  console.log(request.body.title)
   connection.query(
     `

@@ -1,19 +1,27 @@
 import React from "react";
 import "./ContentUploader.css";
 import UploadMultimedia from "../../App/AppLogged/UploadMultimedia";
+import UploadArticle from "../../App/AppLogged/UploadArticle";
+import { Link } from "react-router-dom";
+
+
 
 interface IGlobalStateProps {}
 
 type TProps = IGlobalStateProps;
 
 class ContentUploader extends React.PureComponent<TProps> {
+  
   render() {
     return (
       <>
         <div className="card uploader">
           <div className="card-body">IMAGEN</div>
-          <div className="card-body">
-            <i className="far fa-keyboard icon"></i>
+          <div className="card-body"><Link to="/uploadarticle" className="nav-link">
+          <i className="far fa-keyboard icon"></i>
+        
+                  </Link>
+          
           </div>
           <a className="card-body">
             <i
@@ -33,7 +41,7 @@ class ContentUploader extends React.PureComponent<TProps> {
                 <div className="modal-content">
                   <div className="modal-header">
                     <h5 className="modal-title" id="exampleModalLabel">
-                      Modal title
+                      Upload Image
                     </h5>
                     <button
                       type="button"
@@ -45,7 +53,7 @@ class ContentUploader extends React.PureComponent<TProps> {
                     </button>
                   </div>
                   <div className="modal-body">
-                    <UploadMultimedia></UploadMultimedia>
+                    <UploadMultimedia type ={"image"} />
                   </div>
                 </div>
               </div>
@@ -55,8 +63,38 @@ class ContentUploader extends React.PureComponent<TProps> {
             <i
               className="fas fa-video icon"
               data-toggle="modal"
-              data-target="#exampleModal"
+              data-target="#exampleModal2"
             ></i>
+
+<div
+              className="modal fade"
+              id="exampleModal2"
+              role="dialog"
+              aria-labelledby="exampleModalLabel"
+              aria-hidden="true"
+            >
+              <div className="modal-dialog" role="document">
+                <div className="modal-content">
+                  <div className="modal-header">
+                    <h5 className="modal-title" id="exampleModalLabel">
+                      Upload Video
+                    </h5>
+                    <button
+                      type="button"
+                      className="close"
+                      data-dismiss="modal"
+                      aria-label="Close"
+                    >
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div className="modal-body">
+                    <UploadMultimedia type ={"video"} />
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </a>
         </div>
       </>

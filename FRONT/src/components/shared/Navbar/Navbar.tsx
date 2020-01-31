@@ -27,6 +27,7 @@ class Navbar extends React.PureComponent<TProps> {
     localStorage.removeItem("token");
     localStorage.removeItem("avatar");
     logout();
+    
   }
   render() {
     const { account } = this.props;
