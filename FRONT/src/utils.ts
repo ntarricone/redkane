@@ -10,7 +10,7 @@ export const myFetch = async ({
   token
 }: {
   path: string;
-  method?: "GET" | "POST" | "DELETE";
+  method?: "GET" | "POST" | "DELETE" | "PUT";
   json?: Object;
   formData?: FormData;
   token?: string;
@@ -34,9 +34,11 @@ export const myFetch = async ({
     body
   });
   try {
+    console.log("esta bienn")
     const json = await response.json();
     return json;
   } catch {
+    console.log("eroooooooooorrrr")
     return null;
   }
 };

@@ -50,14 +50,21 @@ class Navbar extends React.PureComponent<TProps> {
           <div className="collapse navbar-collapse" id="navbarText">
             <ul className="navbar-nav mr-auto"></ul>
             <div className="dropdown">
-              <img
+              <span
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                {this.props.account?.email}
+              </span>
+              {/* <img
                 className="avatar"
                 src={account?.avatar}
                 alt=""
                 data-toggle="dropdown"
                 aria-haspopup="true"
                 aria-expanded="false"
-              />
+              /> TODO - ADD IMG*/}
               <div
                 className="dropdown-menu"
                 aria-labelledby="dropdownMenuButton"
@@ -66,8 +73,8 @@ class Navbar extends React.PureComponent<TProps> {
                   Action
                 </a>
                 <a className="dropdown-item" href="">
-                  {!account?.avatar? <span>***</span>: ""}
-                  Update your profile 
+                  {!account?.avatar ? <span>***</span> : ""}
+                  Update your profile
                   {/* TODO - add red asterix if avatar doesn´t exist */}
                 </a>
                 <a className="dropdown-item" href="" onClick={this.logout}>

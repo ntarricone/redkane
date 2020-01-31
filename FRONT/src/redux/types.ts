@@ -15,7 +15,13 @@ interface ISetBannerAction{
   payload: string
 }
 
+interface ISetAvatarAction{
+  type: "SET_AVATAR";
+  payload: string
+}
+
 export type TAction =
   | ISetAccountAction
   | ILogoutAction
-  | ISetBannerAction;
+  | ISetBannerAction
+  | ISetAvatarAction;

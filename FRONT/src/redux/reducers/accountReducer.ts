@@ -24,9 +24,10 @@ export default (state: IAccount = initialState, action: TAction): IAccount =>
       case "LOGOUT":
         return initialState;
       case "SET_BANNER":
-         return {...state, banner: action.payload}
-        default:
+        return { ...state, banner: action.payload };
+      case "SET_AVATAR":
+        return { ...state, avatar: action.payload };
+      default:
         return state;
     }
   });
-

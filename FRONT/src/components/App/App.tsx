@@ -39,10 +39,11 @@ class App extends React.Component<TProps> {
     
     myFetch({
       path: `/users/${id}`,
-    }).then(json => {
-      if (json) {
-        const { token, avatar, banner, surname, profession, about_me, name, password } = json;
-        setAccount(generateAccountFromToken({token, avatar, banner, name, surname, profession, password, about_me}));
+    }).then(user => {
+      if (user) {
+        const token: any = localStorage.getItem("token");
+        const { avatar, banner, surname, profession, about_me, name, password, id, email, isAdmin } = user;
+        setAccount({token, avatar, banner, name, surname, profession, password, about_me, id, email, isAdmin});
         
       } else {
 
@@ -51,12 +52,14 @@ class App extends React.Component<TProps> {
   }
 
   render() {
-    const {account} = this.props;
+
+    const token = localStorage.getItem("token");
+
     return (
       <>
-       {account.token === "" && <AppUnlogged></AppUnlogged>} 
-        <UpdateProfile></UpdateProfile>
-        {account.token !== "" && <AppLogged></AppLogged>}
+       {!token && <AppUnlogged></AppUnlogged>} 
+        {token && <UpdateProfile></UpdateProfile>}
+        {token && <AppLogged></AppLogged>}
       </>
     );
   }
