@@ -39,6 +39,7 @@ type TProps = IGlobalStateProps & IGlobalActionProps;
 
 class UpdateProfile extends React.PureComponent<TProps, IState> {
   
+  fileInputRef: React.RefObject<HTMLInputElement>;
   fileInputRef2: React.RefObject<HTMLInputElement>;
   constructor(props: any) {
     super(props);
