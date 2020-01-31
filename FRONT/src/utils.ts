@@ -53,7 +53,9 @@ export const generateAccountFromToken = ({
   token,
   avatar,
   banner,
-  about_me
+  about_me,
+  youtube,
+  linkedin
 }:{
   name: string;
   surname: string;  
@@ -63,9 +65,11 @@ export const generateAccountFromToken = ({
   profession?: any;
   banner?: string | undefined;
   about_me?: any;
+  youtube: string;
+  linkedin: string;
 }): IAccount => {
   const { id, email, isAdmin }: any = decode(token);
-  return { token, id, email, isAdmin, name, avatar, banner, surname, profession, password, about_me };
+  return { token, id, email, isAdmin, name, avatar, banner, surname, profession, password, about_me, youtube, linkedin };
 };
 
 

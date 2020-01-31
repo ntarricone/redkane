@@ -13,7 +13,9 @@ const initialState: IAccount = {
   email: "",
   isAdmin: false,
   banner: "",
-  about_me: ""
+  about_me: "",
+  youtube: "",
+  linkedin: ""
 };
 
 export default (state: IAccount = initialState, action: TAction): IAccount =>

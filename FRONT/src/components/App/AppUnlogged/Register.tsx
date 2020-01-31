@@ -78,9 +78,33 @@ class Register extends React.PureComponent<TProps, IState> {
       json: { name, surname, email, password }
     }).then(json => {
       if (json) {
-        const { token } = json;
+        const {
+          token,
+          avatar,
+          banner,
+          name,
+          surname,
+          profession,
+          password,
+          about_me,
+          youtube,
+          linkedin,
+          email
+        } = json;
         localStorage.setItem("token", token);
-        this.props.setAccount(generateAccountFromToken(token));
+        this.props.setAccount({
+          token,
+          avatar,
+          email,
+          banner,
+          name,
+          surname,
+          profession,
+          password,
+          about_me,
+          youtube,
+          linkedin
+        });
       } else {
         this.setState({ error: "User already registered" });
       }

@@ -16,18 +16,27 @@ const storage = multer.diskStorage({
 
   const upload = multer({ storage }).single("file");
 
+//GET
 router.get('/', users.getUsers);
-router.post('/register', users.createUser);
-router.post('/login', users.login);
 router.get('/:id', users.getUser);
+
+//PUT
 router.put('/edit/:id', users.editUser);
 router.put('/editPassword/:id', users.editPassword);
-router.delete('/delete/:id', users.deleteUser);
+
+//POST
+router.post('/register', users.createUser);
+router.post('/login', users.login);
 router.post('/saveUnsaveMultimedia', users.saveUnsaveMultimedia);
+
+//PUT
 router.put('/followUser/:id', users.followUser);
 router.put('/unfollowUser/:id', users.unfollowUser);
 router.post('/uploadBanner', upload, users.uploadBanner);
 router.post('/uploadAvatar', upload, users.uploadAvatar);
+
+//DELETE
+router.delete('/delete/:id', users.deleteUser);
 
 
 
