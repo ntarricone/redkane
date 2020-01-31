@@ -5,10 +5,15 @@ import { connect } from "react-redux";
 import { IStore } from "../../../../interfaces/IStore";
 import { IAccount } from "../../../../interfaces/IAccount";
 import { myFetch } from "../../../../utils";
-import { SetBannerAction, SetAvatarAction, SetAccountAction } from "../../../../redux/actions";
+import {
+  SetBannerAction,
+  SetAvatarAction,
+  SetAccountAction
+} from "../../../../redux/actions";
+import { API_URL_IMAGES } from "../../../../constants";
 
 interface IGlobalStateProps {
-  account: IAccount | null;
+  account: IAccount;
 }
 
 interface IGlobalActionProps {
@@ -19,17 +24,15 @@ interface IGlobalActionProps {
 
 interface IState {
   banner: string;
-  name: string | undefined;
-  surname: string | undefined;
-  profession: string | undefined;
-  email: string | undefined;
+  name: string ;
+  surname: string;
+  profession: string;
+  email: string ;
   about_me: string | undefined;
   oldPassword: string;
   newPassword: string;
   youtube: string;
-  twitter: string;
-  facebook: string;
-  linkedin: string;
+  linkedin: string | undefined;
   avatarChosen: string;
   passwordMessage: string;
   updatedMessage: string;
@@ -38,27 +41,24 @@ interface IState {
 type TProps = IGlobalStateProps & IGlobalActionProps;
 
 class UpdateProfile extends React.PureComponent<TProps, IState> {
-  
   fileInputRef: React.RefObject<HTMLInputElement>;
   fileInputRef2: React.RefObject<HTMLInputElement>;
   constructor(props: any) {
     super(props);
 
-    const {account} = this.props;
+    const { account } = this.props;
 
     this.state = {
       banner: "",
-      name: account?.name,
-      surname: account?.surname,
-      profession: account?.password,
-      email: account?.email,
-      about_me: account?.about_me,
+      name: account.name,
+      surname: account.surname,
+      profession: account.profession,
+      email: account.email,
+      about_me: account.about_me,
       oldPassword: "",
       newPassword: "",
       youtube: "",
-      twitter: "",
-      facebook: "",
-      linkedin: "",
+      linkedin: account.linkedin,
       avatarChosen: "",
       passwordMessage: "",
       updatedMessage: ""
@@ -87,7 +87,7 @@ class UpdateProfile extends React.PureComponent<TProps, IState> {
         path: `/users/uploadBanner`,
         token,
         formData
-      }).then(banner => {
+      }).then(({ banner }) => {
         if (banner) {
           setBanner(banner);
         }
@@ -109,8 +109,7 @@ class UpdateProfile extends React.PureComponent<TProps, IState> {
         path: `/users/uploadAvatar`,
         token,
         formData
-      }).then(avatar => {
-        console.log(avatar);
+      }).then(({ avatar }) => {
         if (avatar) {
           setAvatar(avatar);
         }
@@ -120,6 +119,7 @@ class UpdateProfile extends React.PureComponent<TProps, IState> {
   }
 
   updatePassword() {
+    //TODO - NOT WORKING
     this.setState({ passwordMessage: "" });
     const { account } = this.props;
     const { id, token }: any = account;
@@ -130,10 +130,10 @@ class UpdateProfile extends React.PureComponent<TProps, IState> {
       json: { oldPassword, newPassword },
       token
     }).then(response => {
-      console.log(response)
+      console.log(response);
       if (response) {
         console.log("actualizo pss");
-        this.setState({passwordMessage: "Password updated correctly"});
+        this.setState({ passwordMessage: "Password updated correctly" });
       } else {
         console.log("no puedo");
         this.setState({ passwordMessage: "Please insert correct password" });
@@ -148,16 +148,10 @@ class UpdateProfile extends React.PureComponent<TProps, IState> {
       name,
       surname,
       profession,
-      email,
       about_me,
       youtube,
-      linkedin,
-      twitter,
-      facebook
+      linkedin
     } = this.state;
-  // let sendingEmail = email === null? account?.email: email;
-  //TODO - FIX THIS.STATE WHEN BRINGING DATA FROM THE DATABASE
-  // console.log(sendingEmail)
     myFetch({
       path: `/users/edit/${id}`,
       method: "PUT",
@@ -165,75 +159,114 @@ class UpdateProfile extends React.PureComponent<TProps, IState> {
         name,
         surname,
         profession,
-        email,
         about_me,
         youtube,
-        linkedin,
-        twitter,
-        facebook
+        linkedin
       },
       token
     }).then(response => {
       console.log(response);
       if (response) {
-        const {name, surname, profession, avatar, id, email, isAdmin, banner, about_me } = response;
+        const {
+          name,
+          surname,
+          profession,
+          avatar,
+          id,
+          email,
+          isAdmin,
+          banner,
+          about_me
+        } = response;
         console.log("usuario actualizado");
-        this.setState({updatedMessage: "User updated correctly"});
-        setAccount({name, surname, profession, avatar, id, email, isAdmin, banner, about_me, token})
+        this.setState({ updatedMessage: "User updated correctly" });
+        setTimeout(()=>{this.setState({ updatedMessage: "" })}, 2000);
+        setAccount({
+          name,
+          surname,
+          profession,
+          avatar,
+          id,
+          email,
+          isAdmin,
+          banner,
+          about_me,
+          token,
+          youtube,
+          linkedin
+        });
       } else {
         console.log("no actualizado");
-        this.setState({updatedMessage: "Error updating details, please try again"});  
-            
+        this.setState({
+          updatedMessage: "Error updating details, please try again"
+        });
       }
     });
   }
+
   render() {
     const { account } = this.props;
-    const {
-      name,
+    let {
+      name = account?.name,
       surname,
       profession,
-      email,
       oldPassword,
       newPassword,
       about_me,
       youtube,
-      linkedin,
-      twitter,
-      facebook
+      linkedin
     } = this.state;
-    const rojo = "red";
+
     return (
       <>
-        <div className="container-fluid">
-          {/* banner */}
-          <div className="row">
-            <div className="col-12" style={{ backgroundColor: `${rojo}` }}>
-              {
-                //TODO - have a look with Ruben cambiar backgroundColor por backgroundImage
-              }
-              <img className="banner" src={banner} alt="" />
+              {/* banner + avatar */}
+        <div className="container profileBackground">
+            <div className="row">
+            <div className="col-12">
+              <img
+                className="banner mt-4"
+                src={API_URL_IMAGES + account?.banner}
+                alt=""
+              />
               <br />
-              <button>
-                <i className="fas fa-upload" onClick={this.uploadBanner}></i>
-              </button>
-              <input type="file" ref={this.fileInputRef2} />
+              <div className="container uploadBanner ml-4">
+                <div className="">
+                  <div className="col-12 ">
+                  <label htmlFor="banner">
+                    <i className="far fa-images " style={{fontSize: "30px"}}></i>
+                    </label>
+                    <input onChange={this.uploadBanner} type="file"
+                    id="banner"
+                    style={{ display: "none" }}
+                    ref={this.fileInputRef2} />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
           <div className="row">
-            <div className="col-3 mt-4">
-              <img className="avatarProfile mb-1" src={banner} alt="" />
+            <div className="col-2 mt-3">
+              <img
+                className="avatarProfile mb-1"
+                src={API_URL_IMAGES + account?.avatar}
+                alt=""
+              />
               <br />
-              <button type="button" className="btn-sm btn-success">
-                <i className="fas fa-upload" onClick={this.uploadAvatar}></i>
-              </button>
-              <input
+              <label htmlFor="avatar"> 
+                <i className="fas fa-plus-circle uploadAvatar" style={{fontSize: "30px"}}></i>
+                </label>
+               <input
+               id="avatar"
+               style={{ display: "none"}}
                 type="file"
                 ref={this.fileInputRef}
-                style={{ width: "14rem" }}
+                onChange={this.uploadAvatar}
               />
             </div>
-            <div className="col-5 mt-5">
+
+
+            {/* the form starts here */}
+            <div className="col-6 mt-4 ml-1">
               <div className="container">
                 <div className="row centered-form">
                   <div className="panel panel-default">
@@ -245,7 +278,7 @@ class UpdateProfile extends React.PureComponent<TProps, IState> {
                               type="text"
                               className="form-control input-sm"
                               placeholder="First Name"
-                              value={name}
+                              value={this.state.name}
                               onChange={({ target: { value } }) =>
                                 this.setState({ name: value })
                               }
@@ -258,7 +291,7 @@ class UpdateProfile extends React.PureComponent<TProps, IState> {
                               type="text"
                               className="form-control input-sm"
                               placeholder="Last Name"
-                              value={surname? surname : account?.surname}
+                              value={surname ? surname : account?.surname}
                               onChange={({ target: { value } }) =>
                                 this.setState({ surname: value })
                               }
@@ -266,28 +299,67 @@ class UpdateProfile extends React.PureComponent<TProps, IState> {
                           </div>
                         </div>
                       </div>
-
-                      <div className="form-group">
-                        <input
-                          type="email"
-                          className="form-control input-sm"
-                          placeholder="Email Address"
-                          value={email? email: account?.email}
-                          onChange={({ target: { value } }) =>
-                            this.setState({ email: value })
-                          }
-                        />
-                      </div>
                       <div className="form-group">
                         <input
                           type="text"
                           className="form-control input-sm"
                           placeholder="Profession"
-                          value={profession? profession: account?.profession}
+                          value={profession}
                           onChange={({ target: { value } }) =>
                             this.setState({ profession: value })
                           }
                         />
+                      </div>
+                      
+                      <textarea
+                        placeholder="Write a description about you"
+                        className="form-control mt-3"
+                        value={about_me}
+                        onChange={({ target: { value } }: any) =>
+                          this.setState({ about_me: value })
+                        }
+                      ></textarea>
+                      <button
+                        className="btn btn-success btn-block mt-3"
+                        onClick={this.updateAccount}
+                      >
+                        Update profile
+                      </button>
+                      <span>{this.state.updatedMessage}</span>
+
+                      <div className="row mt-4">
+                        <div className="col-xs-6 col-sm-6 col-md-6">
+                          <div className="form-group">
+                            <input
+                              type="password"
+                              className="form-control input-sm"
+                              placeholder="Old password"
+                              value={oldPassword}
+                              onChange={({ target: { value } }) =>
+                                this.setState({ oldPassword: value })
+                              }
+                            />
+                          </div>
+                        </div>
+                        <div className="col-xs-6 col-sm-6 col-md-6">
+                          <div className="form-group">
+                            <input
+                              type="password"
+                              className="form-control input-sm"
+                              placeholder="New password"
+                              value={newPassword}
+                              onChange={({ target: { value } }) =>
+                                this.setState({ newPassword: value })
+                              }
+                            />
+                          </div>
+                        </div>
+                        <button
+                          className="btn btn-success btn-block mt-1 mb-2 passButton"
+                          onClick={this.updatePassword}
+                        >
+                          Update Password
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -296,146 +368,29 @@ class UpdateProfile extends React.PureComponent<TProps, IState> {
             </div>
 
             {/* Social Media Links */}
-            <div className="col-4">
-              <p>
-                <button
-                  className="btn btn-primary"
-                  data-toggle="collapse"
-                  data-target="#youtube"
-                  aria-expanded="false"
-                  aria-controls="youtube"
-                >
-                  Youtube
-                </button>
-                <button
-                  className="btn btn-primary"
-                  data-toggle="collapse"
-                  data-target="#linkedin"
-                  aria-expanded="false"
-                  aria-controls="linkedin"
-                >
-                  Linkedin
-                </button>
-                <button
-                  className="btn btn-primary"
-                  data-toggle="collapse"
-                  data-target="#twitter"
-                  aria-expanded="false"
-                  aria-controls="twitter"
-                >
-                  Twitter
-                </button>
-                <button
-                  className="btn btn-primary"
-                  data-toggle="collapse"
-                  data-target="#facebook"
-                  aria-expanded="false"
-                  aria-controls="facebook"
-                >
-                  Facebook
-                </button>
-              </p>
-              <div className="collapse" id="youtube">
-                <input
-                  style={{ width: "62%" }}
-                  type="text"
-                  value={youtube}
-                  onChange={({ target: { value } }) =>
-                    this.setState({ youtube: value })
-                  }
-                />
-              </div>
-              <div className="collapse" id="linkedin">
-                <input
-                  style={{ width: "62%" }}
-                  type="text"
-                  value={linkedin}
-                  onChange={({ target: { value } }) =>
-                    this.setState({ linkedin: value })
-                  }
-                />
-              </div>
-              <div className="collapse" id="twitter">
-                <input
-                  style={{ width: "62%" }}
-                  type="text"
-                  value={twitter}
-                  onChange={({ target: { value } }) =>
-                    this.setState({ twitter: value })
-                  }
-                />
-              </div>
-              <div className="collapse" id="facebook">
-                <input
-                  style={{ width: "62%" }}
-                  type="text"
-                  value={facebook}
-                  onChange={({ target: { value } }) =>
-                    this.setState({ facebook: value })
-                  }
-                />
-              </div>
-            </div>
-          </div>
-          <div className="row">
-            <div className="col-8">
-              <textarea
-                placeholder="Write a description about you"
-                className="form-control mt-3"
-                value={about_me}
-                onChange={({ target: { value } }: any) =>
-                  this.setState({ about_me: value })
+            <div className="col-3 mt-3">
+              <input
+                className="form-control input-sm socialInput"
+                placeholder="Instagram"
+                style={{ width: "62%" }}
+                type="text"
+                value={youtube}
+                onChange={({ target: { value } }) =>
+                  this.setState({ youtube: value })
                 }
-              ></textarea>
-              <button
-                className="btn btn-info btn-block mt-3"
-                onClick={this.updateAccount}
-              >
-                Update profile
-              </button>
-              <span>{this.state.updatedMessage}</span>
-            </div>
-            <div className="container-fluid">
-              <div className="row mt-4">
-                <div className="col-xs-3 col-sm-3 col-md-3">
-                  <div className="form-group">
-                    <input
-                      type="password"
-                      className="form-control input-sm"
-                      placeholder="Old password"
-                      value={oldPassword}
-                      onChange={({ target: { value } }) =>
-                        this.setState({ oldPassword: value })
-                      }
-                    />
-                  </div>
-                </div>
-                <div className="col-xs-3 col-sm-3 col-md-3">
-                  <div className="form-group">
-                    <input
-                      type="password"
-                      className="form-control input-sm"
-                      placeholder="New password"
-                      value={newPassword}
-                      onChange={({ target: { value } }) =>
-                        this.setState({ newPassword: value })
-                      }
-                    />
-                  </div>
-                </div>
-                <div className="col-xs-2 col-sm-2 col-md-2">
-                  <div className="form-group">
-                    <button
-                      type="button"
-                      className="btn btn-success pr-4"
-                      onClick={this.updatePassword}
-                    >
-                      Update Password
-                    </button>
-
-                  </div>
-                </div>
-              </div>
+              />{" "}
+              <i className="fab fa-instagram"> </i>
+              <input
+                className="form-control input-sm mt-2 socialInput"
+                placeholder="Linkedin"
+                style={{ width: "62%" }}
+                type="text"
+                value={linkedin}
+                onChange={({ target: { value } }) =>
+                  this.setState({ linkedin: value })
+                }
+              />
+              <i className="fab fa-linkedin"></i>
             </div>
           </div>
         </div>

@@ -12,6 +12,8 @@ import { decode } from "jsonwebtoken";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import UploadArticle from "./AppLogged/UploadArticle";
 import Home from "./AppLogged/Home";
+import Navbar from "../shared/Navbar/Navbar";
+
 
 interface IGlobalStateProps {
   account: IAccount;
@@ -33,20 +35,49 @@ class App extends React.Component<TProps> {
     const token = localStorage.getItem("token");
     if (token) {
       const { id }: any = decode(token);
-      this.restartAccount(id);
+      setTimeout(()=>
+      { this.restartAccount(id);}, 100);
+      //TODO - FIX TIME OUT
+      
     }
   }
   restartAccount(id: any) {
     const { setAccount } = this.props;
 
     myFetch({
-      path: `/users/${id}`,
+      path: `/users/${id}`
     }).then(user => {
       if (user) {
         const token: any = localStorage.getItem("token");
-        const { avatar, banner, surname, profession, about_me, name, password, id, email, isAdmin } = user;
-        setAccount({token, avatar, banner, name, surname, profession, password, about_me, id, email, isAdmin});
-        
+        const {
+          avatar,
+          banner,
+          surname,
+          profession,
+          about_me,
+          name,
+          password,
+          id,
+          email,
+          isAdmin,
+          youtube,
+          linkedin
+        } = user;
+        setAccount({
+          token,
+          avatar,
+          banner,
+          name,
+          surname,
+          profession,
+          password,
+          about_me,
+          id,
+          email,
+          isAdmin,
+          youtube,
+          linkedin
+        });
       } else {
       }
     });
@@ -56,18 +87,24 @@ class App extends React.Component<TProps> {
     const token = localStorage.getItem("token");
     return (
       <>
+
         <BrowserRouter>
-          {/* <UpdateProfile></UpdateProfile> */}
-          <Switch>
-            <Route path="/uploadArticle">
+        <Navbar></Navbar>
+          <Switch> 
+
+            <Route exact path="/">
+              {!token && <AppUnlogged></AppUnlogged>}
+              {token && <AppLogged></AppLogged>}
+            </Route>
+
+            <Route exact path="/uploadArticle">
               <UploadArticle type={"article"} />
             </Route>
 
-            <Route path="/">
-              {!token && <AppUnlogged></AppUnlogged>}
-
-              {token && <AppLogged></AppLogged>}
+            <Route exact path="/updateProfile">
+              <UpdateProfile></UpdateProfile>
             </Route>
+            
           </Switch>
         </BrowserRouter>
       </>

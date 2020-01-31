@@ -4,6 +4,7 @@ import { IStore } from "../../../interfaces/IStore";
 import { IAccount } from "../../../interfaces/IAccount";
 import "./Navbar.css";
 import { LogoutAction } from "../../../redux/actions";
+import { Link } from "react-router-dom";
 
 interface IGlobalStateProps {
   account: IAccount | null;
@@ -73,11 +74,11 @@ class Navbar extends React.PureComponent<TProps> {
                 <a className="dropdown-item" href="">
                   Action
                 </a>
-                <a className="dropdown-item" href="">
+                <Link className="dropdown-item" to="/updateProfile">
                   {!account?.avatar ? <span>***</span> : ""}
                   Update your profile
                   {/* TODO - add red asterix if avatar doesn´t exist */}
-                </a>
+                </Link>
                 <a className="dropdown-item" href="" onClick={this.logout}>
                   Logout
                 </a>
