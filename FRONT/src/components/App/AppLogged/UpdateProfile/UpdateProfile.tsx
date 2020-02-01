@@ -24,11 +24,11 @@ interface IGlobalActionProps {
 
 interface IState {
   banner: string;
-  name: string ;
+  name: string;
   surname: string;
   profession: string;
-  email: string ;
-  about_me: string | undefined;
+  email: string;
+  about_me: string;
   oldPassword: string;
   newPassword: string;
   youtube: string;
@@ -40,7 +40,7 @@ interface IState {
 
 type TProps = IGlobalStateProps & IGlobalActionProps;
 
-class UpdateProfile extends React.PureComponent<TProps, IState> {
+class UpdateProfile extends React.Component<TProps, IState> {
   fileInputRef: React.RefObject<HTMLInputElement>;
   fileInputRef2: React.RefObject<HTMLInputElement>;
   constructor(props: any) {
@@ -57,7 +57,7 @@ class UpdateProfile extends React.PureComponent<TProps, IState> {
       about_me: account.about_me,
       oldPassword: "",
       newPassword: "",
-      youtube: "",
+      youtube: account.youtube,
       linkedin: account.linkedin,
       avatarChosen: "",
       passwordMessage: "",
@@ -144,25 +144,19 @@ class UpdateProfile extends React.PureComponent<TProps, IState> {
   updateAccount() {
     const { account, setAccount } = this.props;
     const { id, token }: any = account;
-    const {
-      name,
-      surname,
-      profession,
-      about_me,
-      youtube,
-      linkedin
-    } = this.state;
+    let { name, surname, profession, about_me, youtube, linkedin } = this.state;
+    //If the state of the component is empty because there hasn´t been a change
+    //I´m taking the value that comes from redux so it doesn´t update with empty strings
+    name = name != "" ? name : account.name;
+    surname = surname != "" ? surname : account.surname;
+    profession = profession != "" ? profession : account.profession;
+    about_me = about_me != "" ? about_me : account.about_me;
+    youtube = youtube != "" ? youtube : account.youtube;
+    linkedin = linkedin != "" ? linkedin : account.linkedin;
     myFetch({
       path: `/users/edit/${id}`,
       method: "PUT",
-      json: {
-        name,
-        surname,
-        profession,
-        about_me,
-        youtube,
-        linkedin
-      },
+      json: { name, surname, profession, about_me, linkedin, youtube },
       token
     }).then(response => {
       console.log(response);
@@ -176,11 +170,15 @@ class UpdateProfile extends React.PureComponent<TProps, IState> {
           email,
           isAdmin,
           banner,
-          about_me
+          about_me,
+          linkedin,
+          youtube
         } = response;
         console.log("usuario actualizado");
         this.setState({ updatedMessage: "User updated correctly" });
-        setTimeout(()=>{this.setState({ updatedMessage: "" })}, 2000);
+        setTimeout(() => {
+          this.setState({ updatedMessage: "" });
+        }, 2000);
         setAccount({
           name,
           surname,
@@ -206,6 +204,7 @@ class UpdateProfile extends React.PureComponent<TProps, IState> {
 
   render() {
     const { account } = this.props;
+    const {avatar, banner} = account;
     let {
       name = account?.name,
       surname,
@@ -219,51 +218,73 @@ class UpdateProfile extends React.PureComponent<TProps, IState> {
 
     return (
       <>
-              {/* banner + avatar */}
+        {/* banner + avatar */}
         <div className="container profileBackground">
-            <div className="row">
-            <div className="col-12">
+          <div className="row">
+            <div className="col-12 sharedBorder" >
+              {!banner?
               <img
-                className="banner mt-4"
-                src={API_URL_IMAGES + account?.banner}
-                alt=""
-              />
+              className="banner mt-4"
+              src={API_URL_IMAGES + "defaultBanner.jpg"}
+              alt=""
+            />
+              : <img
+              className="banner mt-4"
+              src={API_URL_IMAGES + banner}
+              alt=""
+            />
+            }
               <br />
               <div className="container uploadBanner ml-4">
                 <div className="">
                   <div className="col-12 ">
-                  <label htmlFor="banner">
-                    <i className="far fa-images " style={{fontSize: "30px"}}></i>
+                    <label htmlFor="banner">
+                      <i
+                        className="far fa-images "
+                        style={{ fontSize: "30px" }}
+                      ></i>
                     </label>
-                    <input onChange={this.uploadBanner} type="file"
-                    id="banner"
-                    style={{ display: "none" }}
-                    ref={this.fileInputRef2} />
+                    <input
+                      onChange={this.uploadBanner}
+                      type="file"
+                      id="banner"
+                      style={{ display: "none" }}
+                      ref={this.fileInputRef2}
+                    />
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <div className="row">
+          <div className="row sharedBorder mt-3">
             <div className="col-2 mt-3">
+              {!avatar?
               <img
                 className="avatarProfile mb-1"
-                src={API_URL_IMAGES + account?.avatar}
+                src={API_URL_IMAGES + "defaultAvatar.png"}
+                alt=""
+              />:
+              <img
+                className="avatarProfile mb-1"
+                src={API_URL_IMAGES + avatar}
                 alt=""
               />
+              }
               <br />
-              <label htmlFor="avatar"> 
-                <i className="fas fa-plus-circle uploadAvatar" style={{fontSize: "30px"}}></i>
-                </label>
-               <input
-               id="avatar"
-               style={{ display: "none"}}
+              <label htmlFor="avatar">
+                <i
+                  className="fas fa-plus-circle uploadAvatar"
+                  style={{ fontSize: "30px" }}
+                ></i>
+              </label>
+              <input
+                id="avatar"
+                style={{ display: "none" }}
                 type="file"
                 ref={this.fileInputRef}
                 onChange={this.uploadAvatar}
               />
             </div>
-
 
             {/* the form starts here */}
             <div className="col-6 mt-4 ml-1">
@@ -272,26 +293,28 @@ class UpdateProfile extends React.PureComponent<TProps, IState> {
                   <div className="panel panel-default">
                     <div className="panel-body">
                       <div className="row">
+                        {/* FIRST NAME */}
                         <div className="col-xs-6 col-sm-6 col-md-6">
                           <div className="form-group">
                             <input
                               type="text"
                               className="form-control input-sm"
                               placeholder="First Name"
-                              value={this.state.name}
+                              value={name ? name : account.name}
                               onChange={({ target: { value } }) =>
                                 this.setState({ name: value })
                               }
                             />
                           </div>
                         </div>
+                        {/* SURNAME */}
                         <div className="col-xs-6 col-sm-6 col-md-6">
                           <div className="form-group">
                             <input
                               type="text"
                               className="form-control input-sm"
                               placeholder="Last Name"
-                              value={surname ? surname : account?.surname}
+                              value={surname ? surname : account.surname}
                               onChange={({ target: { value } }) =>
                                 this.setState({ surname: value })
                               }
@@ -299,26 +322,28 @@ class UpdateProfile extends React.PureComponent<TProps, IState> {
                           </div>
                         </div>
                       </div>
+                      {/* PROFESSION*/}
                       <div className="form-group">
                         <input
                           type="text"
                           className="form-control input-sm"
                           placeholder="Profession"
-                          value={profession}
+                          value={profession ? profession : account.profession}
                           onChange={({ target: { value } }) =>
                             this.setState({ profession: value })
                           }
                         />
                       </div>
-                      
+                      {/* ABOUT_ME */}
                       <textarea
                         placeholder="Write a description about you"
                         className="form-control mt-3"
-                        value={about_me}
+                        value={about_me ? about_me : account.about_me}
                         onChange={({ target: { value } }: any) =>
                           this.setState({ about_me: value })
                         }
                       ></textarea>
+
                       <button
                         className="btn btn-success btn-block mt-3"
                         onClick={this.updateAccount}
@@ -328,6 +353,7 @@ class UpdateProfile extends React.PureComponent<TProps, IState> {
                       <span>{this.state.updatedMessage}</span>
 
                       <div className="row mt-4">
+                        {/* OLD PASSWORD */}
                         <div className="col-xs-6 col-sm-6 col-md-6">
                           <div className="form-group">
                             <input
@@ -341,6 +367,7 @@ class UpdateProfile extends React.PureComponent<TProps, IState> {
                             />
                           </div>
                         </div>
+                        {/* NEW PASSWORD */}
                         <div className="col-xs-6 col-sm-6 col-md-6">
                           <div className="form-group">
                             <input
@@ -369,23 +396,26 @@ class UpdateProfile extends React.PureComponent<TProps, IState> {
 
             {/* Social Media Links */}
             <div className="col-3 mt-3">
+              {/* YOUTUBE */}
               <input
                 className="form-control input-sm socialInput"
-                placeholder="Instagram"
+                placeholder="Youtube"
                 style={{ width: "62%" }}
                 type="text"
-                value={youtube}
+                value={youtube? youtube: account.youtube}
                 onChange={({ target: { value } }) =>
                   this.setState({ youtube: value })
                 }
-              />{" "}
-              <i className="fab fa-instagram"> </i>
+              />
+              <i className="fab fa-youtube"></i>
+
+              {/* LINKEDIN */}
               <input
                 className="form-control input-sm mt-2 socialInput"
                 placeholder="Linkedin"
                 style={{ width: "62%" }}
                 type="text"
-                value={linkedin}
+                value={linkedin? linkedin : account.linkedin}
                 onChange={({ target: { value } }) =>
                   this.setState({ linkedin: value })
                 }

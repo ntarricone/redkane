@@ -7,7 +7,7 @@
     width: 10vw;
     height: 20vh;
     border-radius: 50%;
-    box-shadow: 2px 2px 16px 0px;
+    box-shadow: 3px 1px 4px 0px;
     position: absolute;
     top: -134px;
     left: 26px;
@@ -37,9 +37,15 @@
 
 .profileBackground{
     background-color: #fafafa;
+    width: 72vw !important;
 }
 
 .uploadBanner{
     display: flex;
     flex-direction: row-reverse;
 }
+
+.sharedBorder{
+    border: 1px solid lightgrey;
+}
+

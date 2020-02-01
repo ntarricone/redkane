@@ -22,7 +22,7 @@ usersController.createUser = (req, res) => {
     INTO users (name, surname, email, password, isAdmin, avatar,
        profession, about_me, linkedin, youtube, banner)
     VALUES('${name}','${surname}', '${email}', sha1('${password}'),
-     0, '${defaultValue}', '${defaultValue}', '${defaultValue}', '${defaultValue}',
+     0, '${defaultValue}','${defaultValue}', '${defaultValue}', '${defaultValue}',
       '${defaultValue}', '${defaultValue}')
   `,
       (err, results) => {
@@ -44,7 +44,6 @@ usersController.createUser = (req, res) => {
                     name,
                     surname,
                     email,
-                    password,
                     isAdmin,
                     avatar,
                     profession,
@@ -65,10 +64,10 @@ usersController.createUser = (req, res) => {
 
                 res.send({
                   token,
+                  id,
                   name,
                   surname,
                   email,
-                  password,
                   isAdmin,
                   avatar,
                   profession,
@@ -90,7 +89,7 @@ usersController.createUser = (req, res) => {
   }
 };
 
-//LOGIN USER
+//LOGIN USER - TODO insert last login date
 usersController.login = (request, response) => {
   const { email, password } = request.body;
   connection.query(
@@ -230,13 +229,11 @@ usersController.editPassword = (req, res) => {
 //EDIT USER
 
 usersController.editUser = (request, response) => {
-  console.log("patata");
   const { id } = request.params;
 
   const {
     name,
     surname,
-    email,
     profession,
     about_me,
     facebook,
@@ -270,6 +267,7 @@ usersController.editUser = (request, response) => {
         if (error) {
           response.sendStatus(401);
         } else {
+          delete results[0].password; //deleting password from response
           response.send(results[0]);
           console.log("me actualizo");
         }

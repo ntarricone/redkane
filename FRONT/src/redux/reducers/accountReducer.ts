@@ -6,7 +6,7 @@ const initialState: IAccount = {
   name: "",
   surname: "",
   profession: "",
-  password: "",
+  // password: "",
   token: "",
   avatar: "",
   id: null,

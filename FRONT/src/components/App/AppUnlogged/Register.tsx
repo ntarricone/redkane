@@ -77,15 +77,16 @@ class Register extends React.PureComponent<TProps, IState> {
       method: "POST",
       json: { name, surname, email, password }
     }).then(json => {
+      console.log(json)
       if (json) {
         const {
           token,
+          id,
           avatar,
           banner,
           name,
           surname,
           profession,
-          password,
           about_me,
           youtube,
           linkedin,
@@ -94,13 +95,13 @@ class Register extends React.PureComponent<TProps, IState> {
         localStorage.setItem("token", token);
         this.props.setAccount({
           token,
+          id,
           avatar,
           email,
           banner,
           name,
           surname,
           profession,
-          password,
           about_me,
           youtube,
           linkedin

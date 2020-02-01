@@ -4,7 +4,7 @@ export interface IAccount /*extends ITokenPayload*/{
     name: string;
     surname: string;
     profession: string;
-    password?: string;
+    // password?: string;
     token: string;
     avatar: string ;
     id?: number | null;

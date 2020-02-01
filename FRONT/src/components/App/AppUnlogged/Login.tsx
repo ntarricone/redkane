@@ -64,7 +64,7 @@ class Login extends React.PureComponent<TProps, IState> {
         const { token, avatar, banner, surname, profession, about_me, name, youtube, linkedin } = json;
         localStorage.setItem("token", token);
         localStorage.setItem("avatar", avatar);
-        setAccount(generateAccountFromToken({token, avatar, banner, name, surname, profession, password, about_me, youtube, linkedin}));
+        setAccount(generateAccountFromToken({token, avatar, banner, name, surname, profession, about_me, youtube, linkedin}));
         
       } else {
         this.setState({ error: "Credenciales inválidas" });
