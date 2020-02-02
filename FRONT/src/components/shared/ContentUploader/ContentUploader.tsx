@@ -4,24 +4,20 @@ import UploadMultimedia from "../../App/AppLogged/UploadMultimedia";
 import UploadArticle from "../../App/AppLogged/UploadArticle";
 import { Link } from "react-router-dom";
 
-
-
 interface IGlobalStateProps {}
 
 type TProps = IGlobalStateProps;
 
 class ContentUploader extends React.PureComponent<TProps> {
-  
   render() {
     return (
       <>
         <div className="card uploader">
           <div className="card-body">IMAGEN</div>
-          <div className="card-body"><Link to="/uploadarticle" className="nav-link">
-          <i className="far fa-keyboard icon"></i>
-        
-                  </Link>
-          
+          <div className="card-body">
+            <Link to="/uploadarticle" className="nav-link">
+              <i className="far fa-keyboard icon"></i>
+            </Link>
           </div>
           <a className="card-body">
             <i
@@ -53,7 +49,7 @@ class ContentUploader extends React.PureComponent<TProps> {
                     </button>
                   </div>
                   <div className="modal-body">
-                    <UploadMultimedia type ={"image"} />
+                    <UploadMultimedia type={"image"} />
                   </div>
                 </div>
               </div>
@@ -66,7 +62,7 @@ class ContentUploader extends React.PureComponent<TProps> {
               data-target="#exampleModal2"
             ></i>
 
-<div
+            <div
               className="modal fade"
               id="exampleModal2"
               role="dialog"
@@ -89,12 +85,11 @@ class ContentUploader extends React.PureComponent<TProps> {
                     </button>
                   </div>
                   <div className="modal-body">
-                    <UploadMultimedia type ={"video"} />
+                    <UploadMultimedia type={"video"} />
                   </div>
                 </div>
               </div>
             </div>
-
           </a>
         </div>
       </>

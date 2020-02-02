@@ -1,19 +1,132 @@
-import React from 'react';
+import React from "react";
+import { connect } from "react-redux";
+import { IStore } from "../../../../interfaces/IStore";
+import { IFile } from "../../../../interfaces/IFile";
+import {
+  API_URL,
+  API_URL_MULTIMEDIA,
+  API_URL_IMAGES
+} from "../../../../constants";
+import { myFetch } from "../../../../utils";
+import "./ArticlesView.css";
 
-interface IGlobalStateProps{
+interface IGlobalStateProps {}
 
+interface IGlobalActionProps {}
+
+interface IProps {
+  file: IFile;
 }
 
-type TProps = IGlobalStateProps;
+interface IState {
+  name: string;
+  surname: string;
+  avatar: string;
+}
 
-class ArticlesView extends React.PureComponent<TProps>{
-  render(){
-    return(
-<>
-</>
+type TProps = IProps & IGlobalStateProps & IGlobalActionProps;
 
-    )
+class ArticlesView extends React.PureComponent<TProps, IState> {
+  constructor(props: TProps) {
+    super(props);
+
+    this.state = {
+      name: "",
+      surname: "",
+      avatar: ""
+    };
+  }
+  //setting card owner´s details
+  componentDidMount() {
+    const { file } = this.props;
+    const { id } = file;
+    const token: any = localStorage.getItem("token");
+    myFetch({ path: `/users/${id}`, token }).then(user =>
+      this.setState({
+        name: user.name,
+        surname: user.surname,
+        avatar: user.avatar
+      })
+    );
+  }
+  //TODO - SEE IF WE CAN MAKE THIS WORK
+  // truncateText(text, length) {
+  //   if (text.length <= length) {
+  //     return text;
+  //   }
+
+  //   return text.substr(0, length) + '\u2026'
+  // }
+
+  render() {
+    const { file } = this.props;
+    const { textArea, path } = file;
+    const { name, surname, avatar } = this.state;
+
+    return (
+      <div
+        className="card"
+        // style={{ height: "38vw" }} THIS LINE MAKES THE CARDS THE SAME SIZE, DO WE WANT IT?
+      >
+        {path.includes("youtube") ? (
+          <iframe
+            style={{ height: "13vw" }}
+            src={path}
+            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          ></iframe>
+        ) : (
+          <img
+            className="card-img-top"
+            style={{ height: "13vw" }}
+            src={`${API_URL_MULTIMEDIA}${path}`}
+            alt="Card image cap"
+          />
+        )}
+
+        <div className="card-body" style={{ backgroundColor: "#fafafa" }}>
+          <h5 className="card-title">{file.title}</h5>
+          <p className="card-text">{textArea?.substring(0, 200) + "..."}</p>
+
+          <div className="container-fluid">
+            <div className="row"
+            style={{ fontSize: "1.5rem" }}>
+              <div className="col-2">
+                {
+                  <img
+                    data-toggle="tooltip"
+                    data-placement="top"
+                    title={`${name} ${surname}`}
+                    className="cardAvatar"
+                    src={`${API_URL_IMAGES}${avatar}`}
+                  />
+                }
+
+              </div>
+
+              <div className="col-6"></div>
+              <div className="col-2">
+                <i className="far fa-bookmark"></i>
+                <i className="fas fa-bookmark"></i></div>
+              
+              <div className="col-2">
+                {file.price != 0 && <i className="far fa-money-bill-alt"></i>}
+              </div>
+            </div>
+          </div>
+          <p className="card-text">
+            <small className="text-muted">
+              {new Date(file.time).toLocaleDateString()}
+            </small>
+          </p>
+        </div>
+      </div>
+    );
   }
 }
 
-export default ArticlesView;
+const mapStateToProps = ({ account }: IStore): IGlobalStateProps => ({
+  account
+});
+
+export default connect(mapStateToProps)(ArticlesView);

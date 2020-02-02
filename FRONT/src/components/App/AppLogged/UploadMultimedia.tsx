@@ -9,6 +9,7 @@ interface IState {
   price: string;
   category: string;
   textArea: string;
+  path: string;
 }
 interface IProps {
   type: string;
@@ -28,30 +29,34 @@ class AploadMultimedia extends React.PureComponent<TProps, IState> {
       title: "",
       price: "",
       category: "",
-      textArea: ""
+      textArea: "",
+      path: ""
     };
 
     this.fileInputRef = React.createRef();
     this.uploadFile = this.uploadFile.bind(this);
   }
 
+  //TODO - ADD ADDED FILE TO REDUX
   uploadFile() {
-    const { account } = this.props;
     const initialState = { title: "", price: "", category: "", textArea: "" };
+    const { account, type } = this.props;
+    const {title, price, category, textArea, path} = this.state;
+    const token: any = localStorage.getItem("token");
+
     if (this.fileInputRef.current?.files?.length && account) {
-      const token: any = localStorage.getItem("token");
       const path = this.fileInputRef.current.files[0];
       const formData = new FormData();
       formData.append("file", path);
-      formData.append("title", this.state.title);
-      formData.append("type", this.props.type);
-      formData.append("price", this.state.price);
-      formData.append("category", this.state.category);
-      formData.append("textArea", this.state.textArea);
+      formData.append("title", title);
+      formData.append("type", type);
+      formData.append("price", price);
+      formData.append("category", category);
+      formData.append("textArea", textArea);
       console.log(formData);
       myFetch({
         method: "POST",
-        path: "/multimedia/create",
+        path: "/multimedia/createImage",
         token,
         formData
       }).then(json => {
@@ -62,14 +67,33 @@ class AploadMultimedia extends React.PureComponent<TProps, IState> {
       });
       this.setState(initialState);
       this.fileInputRef.current.value = "";
+    }else{
+      myFetch({
+        path: "/multimedia/createVideo",
+        method: "POST",
+        json: { title, type, price, category, path, textArea },
+        token
+      })
     }
   }
   render() {
+    const {type} = this.props;
     //TODO controlar el imput tipe price. Scroll en el select
+    //TODO - arreglar que se puedan poner links the youtube en vez de subir archivos
     return (
       <>
         <div>
-          <input type="file" ref={this.fileInputRef} id="file-name" />
+          {type === "image"? 
+          <input type="file" ref={this.fileInputRef} id="file-name" />:
+          <input
+          placeholder="Youtube Link"
+          type="text"
+          className="form-control"
+          value={this.state.path}
+          onChange={e => this.setState({ path: e.target.value })}
+        />
+          }
+          
         </div>
         <div>
           <label>Title:</label>

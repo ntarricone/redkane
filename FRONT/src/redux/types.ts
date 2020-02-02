@@ -1,4 +1,5 @@
 import { IAccount } from "../interfaces/IAccount";
+import { IFile } from "../interfaces/IFile";
 
 
 interface ISetAccountAction{
@@ -20,8 +21,18 @@ interface ISetAvatarAction{
   payload: string
 }
 
+
+//working with files
+interface ISetFilesAction {
+  type: "SET_FILES";
+  payload: IFile[];
+}
+
+
+
 export type TAction =
   | ISetAccountAction
   | ILogoutAction
   | ISetBannerAction
-  | ISetAvatarAction;
+  | ISetAvatarAction
+  | ISetFilesAction;

@@ -159,9 +159,6 @@ usersController.getUser = (req, res) => {
   const { id } = req.params;
   console.log(id);
   try {
-    // const token = req.headers.authorization.replace("Bearer ", ""); //le quitas el Bearer que viene predeterminado
-    // console.log(token);
-    // jwt.verify(token, myPrivateKey);
     let sql = `SELECT * FROM users where id = ${id}`;
     connection.query(sql, (error, results) => {
       if (error) console.log(error);

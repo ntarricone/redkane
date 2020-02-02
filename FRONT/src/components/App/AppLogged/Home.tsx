@@ -4,17 +4,28 @@ import ArticlesView from "./MultimediaViews/ArticlesView";
 import ImagesView from "./MultimediaViews/ImagesView";
 import VideosView from "./MultimediaViews/VideosView";
 import Filter from "../../shared/Filter/Filter";
-import AppUnlogged from "../AppUnlogged/AppUnlogged";
-import UpdateProfile from "./UpdateProfile/UpdateProfile";
-import AppLogged from "./AppLogged";
+import { IAccount } from "../../../interfaces/IAccount";
+import { connect } from "react-redux";
+import { IStore } from "../../../interfaces/IStore";
+import { SetFilesAction } from "../../../redux/actions";
+import { IFile } from "../../../interfaces/IFile";
+import { myFetch } from "../../../utils";
+import { IFiles } from "../../../interfaces/IFiles";
 
-interface IGlobalStateProps {}
+interface IGlobalStateProps {
+  account: IAccount;
+  files: IFiles;
+}
+
+interface IGlobalActionProps{
+  setFiles(files: IFile[]): void;
+}
 
 interface IState {
   selectedView: "articles" | "images" | "videos";
 }
 
-type TProps = IGlobalStateProps;
+type TProps = IGlobalStateProps & IGlobalActionProps;
 
 class Home extends React.PureComponent<TProps, IState> {
   constructor(props: TProps) {
@@ -24,14 +35,29 @@ class Home extends React.PureComponent<TProps, IState> {
       selectedView: "articles"
     };
   }
+
+  componentDidMount(){
+  setTimeout(({token} = this.props.account, {setFiles} = this.props) => 
+
+    myFetch({path: `/multimedia`, token}).then(files =>{
+      console.log("entri")
+      if(files){
+        console.log(files)
+        setFiles(files);
+      }
+    })
+    ,300);
+    // setTimeout(() => clearTimeout(timeOut), 151)
+
+  }
   render() {
-    const token = localStorage.getItem("token");
+    const {files} = this.props;
     return (
       <>
-      {/* {!token && <AppUnlogged></AppUnlogged>} 
+        {/* {!token && <AppUnlogged></AppUnlogged>} 
         <UpdateProfile></UpdateProfile>
         { token && <AppLogged></AppLogged>} */}
-        <div className="continer-fluid">
+        <div className="container">
           <div className="row">
             <div className="col-12 col-sm d-flex justify-content-center mt-5">
               <ContentUploader></ContentUploader>
@@ -48,56 +74,59 @@ class Home extends React.PureComponent<TProps, IState> {
           </div>
           <div className="row ">
             <div className="col-12 d-flex justify-content-center mt-4">
-           
               <Filter></Filter>
-            </div>
-          </div>
-          <div className="row">
-            <div className="col-12">
-              <div className="filter-nav d-flex justify-content-center mt-4">
-                <button className="btn btn-primary" data-filter="nature">
-                  Nature
-                </button>
-                <button className="btn btn-primary" data-filter="food">
-                  Food
-                </button>
-                <button className="btn btn-primary" data-filter="architecture">
-                  Architecture
-                </button>
-              </div>
             </div>
           </div>
 
           <div className="row">
-            <div className="col-12">
-              <div className="col-6 pt-3">
-                <div className="btn-group ">
-                  <button className="btn btn-sm btn-default btn-sorteable">
-                    Fecha <i className="fa fa-sort"></i>
-                  </button>
-                  <button className="btn btn-sm btn-default btn-sorteable">
-                    Costo <i className="fa fa-sort"></i>
-                  </button>
-                  <button className="btn btn-sm btn-default btn-sorteable">
-                    Tipo de Contenido <i className="fa fa-sort"></i>
-                  </button>
-                  <button className="btn btn-sm btn-default btn-sorteable">
-                    Vistas <i className="fa fa-sort"></i>
-                  </button>
-                  <button className="btn btn-sm btn-default btn-sorteable">
-                    Credibilidad <i className="fa fa-sort"></i>
-                  </button>
-                </div>
+            <div className="col-12 ">
+              <div className="btn-group ">
+                <button className="btn btn-sm btn-default btn-sorteable">
+                  Fecha <i className="fa fa-sort"></i>
+                </button>
+                <button className="btn btn-sm btn-default btn-sorteable">
+                  Costo <i className="fa fa-sort"></i>
+                </button>
+                <button className="btn btn-sm btn-default btn-sorteable">
+                  Tipo de Contenido <i className="fa fa-sort"></i>
+                </button>
+                <button className="btn btn-sm btn-default btn-sorteable">
+                  Vistas <i className="fa fa-sort"></i>
+                </button>
+                <button className="btn btn-sm btn-default btn-sorteable">
+                  Credibilidad <i className="fa fa-sort"></i>
+                </button>
               </div>
             </div>
           </div>
-          <ArticlesView></ArticlesView>
-          <ImagesView></ImagesView>
-          <VideosView></VideosView>
-        </div>
+          </div>
+          <div className="container">
+            <div className="row">
+              {files.order.map( id =>(
+              <div key={id} className="col-sm-6 col-md-4 col-12">
+              <ArticlesView file={files.byId[+id]}></ArticlesView>
+              <br/>
+              </div>
+              ))}
+            </div>
+          </div>
+ 
+
+
+          {/* <ImagesView></ImagesView>
+          <VideosView></VideosView> */}
+
       </>
     );
   }
 }
 
-export default Home;
+const mapStateToProps = ({ account, files }: IStore): IGlobalStateProps => ({
+  account, files
+});
+
+const mapDispatchToProps: IGlobalActionProps = {
+  setFiles: SetFilesAction
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);
