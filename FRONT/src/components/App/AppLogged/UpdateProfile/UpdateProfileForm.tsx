@@ -5,6 +5,7 @@ import { IStore } from "../../../../interfaces/IStore";
 import { IAccount } from "../../../../interfaces/IAccount";
 import { myFetch } from "../../../../utils";
 import {  SetAccountAction} from "../../../../redux/actions";
+import swal from 'sweetalert';
 
 interface IGlobalStateProps {
   account: IAccount;
@@ -111,10 +112,16 @@ class UpdateProfileForm extends React.Component<TProps, IState> {
           youtube
         } = response;
         console.log("usuario actualizado");
-        this.setState({ updatedMessage: "User updated correctly" });
-        setTimeout(() => {
-          this.setState({ updatedMessage: "" });
-        }, 2000);
+        swal(
+          {title: 'Updated!',
+          text: 'User updated correctly',
+          icon: "success",
+          timer: 4000
+        })
+        // this.setState({ updatedMessage: "User updated correctly" });
+        // setTimeout(() => {
+        //   this.setState({ updatedMessage: "" });
+        // }, 2000);
         setAccount({
           name,
           surname,
