@@ -28,6 +28,15 @@
   color: #61dafb;
 }
 
+.marginTopUploader{
+  margin-top: 10vh !important;
+}
+
+.buttonColor{
+  background-color: #212121 !important;
+  color: white !important;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
@@ -36,6 +45,8 @@
     transform: rotate(360deg);
   }
 }
+
+
 
 /* **** this is the color for the entire application***** */
 #root{

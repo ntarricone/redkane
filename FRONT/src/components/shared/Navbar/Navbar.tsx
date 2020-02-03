@@ -5,6 +5,8 @@ import { IAccount } from "../../../interfaces/IAccount";
 import "./Navbar.css";
 import { LogoutAction } from "../../../redux/actions";
 import { Link } from "react-router-dom";
+import { API_URL_IMAGES } from "../../../constants";
+
 
 interface IGlobalStateProps {
   account: IAccount | null;
@@ -34,10 +36,14 @@ class Navbar extends React.PureComponent<TProps> {
     const { account } = this.props;
     return (
       <>
-        <nav className="navbar navbar-expand-lg navbar-light bg-light">
-          <a className="navbar-brand" href="#">
-            Navbar w/ text
-          </a>
+        <nav 
+        style={{height: "7vh"}}
+        className="navbar navbar-expand-lg navbar-light navbarBackground">
+          <Link to="/" className="navbar-brand" href="#">
+            <img 
+            style={{height: "6vh"}}
+            src={API_URL_IMAGES + "logoKane2.png"} alt=""/>
+          </Link>
           <button
             className="navbar-toggler"
             type="button"
@@ -52,13 +58,15 @@ class Navbar extends React.PureComponent<TProps> {
           <div className="collapse navbar-collapse" id="navbarText">
             <ul className="navbar-nav mr-auto"></ul>
             <div className="dropdown">
-              <span
+              <img
+              style={{height: "6vh", width: "3vw", borderRadius: "50%"}}
                 data-toggle="dropdown"
                 aria-haspopup="true"
                 aria-expanded="false"
+                src={API_URL_IMAGES + account?.avatar}
               >
-                {this.props.account?.email}
-              </span>
+                
+              </img>
               {/* <img
                 className="avatar"
                 src={account?.avatar}

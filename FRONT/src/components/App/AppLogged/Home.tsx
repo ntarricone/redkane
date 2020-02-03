@@ -17,12 +17,12 @@ interface IGlobalStateProps {
   files: IFiles;
 }
 
-interface IGlobalActionProps{
+interface IGlobalActionProps {
   setFiles(files: IFile[]): void;
 }
 
 interface IState {
-  selectedView: "articles" | "images" | "videos";
+  type: "" | "article" | "image" | "video";
 }
 
 type TProps = IGlobalStateProps & IGlobalActionProps;
@@ -32,26 +32,36 @@ class Home extends React.PureComponent<TProps, IState> {
     super(props);
 
     this.state = {
-      selectedView: "articles"
+      type: ""
     };
+    this.settingFiles = this.settingFiles.bind(this);
   }
 
-  componentDidMount(){
-  setTimeout(({token} = this.props.account, {setFiles} = this.props) => 
+  componentDidMount() {
+    this.settingFiles(this.state.type);
+  }
 
-    myFetch({path: `/multimedia`, token}).then(files =>{
-      console.log("entri")
-      if(files){
-        console.log(files)
-        setFiles(files);
-      }
-    })
-    ,300);
+  settingFiles(type: any) {
+    console.log(type);
+
+    this.setState({ type: type });
+    setTimeout(
+      ({ token } = this.props.account, { setFiles } = this.props) =>
+        myFetch({ path: `/multimedia/${type}`, token }).then(
+          files => {
+            console.log("entri");
+            console.log(files);
+            if (files) {
+              setFiles(files);
+            }
+          }
+        ),
+      200
+    );
     // setTimeout(() => clearTimeout(timeOut), 151)
-
   }
   render() {
-    const {files} = this.props;
+    const { files } = this.props;
     return (
       <>
         {/* {!token && <AppUnlogged></AppUnlogged>} 
@@ -59,7 +69,7 @@ class Home extends React.PureComponent<TProps, IState> {
         { token && <AppLogged></AppLogged>} */}
         <div className="container">
           <div className="row">
-            <div className="col-12 col-sm d-flex justify-content-center mt-5">
+            <div className="col-12 col-sm d-flex justify-content-center marginTopUploader">
               <ContentUploader></ContentUploader>
             </div>
           </div>
@@ -75,6 +85,14 @@ class Home extends React.PureComponent<TProps, IState> {
           <div className="row ">
             <div className="col-12 d-flex justify-content-center mt-4">
               <Filter></Filter>
+              <span onClick={() => this.settingFiles("")}>All</span>
+              <span onClick={() => this.settingFiles("image")}>Images</span>
+              <span onClick={() => this.setState({ type: "video" })}>
+                Videos
+              </span>
+              <span onClick={() => this.setState({ type: "article" })}>
+                Articles
+              </span>
             </div>
           </div>
 
@@ -99,30 +117,28 @@ class Home extends React.PureComponent<TProps, IState> {
               </div>
             </div>
           </div>
-          </div>
-          <div className="container">
-            <div className="row">
-              {files.order.map( id =>(
-              <div key={id} className="col-sm-6 col-md-4 col-12">
-              <ArticlesView file={files.byId[+id]}></ArticlesView>
-              <br/>
+        </div>
+        <div className="container">
+          <div className="row">
+            {files.order.map(id => (
+              <div key={id} className="col-sm-6 col-md-4 col-12 ">
+                <ArticlesView file={files.byId[+id]}></ArticlesView>
+                <br />
               </div>
-              ))}
-            </div>
+            ))}
           </div>
- 
+        </div>
 
-
-          {/* <ImagesView></ImagesView>
+        {/* <ImagesView></ImagesView>
           <VideosView></VideosView> */}
-
       </>
     );
   }
 }
 
 const mapStateToProps = ({ account, files }: IStore): IGlobalStateProps => ({
-  account, files
+  account,
+  files
 });
 
 const mapDispatchToProps: IGlobalActionProps = {

@@ -3,3 +3,16 @@
     width: 2.5rem;
     border-radius: 50%;
 }
+
+.navbarBackground{
+    height: 9vh;
+    position: fixed !important;
+    width: 100%;
+    z-index: 999;
+    background-color: #212121f0;
+    color: white;
+}
+
+.buttonColor{
+    background-color: #212121 !important;
+}

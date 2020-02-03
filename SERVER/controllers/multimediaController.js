@@ -18,14 +18,17 @@ multimediaController.createImage = (request, response) => {
   const token = request.headers.authorization.replace("Bearer ", "");
   const { id } = jwt.verify(token, myPrivateKey);
   if (token) {
-    const path = request.file.originalname;
+    console.log(request.file.filename)
+    const path = request.file.filename;
     const { title, category, type, textArea } = request.body;
     const price = request.body.price ? request.body.price : 0;
+    console.log(price)
+
     const [language] = lngDetector.detect(textArea)
     const sql =  `
     INSERT
     INTO multimedia (path, title, type, category, price, textArea, language, id)
-    VALUES('${path}', '${title}', '${type}', '${category}', '${price}', ${textArea}', '${language[0]}' ,${id});
+    VALUES('${path}', '${title}', '${type}', '${category}', '${price}', '${textArea}', '${language[0]}' ,${id});
   `
   console.log(sql)
     connection.query(sql, error => {
@@ -123,7 +126,7 @@ multimediaController.getMultimedia = (request, response) => {
 //GET ALL MULTIMEDIA FILES BY TYPE
 multimediaController.getMultimediaByType = (request, response) => {
   const { authorization } = request.headers;
-  const { type } = request.body;
+  const { type } = request.params;
   console.log(type);
   if (authorization) {
     const token = authorization.replace("Bearer ", "");

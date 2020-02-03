@@ -213,7 +213,7 @@ class UpdateProfileForm extends React.Component<TProps, IState> {
                       ></textarea>
 
                       <button
-                        className="btn btn-danger btn-block mt-3"
+                        className="btn  btn-block mt-3 buttonColor"
                         onClick={this.updateAccount}
                       >
                         Update profile
@@ -250,7 +250,7 @@ class UpdateProfileForm extends React.Component<TProps, IState> {
                           </div>
                         </div>
                         <button
-                          className="btn btn-danger btn-block mt-1 mb-2 passButton"
+                          className="btn btn-block mt-1 mb-2 buttonColor passButton"
                           onClick={this.updatePassword}
                         >
                           Update Password

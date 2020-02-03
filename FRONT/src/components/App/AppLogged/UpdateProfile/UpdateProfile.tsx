@@ -98,9 +98,9 @@ class UpdateProfile extends React.Component<TProps, IState> {
     return (
       <>
         {/* banner + avatar */}
-        <div className="container profileBackground">
-          <div className="row">
-            <div className="col-12 sharedBorder">
+        <div className="container profileBackground ">
+          <div className="row ">
+            <div className="col-12 sharedBorder mt-5">
               {!banner ? (
                 <img
                   className="banner mt-4"

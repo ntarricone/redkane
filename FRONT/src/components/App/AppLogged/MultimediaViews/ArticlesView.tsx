@@ -65,13 +65,13 @@ class ArticlesView extends React.PureComponent<TProps, IState> {
 
     return (
       <div
-        className="card"
-        // style={{ height: "38vw" }} THIS LINE MAKES THE CARDS THE SAME SIZE, DO WE WANT IT?
+        className="card animated fadeIn delay-0.5s"
+        style={{ height: "30vw"}} 
       >
         {path.includes("youtube") ? (
           <iframe
             style={{ height: "13vw" }}
-            src={path}
+            src={path + "?start=0&end=5"}
             allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
           ></iframe>
@@ -86,7 +86,9 @@ class ArticlesView extends React.PureComponent<TProps, IState> {
 
         <div className="card-body" style={{ backgroundColor: "#fafafa" }}>
           <h5 className="card-title">{file.title}</h5>
-          <p className="card-text">{textArea?.substring(0, 200) + "..."}</p>
+          <p className="card-text"
+                  style={{ minHeight: "8vh" }} 
+          >{textArea?.substring(0, 200) + "..."}</p>
 
           <div className="container-fluid">
             <div className="row"
@@ -106,7 +108,7 @@ class ArticlesView extends React.PureComponent<TProps, IState> {
 
               <div className="col-6"></div>
               <div className="col-2">
-                <i className="far fa-bookmark"></i>
+                {/* <i className="far fa-bookmark"></i> */}
                 <i className="fas fa-bookmark"></i></div>
               
               <div className="col-2">
