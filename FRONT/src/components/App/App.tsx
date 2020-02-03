@@ -13,6 +13,7 @@ import { BrowserRouter, Switch, Route } from "react-router-dom";
 import UploadArticle from "./AppLogged/UploadArticle";
 import Home from "./AppLogged/Home";
 import Navbar from "../shared/Navbar/Navbar";
+import SingleMultimedia from "./AppLogged/MultimediaViews/SingleMultimedia/SingleMultimedia";
 
 interface IProps  {
   
@@ -102,6 +103,8 @@ class App extends React.Component<TProps> {
             </Route> */}
 
             <Route exact path="/updateProfile"  component ={UpdateProfile}>
+            </Route>
+            <Route path="/singleMultimedia/:id"  component ={SingleMultimedia}>
             </Route>
             
           </Switch>

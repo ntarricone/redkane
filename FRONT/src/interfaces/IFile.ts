@@ -7,5 +7,7 @@ export interface IFile {
   price: number;
   category: string;
   textArea: string; 
+  reading_time: string;
+  view: number; //check if this peta
   id: number;
 }

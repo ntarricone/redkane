@@ -12,11 +12,12 @@ const lngDetector = new LanguageDetect();
 const myPrivateKey = "mySecretKey";
 const msg = "REQUIRED FILE IS MISSING";
 
-//CREATE IMAGE
+//CREATE MULTIMEDIA
 multimediaController.createImage = (request, response) => {
   console.log("entro");
   const token = request.headers.authorization.replace("Bearer ", "");
-  const { id } = jwt.verify(token, myPrivateKey);
+  const { id } = jwt.verify(token, myPrivateKey);l
+  
   if (token) {
     console.log(request.file.filename)
     const path = request.file.filename;
@@ -180,6 +181,8 @@ multimediaController.getOneMultimedia = (request, response) => {
   console.log(multimediaId);
   const { authorization } = request.headers;
   if (authorization) {
+    console.log("entrudis")
+
     const token = authorization.replace("Bearer ", "");
     jwt.verify(token, myPrivateKey);
     connection.query(
@@ -190,6 +193,7 @@ multimediaController.getOneMultimedia = (request, response) => {
     `,
       (error, results) => {
         if (results && results.length > 0) {
+       
           response.send(results[0]);
         } else {
           response.send(msg);
