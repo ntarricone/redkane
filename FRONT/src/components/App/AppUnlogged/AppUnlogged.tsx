@@ -20,13 +20,13 @@ class AppUnlogged extends React.PureComponent<TProps, IState>{
     this.state = {
       isVisibleRegister: false
     }
-    this.notRegister = this.notRegister.bind(this)
+    this.notRegistered = this.notRegistered.bind(this)
     
   }
 
 
-//CHANGE TO REGISTER COMPONENT
-  notRegister() {
+//CHANGE TO REGISTER/LOGIN COMPONENT
+  notRegistered() {
     this.setState(state => ({ isVisibleRegister: !state.isVisibleRegister }));
   }
 
@@ -35,24 +35,35 @@ class AppUnlogged extends React.PureComponent<TProps, IState>{
     const { isVisibleRegister } = this.state;
     return(
 
-      <div className="AppUnloggedBackground">
-    <div className="container-fluid AppUnloggedBackground">
-        <div className="container">
-        <div className="row centerForm">
-      {/* <div className="col-sm-6 col-12 "><Register></Register></div> */}
-      <div className="col-sm-6 col-12 ">
-        {!isVisibleRegister && <Login notRegister= {this.notRegister}></Login>}
-        {isVisibleRegister && <Register notRegister= {this.notRegister}></Register>}
+    //   <div className="AppUnloggedBackground ">
+    // <div className="container-fluid AppUnloggedBackground">
+    <div className="patata">
+
+
+
+  
+        <div className="container ">
+        <div className="row ">
+      <div className="col-sm-6 col-12 loginContainer container">
+        {!isVisibleRegister && <Login notRegistered= {this.notRegistered}></Login>}
+        {isVisibleRegister && <Register notRegistered= {this.notRegistered}></Register>}
         
         </div>
-      <div className="col-sm-6 col-12"><img src={logoKane} alt=""/></div>
+      <div className="col-sm-6 col-12 logo"><img src={logoKane} alt=""/></div>
     
         </div>
         </div>
+  <div className=" container-fuid appFooter static-bottom">
+  <div className="row ">
+          
+              <div className="container text-light footer-copyright">
+                 Redkane © 2020 Copyright  
+              </div>
+          </div>
+      
+  </div>
 
-
-    </div>
-    </div>
+  </div>
 
     )
   }

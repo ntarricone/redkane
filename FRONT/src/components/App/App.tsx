@@ -14,7 +14,9 @@ import UploadArticle from "./AppLogged/UploadArticle";
 import Home from "./AppLogged/Home";
 import Navbar from "../shared/Navbar/Navbar";
 
-
+interface IProps  {
+  
+}
 interface IGlobalStateProps {
   account: IAccount;
 }
@@ -23,7 +25,7 @@ interface IGlobalActionProps {
   setAccount(account: IAccount): void;
 }
 
-type TProps = IGlobalStateProps & IGlobalActionProps;
+type TProps = IGlobalStateProps & IGlobalActionProps & IProps;
 
 class App extends React.Component<TProps> {
   constructor(props: any) {
@@ -89,7 +91,7 @@ class App extends React.Component<TProps> {
       <>
 
         <BrowserRouter>
-        <Navbar></Navbar>
+        {token && <Navbar></Navbar>}
           <Switch> 
 
             <Route exact path="/">
@@ -97,16 +99,18 @@ class App extends React.Component<TProps> {
               {token && <AppLogged></AppLogged>}
             </Route>
 
-            <Route exact path="/uploadArticle">
+            {/* <Route exact path="/uploadArticle">
               <UploadArticle type={"article"} />
-            </Route>
+            </Route> */}
 
-            <Route exact path="/updateProfile">
-              <UpdateProfile></UpdateProfile>
+            <Route exact path="/updateProfile"  component ={UpdateProfile}>
             </Route>
             
           </Switch>
+    
         </BrowserRouter>
+      
+   
       </>
     );
   }

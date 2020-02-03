@@ -1,4 +1,5 @@
 import React from "react";
+import { RouteComponentProps } from "react-router-dom";
 import banner from "./banner.jpg";
 import "./UpdateProfile.css";
 import { connect } from "react-redux";
@@ -11,7 +12,11 @@ import {
   SetAccountAction
 } from "../../../../redux/actions";
 import { API_URL_IMAGES } from "../../../../constants";
+import swal from 'sweetalert';
 
+interface IProps extends RouteComponentProps {
+  
+}
 interface IGlobalStateProps {
   account: IAccount;
 }
@@ -38,7 +43,7 @@ interface IState {
   updatedMessage: string;
 }
 
-type TProps = IGlobalStateProps & IGlobalActionProps;
+type TProps = IGlobalStateProps & IGlobalActionProps & IProps;
 
 class UpdateProfile extends React.PureComponent<TProps, IState> {
   fileInputRef: React.RefObject<HTMLInputElement>;
@@ -179,8 +184,14 @@ class UpdateProfile extends React.PureComponent<TProps, IState> {
           about_me
         } = response;
         console.log("usuario actualizado");
-        this.setState({ updatedMessage: "User updated correctly" });
-        setTimeout(()=>{this.setState({ updatedMessage: "" })}, 2000);
+        swal(
+        {title: 'Updated!',
+        text: 'User updated correctly',
+        icon: "success",
+        timer: 4000
+      })
+        // this.setState({ updatedMessage: "User updated correctly" });
+        // setTimeout(()=>{this.setState({ updatedMessage: "" })}, 2000);
         setAccount({
           name,
           surname,
@@ -201,7 +212,7 @@ class UpdateProfile extends React.PureComponent<TProps, IState> {
           updatedMessage: "Error updating details, please try again"
         });
       }
-    });
+    })
   }
 
   render() {

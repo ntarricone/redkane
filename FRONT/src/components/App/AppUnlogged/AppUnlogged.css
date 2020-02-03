@@ -1,6 +1,6 @@
 .centerForm{
     height: 30rem;
-    align-items: center;
+    /* align-items: center; */
 }
 
 .AppUnloggedBackground{
@@ -10,3 +10,35 @@
     /* background-image: url("../../../journalism.jpg") ; */
     background-size: cover;
 }
+
+.logo {
+    margin-top: 45px;
+}
+
+.loginContainer {
+    padding-top: 55px;
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+}
+
+.patata {
+    height: 97vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.appFooter {
+    background-color:  #212121;
+    width: 99%;
+    height: 30px;
+  
+  } 
+  
+  .footer-copyright{
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    font-size: small;
+  }

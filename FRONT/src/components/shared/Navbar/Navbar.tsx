@@ -5,6 +5,7 @@ import { IAccount } from "../../../interfaces/IAccount";
 import "./Navbar.css";
 import { LogoutAction } from "../../../redux/actions";
 import { Link } from "react-router-dom";
+import logoKane2 from './logoKane2.png'
 
 interface IGlobalStateProps {
   account: IAccount | null;
@@ -35,8 +36,8 @@ class Navbar extends React.PureComponent<TProps> {
     return (
       <>
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
-          <a className="navbar-brand" href="#">
-            Navbar w/ text
+          <a className="navbar-brand" >
+          <img src={logoKane2} alt=""style={{width:"140px", height:"35px"}}/>
           </a>
           <button
             className="navbar-toggler"
