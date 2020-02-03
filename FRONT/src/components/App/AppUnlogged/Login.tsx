@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 import "./Login.css";
 
 interface IProps {
-  notRegister():void
+  notRegistered():void
 }
 
 interface IGlobalActionProps {
@@ -61,7 +61,7 @@ class Login extends React.PureComponent<TProps, IState> {
     }).then(json => {
       if (json) {
         console.log(json)
-        const { token, avatar, banner, surname, profession, about_me, name, youtube, linkedin } = json;
+        const { token, avatar, banner, name, surname, profession, about_me, youtube, linkedin } = json;
         localStorage.setItem("token", token);
         localStorage.setItem("avatar", avatar);
         setAccount(generateAccountFromToken({token, avatar, banner, name, surname, profession, about_me, youtube, linkedin}));
@@ -75,14 +75,13 @@ class Login extends React.PureComponent<TProps, IState> {
 
   render() {
     const { email, password } = this.state;
-    const { notRegister } = this.props;
+    const { notRegistered } = this.props;
     return (
       <>
-            <div className="container animated bounceInLeft delay-0.5s slow">
-              <div className="row centered-form">
-                <div className="card loginCard">
+            
+                <div className="card loginCard  animated bounceInLeft delay-0.5s slow">
                   <div className="card-body">
-                    <h3>Sign In</h3>
+                    <h3>Login</h3>
                     <div className="form-group">
                       <label>Email address</label>
                       <input
@@ -113,12 +112,11 @@ class Login extends React.PureComponent<TProps, IState> {
                       Login
                     </button>
                     <p className="forgot-password text-right">
-                      Don't have an account? <a href="#" onClick={() =>notRegister()}>register!</a>
+                      Don't have an account? <a href="#" onClick={() =>notRegistered()}>register!</a>
                     </p>
                   </div>
                 </div>
-              </div>
-            </div>
+             
       </>
     );
   }

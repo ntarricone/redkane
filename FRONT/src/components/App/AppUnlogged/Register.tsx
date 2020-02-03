@@ -6,7 +6,7 @@ import { IAccount } from "../../../interfaces/IAccount";
 import "./Register.css";
 
 interface IProps {
-  notRegister():void
+  notRegistered():void
 }
 
 interface IGlobalActionProps {
@@ -123,13 +123,11 @@ class Register extends React.PureComponent<TProps, IState> {
 
   render() {
     const { name, surname, email, password, passwordControl } = this.state;
-    const { notRegister } = this.props;
+    const { notRegistered } = this.props;
     return (
-      <div className="container animated bounceInLeft delay-0.5s slow">
-        <div className="row centered-form">
-          <div className="card registerCard">
+          <div className="card registerCard  animated bounceInLeft delay-0.5s slow">
             <div className="card-body">
-              <h3>Sign up</h3>
+              <h3>Register</h3>
               <div className="row">
                 <div className="col-xs-6 col-sm-6 col-md-6">
                   <div className="form-group">
@@ -208,12 +206,10 @@ class Register extends React.PureComponent<TProps, IState> {
                 Register
               </button>
               <p className="forgot-password text-right">
-                Already have an account? <a href="#" onClick={() =>notRegister()}>Login!</a>
+                Already have an account? <a href="#" onClick={() =>notRegistered()}>Login!</a>
               </p>
             </div>
           </div>
-        </div>
-      </div>
     );
   }
 }

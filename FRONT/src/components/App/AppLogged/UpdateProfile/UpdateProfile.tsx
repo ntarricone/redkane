@@ -9,6 +9,7 @@ import { API_URL_IMAGES } from "../../../../constants";
 import UpdateProfileForm from "./UpdateProfileForm";
 import UserArticles from "./UserArticles";
 
+
 interface IGlobalStateProps {
   account: IAccount;
 }
@@ -89,6 +90,8 @@ class UpdateProfile extends React.Component<TProps, IState> {
       this.fileInputRef.current.value = "";
     }
   }
+
+ 
 
   render() {
     const { account } = this.props;
