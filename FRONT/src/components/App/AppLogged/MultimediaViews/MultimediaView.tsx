@@ -10,6 +10,7 @@ import {
 import { myFetch } from "../../../../utils";
 import "./MultimediaView.css";
 import { Link } from "react-router-dom";
+import ReactHtmlParser from "react-html-parser";
 
 interface IGlobalStateProps {}
 
@@ -54,20 +55,16 @@ class ArticlesView extends React.PureComponent<TProps, IState> {
       })}
     );
   }
-  //TODO - SEE IF WE CAN MAKE THIS WORK
-  // truncateText(text, length) {
-  //   if (text.length <= length) {
-  //     return text;
-  //   }
-
-  //   return text.substr(0, length) + '\u2026'
-  // }
 
   render() {
     const { file } = this.props;
-    const { textArea, path, multimediaId } = file;
+    const { textArea, path, multimediaId, type } = file;
     const { name, surname, avatar, userId } = this.state;
-
+    let textito = textArea?.substr(0,200)
+    console.log("textitooooo" + textito);
+    let texto: any = ReactHtmlParser(`'${textito}'`);
+    console.log("textoooo" + texto);
+    
     return (
       <div
         className="card animated fadeIn delay-0.5s"
@@ -92,11 +89,15 @@ class ArticlesView extends React.PureComponent<TProps, IState> {
         <div className="card-body" style={{ backgroundColor: "#fafafa" }}>
           <Link to={`/singleMultimedia/${multimediaId}`}>
           <h5 className="card-title text-dark webLinks" >{file.title}</h5>
-
-          <p className="card-text text-dark "
-                  style={{ minHeight: "8vh" }} 
-          >{textArea?.substring(0, 200) + "..."}</p>
           </Link>
+          
+         {/* //ADD A VARIABLE TO ADD THE TEXT AS A STRING AND THEN CROP  */}
+             <p className="card-text text-dark"
+             style={{ minHeight: "8vh" }} 
+             > {}</p>:
+        
+
+
           <div className="container-fluid">
             <div className="row"
             style={{ fontSize: "1.5rem" }}>

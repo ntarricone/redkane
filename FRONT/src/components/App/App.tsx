@@ -98,9 +98,9 @@ class App extends React.Component<TProps> {
               {token && <AppLogged></AppLogged>}
             </Route>
 
-            {/* <Route exact path="/uploadArticle">
+            <Route exact path="/uploadArticle">
               <UploadArticle type={"article"} />
-            </Route> */}
+            </Route>
 
             <Route exact path="/updateProfile"  component ={UpdateProfile}>
             </Route>
