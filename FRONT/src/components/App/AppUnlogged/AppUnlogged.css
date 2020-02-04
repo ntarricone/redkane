@@ -22,7 +22,7 @@
     align-items: center;
 }
 
-.patata {
+.unloggedContainer {
     height: 97vh;
     display: flex;
     flex-direction: column;

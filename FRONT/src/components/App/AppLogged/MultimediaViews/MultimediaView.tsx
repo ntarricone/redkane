@@ -8,7 +8,7 @@ import {
   API_URL_IMAGES
 } from "../../../../constants";
 import { myFetch } from "../../../../utils";
-import "./ArticlesView.css";
+import "./MultimediaView.css";
 
 interface IGlobalStateProps {}
 

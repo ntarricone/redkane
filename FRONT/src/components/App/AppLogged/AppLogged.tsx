@@ -13,7 +13,7 @@ class AppLogged extends React.PureComponent<TProps>{
   render(){
     return(
       <>
-
+      
       <Home></Home>
    
     

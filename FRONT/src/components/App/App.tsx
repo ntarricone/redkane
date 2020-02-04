@@ -9,10 +9,11 @@ import { generateAccountFromToken, myFetch } from "../../utils";
 import AppLogged from "./AppLogged/AppLogged";
 import UpdateProfile from "./AppLogged/UpdateProfile/UpdateProfile";
 import { decode } from "jsonwebtoken";
-import { BrowserRouter, Switch, Route } from "react-router-dom";
+import { BrowserRouter, Switch, Route, Router } from "react-router-dom";
 import UploadArticle from "./AppLogged/UploadArticle";
 import Home from "./AppLogged/Home";
 import Navbar from "../shared/Navbar/Navbar";
+import history from "../../history"
 
 interface IProps  {
   
@@ -88,7 +89,7 @@ class App extends React.Component<TProps> {
     return (
       <>
 
-        <BrowserRouter>
+        <Router history={history}>
         {token && <Navbar></Navbar>}
           <Switch> 
 
@@ -97,16 +98,15 @@ class App extends React.Component<TProps> {
               {token && <AppLogged></AppLogged>}
             </Route>
 
-            {/* <Route exact path="/uploadArticle">
-              <UploadArticle type={"article"} />
-            </Route> */}
+            <Route exact path="/uploadArticle" component={UploadArticle} >
+            </Route>
 
             <Route exact path="/updateProfile"  component ={UpdateProfile}>
             </Route>
             
           </Switch>
     
-        </BrowserRouter>
+        </Router>
       
    
       </>
