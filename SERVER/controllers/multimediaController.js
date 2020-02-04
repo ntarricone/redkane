@@ -13,35 +13,36 @@ const myPrivateKey = "mySecretKey";
 const msg = "REQUIRED FILE IS MISSING";
 
 //CREATE MULTIMEDIA
-multimediaController.createImage = (request, response) => {
+multimediaController.createMultimedia = (request, response) => {
   console.log("entro");
   const token = request.headers.authorization.replace("Bearer ", "");
-  const { id } = jwt.verify(token, myPrivateKey);l
+  const { id } = jwt.verify(token, myPrivateKey);
   
   if (token) {
     console.log(request.file.filename)
     const path = request.file.filename;
     const { title, category, type, textArea } = request.body;
     const price = request.body.price ? request.body.price : 0;
-    console.log(price)
+    // console.log(price)
 
-    const [language] = lngDetector.detect(textArea)
+    // const [language] = lngDetector.detect(textArea)
     const sql =  `
     INSERT
     INTO multimedia (path, title, type, category, price, textArea, language, id)
-    VALUES('${path}', '${title}', '${type}', '${category}', '${price}', '${textArea}', '${language[0]}' ,${id});
+    VALUES('${path}', '${title}', '${type}', '${category}', '${price}', '${textArea}', 'english' ,${id});
   `
   console.log(sql)
-    connection.query(sql, error => {
+    connection.query(sql, (error, results) => {
         if (error) {
           console.log(error);
           response.sendStatus(400);
         } else {
+          console.log(results.insertId)
           connection.query(
             `
             SELECT *
             FROM multimedia
-            WHERE path = '${path}'
+            WHERE multimediaId = '${id}'
           `,
             (error, results) => {
               if (error) {
