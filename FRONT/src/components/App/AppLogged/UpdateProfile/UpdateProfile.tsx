@@ -4,25 +4,30 @@ import { connect } from "react-redux";
 import { IStore } from "../../../../interfaces/IStore";
 import { IAccount } from "../../../../interfaces/IAccount";
 import { myFetch } from "../../../../utils";
-import { SetBannerAction, SetAvatarAction } from "../../../../redux/actions";
+import { SetBannerAction, SetAvatarAction, SetFilesAction } from "../../../../redux/actions";
 import { API_URL_IMAGES } from "../../../../constants";
 import UpdateProfileForm from "./UpdateProfileForm";
 import UserArticles from "./UserArticles";
+import { IFiles } from "../../../../interfaces/IFiles";
+import { IFile } from "../../../../interfaces/IFile";
 
 
 interface IGlobalStateProps {
   account: IAccount;
+  files: IFiles;
 }
 
 interface IGlobalActionProps {
   setBanner(banner: string): void;
   setAvatar(banner: string): void;
+  setFiles(files: IFile[]): void;
 }
 
 interface IState {
   banner: string;
   avatarChosen: string;
   toggleContent: "edit" | "articles";
+  // type: "" | "article" | "image" | "video";
 }
 
 type TProps = IGlobalStateProps & IGlobalActionProps;
@@ -36,7 +41,7 @@ class UpdateProfile extends React.Component<TProps, IState> {
     this.state = {
       banner: "",
       avatarChosen: "",
-      toggleContent: "edit"
+      toggleContent: "articles"
     };
 
     this.fileInputRef = React.createRef();
@@ -94,7 +99,7 @@ class UpdateProfile extends React.Component<TProps, IState> {
  
 
   render() {
-    const { account } = this.props;
+    const { account, files } = this.props;
     const { avatar, banner } = account;
     const { toggleContent } = this.state;
 
@@ -182,8 +187,15 @@ class UpdateProfile extends React.Component<TProps, IState> {
               />
             </div>
 
+            
+            {toggleContent === "articles" && files.order.map(id => (
+              <div key={id} className="col-sm-6 col-md-4 col-12 ">
+                <UserArticles file={files.byId[+id]}></UserArticles>
+                <br />
+              </div>
+            ))}
             {toggleContent === "edit" && <UpdateProfileForm ></UpdateProfileForm>}
-           {toggleContent === "articles" && <UserArticles></UserArticles>}
+           {/* {toggleContent === "articles" && <UserArticles></UserArticles>} */}
            {/* TODO - add images and movies */}
           </div>
         </div>
@@ -192,13 +204,15 @@ class UpdateProfile extends React.Component<TProps, IState> {
   }
 }
 
-const mapStateToProps = ({ account }: IStore): IGlobalStateProps => ({
-  account
+const mapStateToProps = ({ account, files }: IStore): IGlobalStateProps => ({
+  account,
+  files
 });
 
 const mapDispatchToProps: IGlobalActionProps = {
   setBanner: SetBannerAction,
-  setAvatar: SetAvatarAction
+  setAvatar: SetAvatarAction,
+  setFiles: SetFilesAction
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(UpdateProfile);

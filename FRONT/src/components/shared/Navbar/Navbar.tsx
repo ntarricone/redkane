@@ -6,8 +6,10 @@ import "./Navbar.css";
 import { LogoutAction } from "../../../redux/actions";
 import { Link } from "react-router-dom";
 import { API_URL_IMAGES } from "../../../constants";
+import { Router } from "react-router-dom";
+import history from "../../../history";
 
-
+interface IProps {}
 interface IGlobalStateProps {
   account: IAccount | null;
 }
@@ -16,7 +18,7 @@ interface IGlobalActionProps {
   logout(): void;
 }
 
-type TProps = IGlobalStateProps & IGlobalActionProps;
+type TProps = IGlobalStateProps & IGlobalActionProps & IProps;
 
 class Navbar extends React.PureComponent<TProps> {
   constructor(props: TProps) {
@@ -30,19 +32,22 @@ class Navbar extends React.PureComponent<TProps> {
     localStorage.removeItem("token");
     localStorage.removeItem("avatar");
     logout();
-    
+    history.push("/");
   }
   render() {
     const { account } = this.props;
     return (
       <>
-        <nav 
-        style={{height: "7vh"}}
-        className="navbar navbar-expand-lg navbar-light navbarBackground">
+        <nav
+          style={{ height: "7vh" }}
+          className="navbar navbar-expand-lg navbar-light navbarBackground"
+        >
           <Link to="/" className="navbar-brand" href="#">
-            <img 
-            style={{height: "6vh"}}
-            src={API_URL_IMAGES + "logoKane2.png"} alt=""/>
+            <img
+              style={{ height: "6vh" }}
+              src={API_URL_IMAGES + "logoKane2.png"}
+              alt=""
+            />
           </Link>
           <button
             className="navbar-toggler"
@@ -59,14 +64,12 @@ class Navbar extends React.PureComponent<TProps> {
             <ul className="navbar-nav mr-auto"></ul>
             <div className="dropdown">
               <img
-              style={{height: "6vh", width: "3vw", borderRadius: "50%"}}
+                style={{ height: "6vh", width: "3vw", borderRadius: "50%" }}
                 data-toggle="dropdown"
                 aria-haspopup="true"
                 aria-expanded="false"
                 src={API_URL_IMAGES + account?.avatar}
-              >
-                
-              </img>
+              ></img>
               {/* <img
                 className="avatar"
                 src={account?.avatar}
@@ -75,21 +78,24 @@ class Navbar extends React.PureComponent<TProps> {
                 aria-haspopup="true"
                 aria-expanded="false"
               /> TODO - ADD IMG*/}
-              <div
-                className="dropdown-menu"
-                aria-labelledby="dropdownMenuButton"
-              >
-                <a className="dropdown-item" href="">
-                  Action
-                </a>
-                <Link className="dropdown-item" to="/updateProfile">
+              <div className="dropdown" aria-labelledby="dropdownMenuButton">
+              <div className="dropdown-content">
+                <div>
+                <a href="">Action</a>
+                </div>
+                <div>
+                <Link to="/updateProfile">
                   {!account?.avatar ? <span>***</span> : ""}
                   Update your profile
                   {/* TODO - add red asterix if avatar doesn´t exist */}
                 </Link>
-                <a className="dropdown-item" href="" onClick={this.logout}>
+                </div>
+                <div>
+                <a href="" onClick={this.logout}>
                   Logout
                 </a>
+                </div>
+                </div>
               </div>
             </div>
           </div>

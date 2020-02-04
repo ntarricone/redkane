@@ -37,7 +37,7 @@ class AppUnlogged extends React.PureComponent<TProps, IState>{
 
     //   <div className="AppUnloggedBackground ">
     // <div className="container-fluid AppUnloggedBackground">
-    <div className="patata">
+    <div className="unloggedContainer">
 
 
 

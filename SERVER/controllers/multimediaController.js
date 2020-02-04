@@ -100,6 +100,28 @@ multimediaController.createVideo = (request, response) => {
   }
 };
 
+//CREATE ARTICLE
+multimediaController.createEditor = (request, response) => {
+  console.log("entro");
+  
+    const { title, category, type, textArea, path } = request.body;
+    
+    console.log(request.body.title);
+    connection.query(
+      `
+    INSERT
+    INTO editor (textArea)
+    VALUES('${textArea}')
+  `,
+      error => {
+        if (error) {
+          console.log(error);
+          response.sendStatus(400);
+        }
+      }
+    )
+    }
+
 //GET ALL MULTIMEDIA
 multimediaController.getMultimedia = (request, response) => {
   const { authorization } = request.headers;
@@ -148,8 +170,8 @@ multimediaController.getMultimediaByType = (request, response) => {
   }
 };
 
-// GET ALL MULTIMEDIA FILES BY USER. ID FROM PARAMS!
-multimediaController.getMultimediaByUser = (request, response) => {
+// GET ALL MULTIMEDIA FILES BY USER AND TYPE. ID FROM PARAMS!
+multimediaController.getMultimediaByUserAndType = (request, response) => {
   const { id } = request.params;
   const { authorization } = request.headers;
   console.log("id" + id);
@@ -160,7 +182,7 @@ multimediaController.getMultimediaByUser = (request, response) => {
       `
     SELECT *
     FROM multimedia
-    WHERE id = '${id}'
+    WHERE type = '${type}' AND id = '${id}'
     `,
       (error, [results]) => {
         if (error) {

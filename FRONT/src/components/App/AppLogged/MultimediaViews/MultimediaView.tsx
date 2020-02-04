@@ -1,23 +1,18 @@
 import React from "react";
-import "./UpdateProfile.css";
 import { connect } from "react-redux";
 import { IStore } from "../../../../interfaces/IStore";
-import { IAccount } from "../../../../interfaces/IAccount";
-import { myFetch } from "../../../../utils";
-import { SetBannerAction, SetAvatarAction } from "../../../../redux/actions";
-import { API_URL_IMAGES } from "../../../../constants";
-import UpdateProfileForm from "./UpdateProfileForm";
 import { IFile } from "../../../../interfaces/IFile";
-import { IFiles } from "../../../../interfaces/IFiles";
+import {
+  API_URL,
+  API_URL_MULTIMEDIA,
+  API_URL_IMAGES
+} from "../../../../constants";
+import { myFetch } from "../../../../utils";
+import "./MultimediaView.css";
 
-interface IGlobalStateProps {
-  account: IAccount;
-  files: IFiles;
-}
+interface IGlobalStateProps {}
 
-interface IGlobalActionProps {
-
-}
+interface IGlobalActionProps {}
 
 interface IProps {
   file: IFile;
@@ -29,36 +24,66 @@ interface IState {
   avatar: string;
 }
 
-type TProps = IGlobalStateProps & IGlobalActionProps & IProps;
+type TProps = IProps & IGlobalStateProps & IGlobalActionProps;
 
-class UserArticles extends React.Component<TProps, IState> {
-
+class ArticlesView extends React.PureComponent<TProps, IState> {
   constructor(props: TProps) {
     super(props);
-
 
     this.state = {
       name: "",
       surname: "",
       avatar: ""
-
     };
-
-
   }
+  //setting card owner´s details
+  componentDidMount() {
+    const { file } = this.props;
+    const { id } = file;
+    const token: any = localStorage.getItem("token");
+    myFetch({ path: `/users/${id}`, token }).then(user =>
+      this.setState({
+        name: user.name,
+        surname: user.surname,
+        avatar: user.avatar
+      })
+    );
+  }
+  //TODO - SEE IF WE CAN MAKE THIS WORK
+  // truncateText(text, length) {
+  //   if (text.length <= length) {
+  //     return text;
+  //   }
 
+  //   return text.substr(0, length) + '\u2026'
+  // }
 
   render() {
-    const { account, file } = this.props;
+    const { file } = this.props;
     const { textArea, path } = file;
     const { name, surname, avatar } = this.state;
 
     return (
-      <>
-       <div
+      <div
         className="card animated fadeIn delay-0.5s"
         style={{ height: "30vw"}} 
       >
+        {path.includes("youtube") ? (
+          <iframe
+            style={{ height: "13vw" }}
+            src={path + "?start=0&end=5"}
+            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          ></iframe>
+        ) : (
+          <img
+            className="card-img-top"
+            style={{ height: "13vw" }}
+            src={`${API_URL_MULTIMEDIA}${path}`}
+            alt="Card image cap"
+          />
+        )}
+
         <div className="card-body" style={{ backgroundColor: "#fafafa" }}>
           <h5 className="card-title">{file.title}</h5>
           <p className="card-text"
@@ -98,19 +123,12 @@ class UserArticles extends React.Component<TProps, IState> {
           </p>
         </div>
       </div>
-
-      </>
     );
   }
 }
 
-const mapStateToProps = ({ account, files }: IStore): IGlobalStateProps => ({
-  account,
-  files
+const mapStateToProps = ({ account }: IStore): IGlobalStateProps => ({
+  account
 });
 
-const mapDispatchToProps: IGlobalActionProps = {
-
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(UserArticles);
+export default connect(mapStateToProps)(ArticlesView);
