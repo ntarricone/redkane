@@ -9,6 +9,8 @@ import {
 } from "../../../../constants";
 import { myFetch } from "../../../../utils";
 import "./MultimediaView.css";
+import { Link } from "react-router-dom";
+import ReactHtmlParser from "react-html-parser";
 
 interface IGlobalStateProps {}
 
@@ -22,6 +24,7 @@ interface IState {
   name: string;
   surname: string;
   avatar: string;
+  userId: number | null;
 }
 
 type TProps = IProps & IGlobalStateProps & IGlobalActionProps;
@@ -33,7 +36,8 @@ class ArticlesView extends React.PureComponent<TProps, IState> {
     this.state = {
       name: "",
       surname: "",
-      avatar: ""
+      avatar: "",
+      userId: null
     };
   }
   //setting card owner´s details
@@ -41,32 +45,30 @@ class ArticlesView extends React.PureComponent<TProps, IState> {
     const { file } = this.props;
     const { id } = file;
     const token: any = localStorage.getItem("token");
-    myFetch({ path: `/users/${id}`, token }).then(user =>
+    myFetch({ path: `/users/${id}`, token }).then(user =>{
+      console.log(user)
       this.setState({
         name: user.name,
         surname: user.surname,
-        avatar: user.avatar
-      })
+        avatar: user.avatar,
+        userId: user.id
+      })}
     );
   }
-  //TODO - SEE IF WE CAN MAKE THIS WORK
-  // truncateText(text, length) {
-  //   if (text.length <= length) {
-  //     return text;
-  //   }
-
-  //   return text.substr(0, length) + '\u2026'
-  // }
 
   render() {
     const { file } = this.props;
-    const { textArea, path } = file;
-    const { name, surname, avatar } = this.state;
-
+    const { textArea, path, multimediaId, type } = file;
+    const { name, surname, avatar, userId } = this.state;
+    let textito = textArea?.substr(0,200)
+    console.log("textitooooo" + textito);
+    let texto: any = ReactHtmlParser(`'${textito}'`);
+    console.log("textoooo" + texto);
+    
     return (
       <div
         className="card animated fadeIn delay-0.5s"
-        style={{ height: "30vw"}} 
+        // style={{ height: "30vw"}} 
       >
         {path.includes("youtube") ? (
           <iframe
@@ -85,10 +87,16 @@ class ArticlesView extends React.PureComponent<TProps, IState> {
         )}
 
         <div className="card-body" style={{ backgroundColor: "#fafafa" }}>
-          <h5 className="card-title">{file.title}</h5>
-          <p className="card-text"
-                  style={{ minHeight: "8vh" }} 
-          >{textArea?.substring(0, 200) + "..."}</p>
+          <Link to={`/singleMultimedia/${multimediaId}`}>
+          <h5 className="card-title text-dark webLinks" >{file.title}</h5>
+          </Link>
+          
+         {/* //ADD A VARIABLE TO ADD THE TEXT AS A STRING AND THEN CROP  */}
+             <p className="card-text text-dark"
+             style={{ minHeight: "8vh" }} 
+             > {}</p>:
+        
+
 
           <div className="container-fluid">
             <div className="row"

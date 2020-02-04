@@ -1,0 +1,11 @@
+.multimediaAvatar{
+    width: 75%;
+    height: 7vh;
+    border-radius: 50%
+}
+
+.iconsDisplay{
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-evenly;
+}
