@@ -1,8 +1,6 @@
 import React from "react";
 import ContentUploader from "../../shared/ContentUploader/ContentUploader";
-import ArticlesView from "./MultimediaViews/ArticlesView";
-import ImagesView from "./MultimediaViews/ImagesView";
-import VideosView from "./MultimediaViews/VideosView";
+import ArticlesView from "./MultimediaViews/MultimediaView";
 import Filter from "../../shared/Filter/Filter";
 import { IAccount } from "../../../interfaces/IAccount";
 import { connect } from "react-redux";
@@ -11,6 +9,7 @@ import { SetFilesAction } from "../../../redux/actions";
 import { IFile } from "../../../interfaces/IFile";
 import { myFetch } from "../../../utils";
 import { IFiles } from "../../../interfaces/IFiles";
+import MultimediaView from "./MultimediaViews/MultimediaView";
 
 interface IGlobalStateProps {
   account: IAccount;
@@ -122,7 +121,7 @@ class Home extends React.PureComponent<TProps, IState> {
           <div className="row">
             {files.order.map(id => (
               <div key={id} className="col-sm-6 col-md-4 col-12 ">
-                <ArticlesView file={files.byId[+id]}></ArticlesView>
+                <MultimediaView file={files.byId[+id]}></MultimediaView>
                 <br />
               </div>
             ))}
