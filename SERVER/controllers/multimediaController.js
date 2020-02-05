@@ -52,7 +52,6 @@ multimediaController.createArticle = (request, response) => {
             } else {
               const [file] = results;
               response.send(file);
-              
             }
           }
         );
@@ -75,7 +74,7 @@ multimediaController.createImage = (request, response) => {
     const price = request.body.price ? request.body.price : 0;
     // console.log(price)
 
-    const [language] = lngDetector.detect(description)
+    const [language] = lngDetector.detect(description);
     const sql = `
     INSERT
     INTO multimedia (path, title, type, category, price, description, language, id)
@@ -119,7 +118,7 @@ multimediaController.createVideo = (request, response) => {
     const { title, category, type, description, path } = request.body;
     const price = request.body.price ? request.body.price : 0;
     console.log(request.body.title);
-    const [language] = lngDetector.detect(description)
+    const [language] = lngDetector.detect(description);
     connection.query(
       `
     INSERT
@@ -154,27 +153,7 @@ multimediaController.createVideo = (request, response) => {
   }
 };
 
-//CREATE ARTICLE
-multimediaController.createEditor = (request, response) => {
-  console.log("entro");
 
-  const { title, category, type, textArea, path } = request.body;
-
-  console.log(request.body.title);
-  connection.query(
-    `
-    INSERT
-    INTO editor (textArea)
-    VALUES('${textArea}')
-  `,
-    error => {
-      if (error) {
-        console.log(error);
-        response.sendStatus(400);
-      }
-    }
-  );
-};
 
 //GET ALL MULTIMEDIA
 multimediaController.getMultimedia = (request, response) => {
@@ -226,7 +205,6 @@ multimediaController.getMultimediaByType = (request, response) => {
 
 // GET ALL MULTIMEDIA FILES BY USER AND TYPE. ID FROM PARAMS!
 multimediaController.getMultimediaByUserAndType = (request, response) => {
-  
   const { id } = request.params;
   const { type } = request.body;
   const { authorization } = request.headers;
@@ -254,7 +232,6 @@ multimediaController.getMultimediaByUserAndType = (request, response) => {
 
 //OPEN SINGLE MULTIMEDIA
 multimediaController.getOneMultimedia = (request, response) => {
-  console.log("entrudiiiiiiiis")
   const { multimediaId } = request.params;
   console.log(multimediaId);
   const { authorization } = request.headers;
@@ -278,12 +255,19 @@ multimediaController.getOneMultimedia = (request, response) => {
   }
 };
 
-//EDIT MULTIMEDIA.
-// TODO MULTER
-multimediaController.editMultimedia = (request, response) => {
+//Update Article.
+
+multimediaController.updateArticle = (request, response) => {
   const { multimediaId } = request.params;
-  const { path, title, type, price, category } = request.body;
-  console.log(multimediaId);
+  const { title, category, description } = request.body;
+  let path = "";
+  if (request.file){
+     path = request.file.filename
+  }else{
+     path = request.body.path;
+  }
+  const textArea = request.body.textArea? request.body.textArea: "";
+  const price = request.body.price ? request.body.price : 0;
   const { authorization } = request.headers;
   if (authorization) {
     const token = authorization.replace("Bearer ", "");
@@ -291,11 +275,15 @@ multimediaController.editMultimedia = (request, response) => {
     connection.query(
       `
     UPDATE 
-    multimedia SET path ='${path}', title = '${title}', type = '${type}', price = '${price}', category = '${category}'
+    multimedia SET path ='${path}', title = '${title}',
+    textArea = '${textArea}',
+    price = '${price}', category = '${category}',
+    description = '${description}'
     WHERE multimediaId = '${multimediaId}'
     `,
       (error, results) => {
         if (error) {
+          console.log(error)
           return response.sendStatus(400);
         } else {
           connection.query(

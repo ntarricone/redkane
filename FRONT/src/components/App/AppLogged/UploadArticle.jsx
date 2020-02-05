@@ -6,7 +6,6 @@ import history from "../../../history";
 import { connect } from "react-redux";
 import { SetChosenFileAction } from "../../../redux/actions";
 import { API_URL_MULTIMEDIA } from "../../../constants";
-import ReactHtmlParser from "react-html-parser";
 
 class UploadArticle extends React.PureComponent {
   id_multimedia = history.location.pathname.split("/").slice(-1)[0];
@@ -19,12 +18,14 @@ class UploadArticle extends React.PureComponent {
       title: "",
       price: "",
       category: "",
-      path: ""
+      path: "",
+      type: ""
     };
 
     this.fileInputRef = React.createRef();
     this.onEditorChange = this.onEditorChange.bind(this);
     this.uploadFile = this.uploadFile.bind(this);
+    this.updateFile = this.updateFile.bind(this);
     this.setFile = this.setFile.bind(this);
   }
 
@@ -48,7 +49,8 @@ class UploadArticle extends React.PureComponent {
         price,
         category,
         description,
-        textArea
+        textArea,
+        type
       } = this.props.files.chosenFile;
       this.setState({
         title,
@@ -56,7 +58,8 @@ class UploadArticle extends React.PureComponent {
         price,
         category,
         description,
-        data: textArea
+        data: textArea,
+        type
       });
     } else {
       setTimeout(
@@ -72,7 +75,8 @@ class UploadArticle extends React.PureComponent {
                 price,
                 category,
                 description,
-                textArea
+                textArea,
+                type
               } = file;
               this.setState({
                 title,
@@ -80,12 +84,13 @@ class UploadArticle extends React.PureComponent {
                 price,
                 category,
                 description,
-                data: textArea
+                data: textArea,
+                type
               });
               this.props.setChosenFile(file);
             }
           }),
-        300
+        500
       );
     }
   }
@@ -93,10 +98,7 @@ class UploadArticle extends React.PureComponent {
   uploadFile() {
     const initialState = { title: "", price: "", category: "", data: "" };
     const textArea = this.state.data;
-    const title = this.state.title;
-    const price = this.state.price;
-    const category = this.state.category;
-    const description = this.state.description;
+    const { title, price, category, description } = this.state;
     const token = localStorage.getItem("token");
 
     if (this.fileInputRef.current?.files?.length) {
@@ -138,69 +140,83 @@ class UploadArticle extends React.PureComponent {
 
   updateFile() {
     const initialState = { title: "", price: "", category: "", data: "" };
-    console.log(this.state)
-    // const textArea = this.state.data;
-    // const title = this.state.title;
-    // const price = this.state.price;
-    // const category = this.state.category;
-    // const description = this.state.description;
-    // const token = localStorage.getItem("token");
+    const textArea = this.state.data;
+    const { title, price, category, description, path } = this.state;
+    const token = localStorage.getItem("token");
 
-    // if (this.fileInputRef.current?.files?.length) {
-    //   const path = this.fileInputRef.current.files[0];
-    //   const formData = new FormData();
-    //   formData.append("file", path);
-    //   formData.append("title", title);
-    //   formData.append("type", "article");
-    //   formData.append("price", price);
-    //   formData.append("category", category);
-    //   formData.append("textArea", textArea);
-    //   formData.append("description", description);
-    //   console.log(formData);
+    if (this.fileInputRef.current?.files?.length) {
+      const path = this.fileInputRef.current.files[0];
+      const formData = new FormData();
+      formData.append("file", path);
+      formData.append("title", title);
+      formData.append("type", "article");
+      formData.append("price", price);
+      formData.append("category", category);
+      formData.append("textArea", textArea);
+      formData.append("description", description);
+      console.log(formData);
 
-    //   myFetch({
-    //     method: "POST",
-    //     path: "/multimedia/createArticle",
-    //     token,
-    //     formData
-    //   }).then(file => {
-    //     if (file) {
-    //       swal({
-    //         title: "Success!",
-    //         text: "Your article was uploaded",
-    //         icon: "success",
-    //         timer: 4000
-    //       });
-    //       console.log(file);
-    //       this.setState(initialState);
-    //       this.fileInputRef.current.value = "";
-    //       this.props.setChosenFile(file);
-    //       history.push(`/singleMultimedia/${file.multimediaId}`);
-    //     }
-    //   });
-    // } else {
-    //   window.alert("Please insert an image");
-    // }
+      myFetch({
+        method: "POST",
+        path: `/multimedia/update/${this.id_multimedia}`,
+        token,
+        formData
+      }).then(file => {
+        if (file) {
+          swal({
+            title: "Success!",
+            text: "Your article was uploaded",
+            icon: "success",
+            timer: 4000
+          });
+          console.log(file);
+          this.setState(initialState);
+          this.fileInputRef.current.value = "";
+          this.props.setChosenFile(file);
+          history.push(`/singleMultimedia/${file.multimediaId}`);
+        }
+      });
+    } else {
+      myFetch({
+        path: `/multimedia/update/${this.id_multimedia}`,
+        method: "POST",
+        json: { title, price, category, description, textArea, path },
+        token
+      }).then(file => {
+        console.log(file);
+        if (file) {
+          swal({
+            title: "Success!",
+            text: "Your article was updated",
+            icon: "success",
+            timer: 4000
+          });
+          console.log(file);
+          this.setState(initialState);
+          this.props.setChosenFile(file);
+          history.push(`/singleMultimedia/${file.multimediaId}`);
+        }
+      });
+    }
   }
 
   onEditorChange(evt) {
     this.setState({
       data: evt.editor.getData()
     });
-    console.log(this.state.data);
   }
 
   render() {
-    const { title, description, category, price, data, path } = this.state;
+    const { title, description, category, price, data, path, type } = this.state;
+    console.log(type);
     return (
       <>
-  
-      {/* Title */}
+        {/* Title */}
         <div className="container">
-          <div className="row">            
+          <div className="row">
             <div className="col-1"></div>
             <div className="col-10 marginTopUploader">
-              <div>                
+              <div>
                 <label>Title:</label>
                 <input
                   type="text"
@@ -214,21 +230,23 @@ class UploadArticle extends React.PureComponent {
           </div>
         </div>
         {/* Image only for update */}
-        {this.id_multimedia !== "0" && <div className="container">
-          <div className="row">            
-            <div className="col-1"></div>
-            <div className="col-10 mt-2 ml-3 ">
-              <div>                
-              <img
-                  style={{ width: "97%", height: "50vh" }}
-                  src={API_URL_MULTIMEDIA + path}
-                  alt=""
-                />
+        {this.id_multimedia !== "0" && (
+          <div className="container">
+            <div className="row">
+              <div className="col-1"></div>
+              <div className="col-10 mt-2 ml-3 ">
+                <div>
+                  <img
+                    style={{ width: "97%", height: "50vh" }}
+                    src={API_URL_MULTIMEDIA + path}
+                    alt=""
+                  />
+                </div>
               </div>
+              <div className="col-1"></div>
             </div>
-            <div className="col-1"></div>
           </div>
-        </div>}
+        )}
         {/* File / Category / Price */}
         <div className="container">
           <div className="row mt-3">
@@ -242,14 +260,14 @@ class UploadArticle extends React.PureComponent {
                 id="file-name"
               />
             </div>
-              <div className="col-3">
+            <div className="col-3">
               <select
                 className="form-control"
                 data-spy="scroll"
                 value={category}
                 onChange={e => this.setState({ category: e.target.value })}
               >
-                <option selected>Category...</option>
+                <option defaultValue>Category...</option>
                 <option value="environmet">environmet</option>
                 <option value="politics">politics</option>
                 <option value="sports">sports</option>
@@ -274,7 +292,7 @@ class UploadArticle extends React.PureComponent {
             <div className="col-1"></div>
           </div>
         </div>
-         {/* Description */}
+        {/* Description */}
         <div className="container">
           <div className="row">
             <div className="col-1"></div>
@@ -290,7 +308,7 @@ class UploadArticle extends React.PureComponent {
           </div>
         </div>
         {/* Text Editor */}
-        <div className="container">
+       { type == "article" | type == "" && <div className="container">
           <div className="row">
             <div className="col-1"></div>
             <div className="col-10 mt-3">
@@ -298,7 +316,7 @@ class UploadArticle extends React.PureComponent {
             </div>
             <div className="col-1"></div>
           </div>
-        </div>
+        </div>}
         {/* Upload / Update button */}
         <div className="container">
           <div className="row">
@@ -316,7 +334,7 @@ class UploadArticle extends React.PureComponent {
               ) : (
                 <button
                   disabled={
-                    !this.state.data | !this.state.category | !this.state.title
+                    (!this.state.data && type === "article") | !this.state.category | !this.state.title
                   }
                   onClick={this.updateFile}
                 >

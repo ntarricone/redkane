@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import { API_URL_IMAGES } from "../../../constants";
 import { Router } from "react-router-dom";
 import history from "../../../history";
+import ContentUploader from "../ContentUploader/ContentUploader";
 
 interface IProps {}
 interface IGlobalStateProps {
@@ -62,6 +63,7 @@ class Navbar extends React.PureComponent<TProps> {
           </button>
           <div className="collapse navbar-collapse" id="navbarText">
             <ul className="navbar-nav mr-auto"></ul>
+            {/* <ContentUploader></ContentUploader> */}
             <div className="dropdown">
               <img
                 style={{ height: "6vh", width: "3vw", borderRadius: "50%" }}
@@ -70,14 +72,7 @@ class Navbar extends React.PureComponent<TProps> {
                 aria-expanded="false"
                 src={API_URL_IMAGES + account?.avatar}
               ></img>
-              {/* <img
-                className="avatar"
-                src={account?.avatar}
-                alt=""
-                data-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="false"
-              /> TODO - ADD IMG*/}
+
               <div className="dropdown" aria-labelledby="dropdownMenuButton">
               <div className="dropdown-content">
                 <div>

@@ -38,6 +38,7 @@ produce(state, draftState => {
       case "SET_CHOSEN_FILE":
       return {...state, chosenFile: action.payload}      
     
+      //TODO ADD AN ADD MULTIMEDIA SO WHEN THINGS GET UPLOADED THEY REFLECT IMMEDIATELY IN REDUX
     default:
       return state;
   }

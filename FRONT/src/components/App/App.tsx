@@ -5,11 +5,11 @@ import { connect } from "react-redux";
 import { SetAccountAction } from "../../redux/actions";
 import { IStore } from "../../interfaces/IStore";
 import { IAccount } from "../../interfaces/IAccount";
-import { generateAccountFromToken, myFetch } from "../../utils";
+import { myFetch } from "../../utils";
 import AppLogged from "./AppLogged/AppLogged";
 import UpdateProfile from "./AppLogged/UpdateProfile/UpdateProfile";
 import { decode } from "jsonwebtoken";
-import { BrowserRouter, Switch, Route, Router } from "react-router-dom";
+import { Switch, Route, Router } from "react-router-dom";
 import UploadArticle from "./AppLogged/UploadArticle";
 import Home from "./AppLogged/Home";
 import Navbar from "../shared/Navbar/Navbar";
@@ -100,7 +100,7 @@ class App extends React.Component<TProps> {
               {token && <AppLogged></AppLogged>}
             </Route>
 
-            <Route exact path="/uploadArticle/:id">
+            <Route path="/uploadArticle/:id">
               <UploadArticle type={"article"} />
             </Route>
 

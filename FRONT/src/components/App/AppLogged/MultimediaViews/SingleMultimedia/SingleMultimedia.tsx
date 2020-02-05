@@ -10,6 +10,8 @@ import youtubeIcon from "../../../../../icons/youtube.png";
 import ReactHtmlParser from "react-html-parser";
 import { SetChosenFileAction } from "../../../../../redux/actions";
 import { IFile } from "../../../../../interfaces/IFile";
+import { decode } from "jsonwebtoken";
+import { Link } from "react-router-dom";
 
 interface IGlobalStateProps {
   files: IFiles;
@@ -42,7 +44,6 @@ interface IState {
   email: string;
   youtube: string;
   linkedin: string;
-
 }
 
 type TProps = IProps & IGlobalStateProps & IGlobalActionProps;
@@ -80,42 +81,44 @@ class SingleMultimedia extends React.PureComponent<TProps, IState> {
   }
 
   setFile() {
-    console.log(this.props.files.chosenFile)
-    if(this.props.files.chosenFile.multimediaId !== 0){
-    const {
-      title,
-      time,
-      path,
-      type,
-      price,
-      category,
-      language,
-      views,
-      reading_time,
-      description,
-      textArea,
-      id
-    } = this.props.files.chosenFile;
-    this.setState({
-      title,
-      time,
-      path,
-      type,
-      price,
-      category,
-      language,
-      views,
-      reading_time,
-      description,
-      textArea,
-      id
-    });
-    this.setUser(id);
-  }else{
-    setTimeout(
-      (token = localStorage.getItem("token")) =>
-        myFetch({ path: `/multimedia/single/${this.id_multimedia}`, token }).then(
-          file => {
+    console.log(this.props.files.chosenFile);
+    if (this.props.files.chosenFile.multimediaId !== 0) {
+      const {
+        title,
+        time,
+        path,
+        type,
+        price,
+        category,
+        language,
+        views,
+        reading_time,
+        description,
+        textArea,
+        id
+      } = this.props.files.chosenFile;
+      this.setState({
+        title,
+        time,
+        path,
+        type,
+        price,
+        category,
+        language,
+        views,
+        reading_time,
+        description,
+        textArea,
+        id
+      });
+      this.setUser(id);
+    } else {
+      setTimeout(
+        (token = localStorage.getItem("token")) =>
+          myFetch({
+            path: `/multimedia/single/${this.id_multimedia}`,
+            token
+          }).then(file => {
             console.log(file);
             if (file) {
               const {
@@ -148,14 +151,12 @@ class SingleMultimedia extends React.PureComponent<TProps, IState> {
               });
               this.props.setChosenFile(file);
               this.setUser(id);
-
             }
-          }
-        ),
-      200
-    );
+          }),
+        200
+      );
+    }
   }
-}
 
   setUser(id: number) {
     myFetch({ path: `/users/${id}` }).then(user => {
@@ -168,9 +169,8 @@ class SingleMultimedia extends React.PureComponent<TProps, IState> {
   }
 
   // setFile(multimediaId: number) {
-    
-  // }
 
+  // }
 
   render() {
     const {
@@ -184,8 +184,12 @@ class SingleMultimedia extends React.PureComponent<TProps, IState> {
       avatar,
       youtube,
       linkedin,
-      time
+      time,
+      id: idCreator,
+      type
     } = this.state;
+    const token: any = localStorage.getItem("token");
+    const { id: idLogged }: any = decode(token);
     return (
       <>
         {/* TITLE */}
@@ -193,9 +197,12 @@ class SingleMultimedia extends React.PureComponent<TProps, IState> {
           <div className="row">
             <div className="col-1"></div>
             <div className="col-10" style={{ marginTop: "8%" }}>
-              <div><h1>{title}</h1><img src=""/></div> 
-              {/* add edit link */}
-              
+              <div className="row ml-1">
+                <div>
+                  <h1>{title}</h1>
+                </div>
+
+              </div>
             </div>
             <div className="col-1"></div>
           </div>
@@ -224,12 +231,22 @@ class SingleMultimedia extends React.PureComponent<TProps, IState> {
             </div>
             <div className="col-4"></div>
             <div className="col-2 iconsDisplay">
-              {linkedin && <a href={linkedin}>
-                <img className="iconsSize" src={linkedinIcon} alt="" />{" "}
-              </a>}
-              {youtube && <a href={youtube}>
-                <img className="iconsSize" src={youtubeIcon} alt="" />{" "}
-              </a>}
+            {idCreator === idLogged && (
+                 <Link to={`/uploadArticle/${this.id_multimedia}`}><small> <button type="button" className="btn-sm btn-success">
+                    Edit
+                  </button></small>
+                  </Link>
+                )}
+              {linkedin && (
+                <a href={linkedin}>
+                  <img className="iconsSize" src={linkedinIcon} alt="" />{" "}
+                </a>
+              )}
+              {youtube && (
+                <a href={youtube}>
+                  <img className="iconsSize" src={youtubeIcon} alt="" />{" "}
+                </a>
+              )}
             </div>
           </div>
           <div className="col-1"></div>
@@ -271,7 +288,7 @@ class SingleMultimedia extends React.PureComponent<TProps, IState> {
           <div className="row">
             <div className="col-1"></div>
             <div className="col-10">
-              <h3>Article Summary</h3>
+              <h3>Summary</h3>
               <hr />
               <p>{description}</p>
             </div>
@@ -279,7 +296,7 @@ class SingleMultimedia extends React.PureComponent<TProps, IState> {
           </div>
         </div>
         {/* TEXT  */}
-        <div className="container mt-5">
+       { type === "article" && <div className="container mt-5">
           <div className="row">
             <div className="col-1"></div>
             <div className="col-10">
@@ -289,7 +306,7 @@ class SingleMultimedia extends React.PureComponent<TProps, IState> {
             </div>
             <div className="col-1"></div>
           </div>
-        </div>
+        </div>}
       </>
     );
   }
