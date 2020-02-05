@@ -10,11 +10,14 @@ import {
 import { myFetch } from "../../../../utils";
 import "./MultimediaView.css";
 import { Link } from "react-router-dom";
-import ReactHtmlParser from "react-html-parser";
+import { SetChosenFileAction } from "../../../../redux/actions";
+
 
 interface IGlobalStateProps {}
 
-interface IGlobalActionProps {}
+interface IGlobalActionProps {
+  setChosenFile(file: IFile): void
+}
 
 interface IProps {
   file: IFile;
@@ -39,6 +42,7 @@ class ArticlesView extends React.PureComponent<TProps, IState> {
       avatar: "",
       userId: null
     };
+    this.setingFile = this.setingFile.bind(this)
   }
   //setting card owner´s details
   componentDidMount() {
@@ -56,16 +60,16 @@ class ArticlesView extends React.PureComponent<TProps, IState> {
     );
   }
 
+  setingFile(file: IFile){
+    this.props.setChosenFile(file)
+  }
   render() {
     const { file } = this.props;
-    const { textArea, path, multimediaId, type } = file;
+    const { path, multimediaId, description, title, time, price} = file;
     const { name, surname, avatar, userId } = this.state;
-    let textito = textArea?.substr(0,200)
-    console.log("textitooooo" + textito);
-    let texto: any = ReactHtmlParser(`'${textito}'`);
-    console.log("textoooo" + texto);
     
     return (
+      
       <div
         className="card animated fadeIn delay-0.5s"
         // style={{ height: "30vw"}} 
@@ -87,14 +91,15 @@ class ArticlesView extends React.PureComponent<TProps, IState> {
         )}
 
         <div className="card-body" style={{ backgroundColor: "#fafafa" }}>
-          <Link to={`/singleMultimedia/${multimediaId}`}>
-          <h5 className="card-title text-dark webLinks" >{file.title}</h5>
+        <Link to={`/singleMultimedia/${multimediaId}`}
+        onClick={() => this.setingFile(file)}>
+          <h5 className="card-title text-dark webLinks" >{title}</h5>
           </Link>
           
          {/* //ADD A VARIABLE TO ADD THE TEXT AS A STRING AND THEN CROP  */}
              <p className="card-text text-dark"
              style={{ minHeight: "8vh" }} 
-             > {}</p>:
+             > {description?.substring(0, 100) + "..."}</p>
         
 
 
@@ -120,13 +125,13 @@ class ArticlesView extends React.PureComponent<TProps, IState> {
                 <i className="fas fa-bookmark"></i></div>
               
               <div className="col-2">
-                {file.price != 0 && <i className="far fa-money-bill-alt"></i>}
+                {price != 0 && <i className="far fa-money-bill-alt"></i>}
               </div>
             </div>
           </div>
           <p className="card-text">
             <small className="text-muted">
-              {new Date(file.time).toLocaleDateString()}
+              {new Date(time).toLocaleDateString()}
             </small>
           </p>
         </div>
@@ -139,4 +144,8 @@ const mapStateToProps = ({ account }: IStore): IGlobalStateProps => ({
   account
 });
 
-export default connect(mapStateToProps)(ArticlesView);
+const mapDispatchToProps: IGlobalActionProps = {
+  setChosenFile: SetChosenFileAction
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ArticlesView);

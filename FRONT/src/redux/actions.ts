@@ -25,3 +25,8 @@ export const SetFilesAction = (files: IFile[]): TAction => ({
   type: "SET_FILES",
   payload: files
 });
+ 
+export const SetChosenFileAction = (file: IFile): TAction => ({
+  type: "SET_CHOSEN_FILE",
+  payload: file
+});

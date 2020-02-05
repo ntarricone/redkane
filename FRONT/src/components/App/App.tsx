@@ -15,6 +15,7 @@ import Home from "./AppLogged/Home";
 import Navbar from "../shared/Navbar/Navbar";
 import history from "../../history"
 import SingleMultimedia from "./AppLogged/MultimediaViews/SingleMultimedia/SingleMultimedia";
+import UpdateArticle from "./AppLogged/UpdateArticle/UpdateArticle";
 
 interface IProps  {
   
@@ -99,13 +100,16 @@ class App extends React.Component<TProps> {
               {token && <AppLogged></AppLogged>}
             </Route>
 
-            <Route exact path="/uploadArticle">
+            <Route exact path="/uploadArticle/:id">
               <UploadArticle type={"article"} />
             </Route>
 
             <Route exact path="/updateProfile"  component ={UpdateProfile}>
             </Route>
             <Route path="/singleMultimedia/:id"  component ={SingleMultimedia}>
+            </Route>
+
+            <Route path="/updateArticle/:id"  component ={UpdateArticle}>
             </Route>
             
           </Switch>

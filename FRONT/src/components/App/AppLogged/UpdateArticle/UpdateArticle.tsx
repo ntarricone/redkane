@@ -1,15 +1,17 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { IStore } from "../../../../../interfaces/IStore";
-import { IFiles } from "../../../../../interfaces/IFiles";
-import { myFetch } from "../../../../../utils";
-import { API_URL_MULTIMEDIA, API_URL_IMAGES } from "../../../../../constants";
-import "./SingleMultimedia.css";
-import linkedinIcon from "../../../../../icons/linkedin.png";
-import youtubeIcon from "../../../../../icons/youtube.png";
+
+import { IFiles } from "../../../../interfaces/IFiles";
+import { myFetch } from "../../../../utils";
+
+// import "./SingleMultimedia.css";
 import ReactHtmlParser from "react-html-parser";
-import { SetChosenFileAction } from "../../../../../redux/actions";
-import { IFile } from "../../../../../interfaces/IFile";
+import { IStore } from "../../../../interfaces/IStore";
+import { API_URL_MULTIMEDIA } from "../../../../constants";
+import { SetChosenFileAction } from "../../../../redux/actions";
+import { IFile } from "../../../../interfaces/IFile";
+
+
 
 interface IGlobalStateProps {
   files: IFiles;
@@ -36,19 +38,13 @@ interface IState {
   description: string;
   textArea: string;
   id: number | null;
-  name: string;
-  surname: string;
-  avatar: string;
-  email: string;
-  youtube: string;
-  linkedin: string;
-
 }
 
 type TProps = IProps & IGlobalStateProps & IGlobalActionProps;
 
-class SingleMultimedia extends React.PureComponent<TProps, IState> {
+class UpdateArticle extends React.PureComponent<TProps, IState> {
   id_multimedia = this.props.match.params.id;
+
   constructor(props: TProps) {
     super(props);
     this.state = {
@@ -63,16 +59,10 @@ class SingleMultimedia extends React.PureComponent<TProps, IState> {
       reading_time: "",
       description: "",
       textArea: "",
-      id: null,
-      name: "",
-      surname: "",
-      avatar: "",
-      email: "",
-      youtube: "",
-      linkedin: ""
+      id: null
     };
     this.setFile = this.setFile.bind(this);
-    this.setUser = this.setUser.bind(this);
+
   }
 
   componentDidMount() {
@@ -110,7 +100,6 @@ class SingleMultimedia extends React.PureComponent<TProps, IState> {
       textArea,
       id
     });
-    this.setUser(id);
   }else{
     setTimeout(
       (token = localStorage.getItem("token")) =>
@@ -147,8 +136,6 @@ class SingleMultimedia extends React.PureComponent<TProps, IState> {
                 id
               });
               this.props.setChosenFile(file);
-              this.setUser(id);
-
             }
           }
         ),
@@ -156,34 +143,13 @@ class SingleMultimedia extends React.PureComponent<TProps, IState> {
     );
   }
 }
-
-  setUser(id: number) {
-    myFetch({ path: `/users/${id}` }).then(user => {
-      if (user) {
-        console.log(user);
-        const { name, surname, email, avatar, youtube, linkedin } = user;
-        this.setState({ name, surname, email, avatar, youtube, linkedin });
-      }
-    });
-  }
-
-  // setFile(multimediaId: number) {
-    
-  // }
-
-
+  
   render() {
     const {
       title,
       textArea,
       description,
       path,
-      name,
-      surname,
-      email,
-      avatar,
-      youtube,
-      linkedin,
       time
     } = this.state;
     return (
@@ -193,48 +159,12 @@ class SingleMultimedia extends React.PureComponent<TProps, IState> {
           <div className="row">
             <div className="col-1"></div>
             <div className="col-10" style={{ marginTop: "8%" }}>
-              <div><h1>{title}</h1><img src=""/></div> 
-              {/* add edit link */}
-              
+              <h1>{title}</h1>
             </div>
             <div className="col-1"></div>
           </div>
         </div>
-        {/* USER */}
-        <div className="container mt-2">
-          <div className="row">
-            <div className="col-1"></div>
-            <div className="col-1">
-              <img
-                className="multimediaAvatar"
-                src={API_URL_IMAGES + avatar}
-                alt=""
-              />
-            </div>
-            <div className="col-3 pl-0">
-              <span>
-                {name} {surname}
-              </span>
-              <br />
-
-              <small className="text-muted">
-                {new Date(time).toLocaleDateString()}
-              </small>
-              <small className="text-muted">{" " + email}</small>
-            </div>
-            <div className="col-4"></div>
-            <div className="col-2 iconsDisplay">
-              {linkedin && <a href={linkedin}>
-                <img className="iconsSize" src={linkedinIcon} alt="" />{" "}
-              </a>}
-              {youtube && <a href={youtube}>
-                <img className="iconsSize" src={youtubeIcon} alt="" />{" "}
-              </a>}
-            </div>
-          </div>
-          <div className="col-1"></div>
-        </div>
-
+       
         {/* IMAGE */}
         {path.includes("youtube") ? (
           <div className="container mt-5">
@@ -267,12 +197,12 @@ class SingleMultimedia extends React.PureComponent<TProps, IState> {
           </div>
         )}
         {/* DESCRIPTION  */}
-        <div className="container mt-5">
+         <div className="container mt-5">
           <div className="row">
             <div className="col-1"></div>
             <div className="col-10">
-              <h3>Article Summary</h3>
-              <hr />
+            <h3>Article Summary</h3>
+            <hr/>
               <p>{description}</p>
             </div>
             <div className="col-1"></div>
@@ -283,8 +213,8 @@ class SingleMultimedia extends React.PureComponent<TProps, IState> {
           <div className="row">
             <div className="col-1"></div>
             <div className="col-10">
-              <h3>Content</h3>
-              <hr />
+            <h3>Content</h3>
+            <hr/>
               <p>{ReactHtmlParser(`${textArea}`)}</p>
             </div>
             <div className="col-1"></div>
@@ -303,4 +233,4 @@ const mapDispatchToProps: IGlobalActionProps = {
   setChosenFile: SetChosenFileAction
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(SingleMultimedia);
+export default connect(mapStateToProps, mapDispatchToProps)(UpdateArticle);

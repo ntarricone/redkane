@@ -28,6 +28,11 @@ interface ISetFilesAction {
   payload: IFile[];
 }
 
+interface ISetChosenFileAction{
+  type: "SET_CHOSEN_FILE";
+  payload: IFile
+}
+
 
 
 export type TAction =
@@ -35,4 +40,5 @@ export type TAction =
   | ILogoutAction
   | ISetBannerAction
   | ISetAvatarAction
-  | ISetFilesAction;
+  | ISetFilesAction
+  | ISetChosenFileAction;

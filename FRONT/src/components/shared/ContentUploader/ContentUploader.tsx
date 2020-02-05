@@ -15,7 +15,7 @@ class ContentUploader extends React.PureComponent<TProps> {
         <div className="card uploader">
           <div className="card-body">IMAGEN</div>
           <div className="card-body">
-            <Link to="/uploadarticle" className="nav-link">
+            <Link to="/uploadArticle/0" className="nav-link">
               <i className="far fa-keyboard icon"></i>
             </Link>
           </div>

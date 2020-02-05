@@ -6,8 +6,10 @@ export interface IFile {
   type: string;
   price: number;
   category: string;
+  language: string;
   textArea: any; //I type is as any because it can also come html
+  description: string;
   reading_time: string;
-  view: number; //check if this peta
+  views: number; //check if this peta
   id: number;
 }

@@ -8,7 +8,7 @@ interface IState {
   title: string;
   price: string;
   category: string;
-  textArea: string;
+  description: string;
   path: string;
 }
 interface IProps {
@@ -29,7 +29,7 @@ class AploadMultimedia extends React.PureComponent<TProps, IState> {
       title: "",
       price: "",
       category: "",
-      textArea: "",
+      description: "",
       path: ""
     };
 
@@ -39,9 +39,9 @@ class AploadMultimedia extends React.PureComponent<TProps, IState> {
 
   //TODO - ADD ADDED FILE TO REDUX
   uploadFile() {
-    const initialState = { title: "", price: "", category: "", textArea: "" };
+    const initialState = { title: "", price: "", category: "", description: "" };
     const { account, type } = this.props;
-    const {title, price, category, textArea, path} = this.state;
+    const {title, price, category, description, path} = this.state;
     const token: any = localStorage.getItem("token");
 
     if (this.fileInputRef.current?.files?.length && account) {
@@ -52,7 +52,7 @@ class AploadMultimedia extends React.PureComponent<TProps, IState> {
       formData.append("type", type);
       formData.append("price", price);
       formData.append("category", category);
-      formData.append("textArea", textArea);
+      formData.append("description", description);
       console.log(formData);
       myFetch({
         method: "POST",
@@ -71,7 +71,7 @@ class AploadMultimedia extends React.PureComponent<TProps, IState> {
       myFetch({
         path: "/multimedia/createVideo",
         method: "POST",
-        json: { title, type, price, category, path, textArea },
+        json: { title, type, price, category, path, description },
         token
       })
     }
@@ -138,11 +138,11 @@ class AploadMultimedia extends React.PureComponent<TProps, IState> {
         </div>
         <div></div>
         <div>
-          <label>Text:</label>
+          <label>Brief description of your multimedia:</label>
           <textarea
             className="form-control"
-            value={this.state.textArea}
-            onChange={e => this.setState({ textArea: e.target.value })}
+            value={this.state.description}
+            onChange={e => this.setState({ description: e.target.value })}
           />
         </div>
         <div className="modal-footer">

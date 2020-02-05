@@ -12,51 +12,101 @@ const lngDetector = new LanguageDetect();
 const myPrivateKey = "mySecretKey";
 const msg = "REQUIRED FILE IS MISSING";
 
-//CREATE MULTIMEDIA
-multimediaController.createMultimedia = (request, response) => {
+//CREATE ARTICLE
+multimediaController.createArticle = (request, response) => {
   console.log("entro");
   const token = request.headers.authorization.replace("Bearer ", "");
   const { id } = jwt.verify(token, myPrivateKey);
-  
+
   if (token) {
-    console.log(request.file.filename)
+    console.log(request.file.filename);
     const path = request.file.filename;
-    const { title, category, type, textArea } = request.body;
+    const { title, category, type, textArea, description } = request.body;
     const price = request.body.price ? request.body.price : 0;
     // console.log(price)
 
-    // const [language] = lngDetector.detect(textArea)
-    const sql =  `
+    const [language] = lngDetector.detect(description);
+    const sql = `
     INSERT
-    INTO multimedia (path, title, type, category, price, textArea, language, id)
-    VALUES('${path}', '${title}', '${type}', '${category}', '${price}', '${textArea}', 'english' ,${id});
-  `
-  console.log(sql)
+    INTO multimedia (path, title, type, category, price, textArea, description, language, id)
+    VALUES('${path}', '${title}', '${type}', '${category}',
+     '${price}', '${textArea}','${description}', '${language}' ,${id});
+  `;
+    console.log(sql);
     connection.query(sql, (error, results) => {
-        if (error) {
-          console.log(error);
-          response.sendStatus(400);
-        } else {
-          console.log(results.insertId)
-          connection.query(
-            `
+      if (error) {
+        console.log(error);
+        response.sendStatus(400);
+      } else {
+        console.log(results.insertId);
+        connection.query(
+          `
+            SELECT *
+            FROM multimedia
+            WHERE multimediaId = '${results.insertId}'
+          `,
+          (error, results) => {
+            if (error) {
+              console.log(error);
+              response.sendStatus(400);
+            } else {
+              const [file] = results;
+              response.send(file);
+              
+            }
+          }
+        );
+      }
+    });
+  }
+};
+
+//CREATE IMAGE
+
+multimediaController.createImage = (request, response) => {
+  console.log("entro");
+  const token = request.headers.authorization.replace("Bearer ", "");
+  const { id } = jwt.verify(token, myPrivateKey);
+
+  if (token) {
+    console.log(request.file.filename);
+    const path = request.file.filename;
+    const { title, category, type, description } = request.body;
+    const price = request.body.price ? request.body.price : 0;
+    // console.log(price)
+
+    const [language] = lngDetector.detect(description)
+    const sql = `
+    INSERT
+    INTO multimedia (path, title, type, category, price, description, language, id)
+    VALUES('${path}', '${title}', '${type}', '${category}', '${price}',
+     '${description}', '${language}' ,${id});
+  `;
+    console.log(sql);
+    connection.query(sql, (error, results) => {
+      if (error) {
+        console.log(error);
+        response.sendStatus(400);
+      } else {
+        console.log(results.insertId);
+        connection.query(
+          `
             SELECT *
             FROM multimedia
             WHERE multimediaId = '${id}'
           `,
-            (error, results) => {
-              if (error) {
-                console.log(error);
-                response.sendStatus(400);
-              } else {
-                const [file] = results;
-                response.send(file);
-              }
+          (error, results) => {
+            if (error) {
+              console.log(error);
+              response.sendStatus(400);
+            } else {
+              const [file] = results;
+              response.send(file);
             }
-          );
-        }
+          }
+        );
       }
-    );
+    });
   }
 };
 
@@ -66,14 +116,16 @@ multimediaController.createVideo = (request, response) => {
   const token = request.headers.authorization.replace("Bearer ", "");
   const { id } = jwt.verify(token, myPrivateKey);
   if (token) {
-    const { title, category, type, textArea, path } = request.body;
+    const { title, category, type, description, path } = request.body;
     const price = request.body.price ? request.body.price : 0;
     console.log(request.body.title);
+    const [language] = lngDetector.detect(description)
     connection.query(
       `
     INSERT
-    INTO multimedia (path, title, type, category, price, textArea, id)
-    VALUES('${path}', '${title}', '${type}', '${category}', '${price}', '${textArea}', ${id})
+    INTO multimedia (path, title, type, category, price, description, language, id)
+    VALUES('${path}', '${title}', '${type}', '${category}', '${price}',
+    '${description}', '${language}', ${id})
   `,
       error => {
         if (error) {
@@ -105,24 +157,24 @@ multimediaController.createVideo = (request, response) => {
 //CREATE ARTICLE
 multimediaController.createEditor = (request, response) => {
   console.log("entro");
-  
-    const { title, category, type, textArea, path } = request.body;
-    
-    console.log(request.body.title);
-    connection.query(
-      `
+
+  const { title, category, type, textArea, path } = request.body;
+
+  console.log(request.body.title);
+  connection.query(
+    `
     INSERT
     INTO editor (textArea)
     VALUES('${textArea}')
   `,
-      error => {
-        if (error) {
-          console.log(error);
-          response.sendStatus(400);
-        }
+    error => {
+      if (error) {
+        console.log(error);
+        response.sendStatus(400);
       }
-    )
     }
+  );
+};
 
 //GET ALL MULTIMEDIA
 multimediaController.getMultimedia = (request, response) => {
@@ -174,7 +226,9 @@ multimediaController.getMultimediaByType = (request, response) => {
 
 // GET ALL MULTIMEDIA FILES BY USER AND TYPE. ID FROM PARAMS!
 multimediaController.getMultimediaByUserAndType = (request, response) => {
+  
   const { id } = request.params;
+  const { type } = request.body;
   const { authorization } = request.headers;
   console.log("id" + id);
   if (authorization) {
@@ -200,12 +254,11 @@ multimediaController.getMultimediaByUserAndType = (request, response) => {
 
 //OPEN SINGLE MULTIMEDIA
 multimediaController.getOneMultimedia = (request, response) => {
+  console.log("entrudiiiiiiiis")
   const { multimediaId } = request.params;
   console.log(multimediaId);
   const { authorization } = request.headers;
   if (authorization) {
-    console.log("entrudis")
-
     const token = authorization.replace("Bearer ", "");
     jwt.verify(token, myPrivateKey);
     connection.query(
@@ -216,7 +269,6 @@ multimediaController.getOneMultimedia = (request, response) => {
     `,
       (error, results) => {
         if (results && results.length > 0) {
-       
           response.send(results[0]);
         } else {
           response.send(msg);

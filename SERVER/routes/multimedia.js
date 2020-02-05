@@ -21,10 +21,11 @@ const multer = require("multer");
 
 router.get("/", multimedia.getMultimedia);
 router.get("/:type", multimedia.getMultimediaByType);
-router.post("/createMultimedia", upload, multimedia.createMultimedia);
+router.post("/createArticle", upload, multimedia.createArticle);
+router.post("/createImage", upload, multimedia.createImage);
 router.post("/createVideo", upload, multimedia.createVideo);
 router.post("/createEditor", multimedia.createVideo);
-router.get("/:id/:type", multimedia.getMultimediaByUserAndType);
+router.get("/byUserAndType/:id/:type", multimedia.getMultimediaByUserAndType);
 router.get("/single/:multimediaId", multimedia.getOneMultimedia);
 // router.get("/likedByUser/:id", multimedia.getMultimediaLikedByUser);
 router.put("/update/:multimediaId", multimedia.editMultimedia);
