@@ -39,9 +39,15 @@ class AploadMultimedia extends React.PureComponent<TProps, IState> {
 
   //TODO - ADD ADDED FILE TO REDUX
   uploadFile() {
-    const initialState = { title: "", price: "", category: "", description: "" };
+    const initialState = {
+      title: "",
+      price: "",
+      category: "",
+      description: ""
+    };
     const { account, type } = this.props;
-    const {title, price, category, description, path} = this.state;
+    const { title, price, description } = this.state;
+    let {path, category} = this.state;
     const token: any = localStorage.getItem("token");
 
     if (this.fileInputRef.current?.files?.length && account) {
@@ -67,34 +73,42 @@ class AploadMultimedia extends React.PureComponent<TProps, IState> {
       });
       this.setState(initialState);
       this.fileInputRef.current.value = "";
-    }else{
+    } else {
+      path = path.replace("https://www.youtube.com/watch?v=", "http://www.youtube.com/embed/")
+      category = "other";
+      console.log(path)
       myFetch({
         path: "/multimedia/createVideo",
         method: "POST",
         json: { title, type, price, category, path, description },
         token
-      })
+      });
     }
   }
+
+  
+ 
   render() {
-    const {type} = this.props;
+    const { type } = this.props;
     //TODO controlar el imput tipe price. Scroll en el select
     //TODO - arreglar que se puedan poner links the youtube en vez de subir archivos
     return (
       <>
+        {/* Uploading image or adding youtube link */}
         <div>
-          {type === "image"? 
-          <input type="file" ref={this.fileInputRef} id="file-name" />:
-          <input
-          placeholder="Youtube Link"
-          type="text"
-          className="form-control"
-          value={this.state.path}
-          onChange={e => this.setState({ path: e.target.value })}
-        />
-          }
-          
+          {type === "image" ? (
+            <input type="file" ref={this.fileInputRef} id="file-name" />
+          ) : (
+            <input
+              placeholder="Youtube Link"
+              type="text"
+              className="form-control"
+              value={this.state.path}
+              onChange={e => this.setState({ path: e.target.value })}
+            />
+          )}
         </div>
+        {/* Title */}
         <div>
           <label>Title:</label>
           <input
@@ -104,12 +118,14 @@ class AploadMultimedia extends React.PureComponent<TProps, IState> {
             onChange={e => this.setState({ title: e.target.value })}
           />
         </div>
-
+        {/* Category */}
         <div className="form-row">
           <div className="form-group col-md-6">
             <label>Category:</label>
             <select
-              className="form-control" data-spy="scroll"
+            required
+              className="form-control"
+              data-spy="scroll"
               value={this.state.category}
               onChange={e => this.setState({ category: e.target.value })}
             >
@@ -126,7 +142,9 @@ class AploadMultimedia extends React.PureComponent<TProps, IState> {
               <option value="other">other</option>
             </select>
           </div>
-          <div className="form-group col-md-6"> 
+
+          {/* Price */}
+          <div className="form-group col-md-6">
             <label>Price €:</label>
             <input
               className="form-control"
@@ -138,6 +156,7 @@ class AploadMultimedia extends React.PureComponent<TProps, IState> {
         </div>
         <div></div>
         <div>
+          {/* Description */}
           <label>Brief description of your multimedia:</label>
           <textarea
             className="form-control"

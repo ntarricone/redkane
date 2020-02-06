@@ -252,7 +252,7 @@ class SingleMultimedia extends React.PureComponent<TProps, IState> {
           <div className="col-1"></div>
         </div>
 
-        {/* IMAGE */}
+        {/* IMAGE OR VIDEO */}
         {path.includes("youtube") ? (
           <div className="container mt-5">
             <div className="row">

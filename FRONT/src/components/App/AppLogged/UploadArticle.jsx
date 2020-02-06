@@ -207,7 +207,15 @@ class UploadArticle extends React.PureComponent {
   }
 
   render() {
-    const { title, description, category, price, data, path, type } = this.state;
+    const {
+      title,
+      description,
+      category,
+      price,
+      data,
+      path,
+      type
+    } = this.state;
     console.log(type);
     return (
       <>
@@ -229,18 +237,28 @@ class UploadArticle extends React.PureComponent {
             <div className="col-1"></div>
           </div>
         </div>
-        {/* Image only for update */}
+        {/* Previo of Image or video only for update */}
         {this.id_multimedia !== "0" && (
           <div className="container">
             <div className="row">
               <div className="col-1"></div>
               <div className="col-10 mt-2 ml-3 ">
                 <div>
-                  <img
+                  {type !== "video" && (
+                    <img
+                      style={{ width: "97%", height: "50vh" }}
+                      src={API_URL_MULTIMEDIA + path}
+                      alt=""
+                    />
+                  )}
+                  {type === "video" && (
+                    <iframe
                     style={{ width: "97%", height: "50vh" }}
-                    src={API_URL_MULTIMEDIA + path}
-                    alt=""
-                  />
+                      src={path + "?start=0&end=5"}
+                      allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    ></iframe>
+                  )}
                 </div>
               </div>
               <div className="col-1"></div>
@@ -252,13 +270,19 @@ class UploadArticle extends React.PureComponent {
           <div className="row mt-3">
             <div className="col-1"></div>
             <div className="col-5">
-              <input
-                required
-                type="file"
-                // value={this.state.path}
-                ref={this.fileInputRef}
-                id="file-name"
-              />
+              {type !== "video" ? (
+                <input type="file" ref={this.fileInputRef} id="file-name" />
+              ) : (
+                <input
+                  placeholder="Youtube Link"
+                  type="text"
+                  className="form-control"
+                  value={this.state.path}
+                  onChange={e => this.setState({ path: e.target.value })}
+                />
+              )}
+
+              {/* Category */}
             </div>
             <div className="col-3">
               <select
@@ -280,6 +304,7 @@ class UploadArticle extends React.PureComponent {
                 <option value="other">other</option>
               </select>
             </div>
+            {/* Price */}
             <div className="col-2">
               <input
                 placeholder="Price"
@@ -308,15 +333,20 @@ class UploadArticle extends React.PureComponent {
           </div>
         </div>
         {/* Text Editor */}
-       { type == "article" | type == "" && <div className="container">
-          <div className="row">
-            <div className="col-1"></div>
-            <div className="col-10 mt-3">
-              <CKEditor data={this.state.data} onChange={this.onEditorChange} />
+        {(type == "article") | (this.id_multimedia === "0") && (
+          <div className="container">
+            <div className="row">
+              <div className="col-1"></div>
+              <div className="col-10 mt-3">
+                <CKEditor
+                  data={this.state.data}
+                  onChange={this.onEditorChange}
+                />
+              </div>
+              <div className="col-1"></div>
             </div>
-            <div className="col-1"></div>
           </div>
-        </div>}
+        )}
         {/* Upload / Update button */}
         <div className="container">
           <div className="row">
@@ -334,7 +364,9 @@ class UploadArticle extends React.PureComponent {
               ) : (
                 <button
                   disabled={
-                    (!this.state.data && type === "article") | !this.state.category | !this.state.title
+                    (!this.state.data && type === "article") |
+                    !this.state.category |
+                    !this.state.title
                   }
                   onClick={this.updateFile}
                 >

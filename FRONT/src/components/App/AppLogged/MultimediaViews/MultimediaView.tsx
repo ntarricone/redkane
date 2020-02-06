@@ -11,12 +11,13 @@ import { myFetch } from "../../../../utils";
 import "./MultimediaView.css";
 import { Link } from "react-router-dom";
 import { SetChosenFileAction } from "../../../../redux/actions";
-
+import paid from "../../../../icons/money.png";
+import saved from "../../../../icons/save-button.png";
 
 interface IGlobalStateProps {}
 
 interface IGlobalActionProps {
-  setChosenFile(file: IFile): void
+  setChosenFile(file: IFile): void;
 }
 
 interface IProps {
@@ -42,37 +43,36 @@ class ArticlesView extends React.PureComponent<TProps, IState> {
       avatar: "",
       userId: null
     };
-    this.setingFile = this.setingFile.bind(this)
+    this.setingFile = this.setingFile.bind(this);
   }
   //setting card owner´s details
   componentDidMount() {
     const { file } = this.props;
     const { id } = file;
     const token: any = localStorage.getItem("token");
-    myFetch({ path: `/users/${id}`, token }).then(user =>{
-      console.log(user)
+    myFetch({ path: `/users/${id}`, token }).then(user => {
+      console.log(user);
       this.setState({
         name: user.name,
         surname: user.surname,
         avatar: user.avatar,
         userId: user.id
-      })}
-    );
+      });
+    });
   }
 
-  setingFile(file: IFile){
-    this.props.setChosenFile(file)
+  setingFile(file: IFile) {
+    this.props.setChosenFile(file);
   }
   render() {
     const { file } = this.props;
-    const { path, multimediaId, description, title, time, price} = file;
+    const { path, multimediaId, description, title, time, price, type } = file;
     const { name, surname, avatar, userId } = this.state;
-    
+
     return (
-      
       <div
         className="card animated fadeIn delay-0.5s"
-        // style={{ height: "30vw"}} 
+        // style={{ height: "30vw"}}
       >
         {path.includes("youtube") ? (
           <iframe
@@ -91,21 +91,21 @@ class ArticlesView extends React.PureComponent<TProps, IState> {
         )}
 
         <div className="card-body" style={{ backgroundColor: "#fafafa" }}>
-        <Link to={`/singleMultimedia/${multimediaId}`}
-        onClick={() => this.setingFile(file)}>
-          <h5 className="card-title text-dark webLinks" >{title}</h5>
+          <Link
+            to={`/singleMultimedia/${multimediaId}`}
+            onClick={() => this.setingFile(file)}
+          >
+            <h5 className="card-title text-dark webLinks">{title}</h5>
           </Link>
-          
-         {/* //ADD A VARIABLE TO ADD THE TEXT AS A STRING AND THEN CROP  */}
-             <p className="card-text text-dark"
-             style={{ minHeight: "8vh" }} 
-             > {description?.substring(0, 100) + "..."}</p>
-        
 
+          {/* //ADD A VARIABLE TO ADD THE TEXT AS A STRING AND THEN CROP  */}
+          <p className="card-text text-dark" style={{ minHeight: "8vh" }}>
+            {" "}
+            {description?.substring(0, 100) + "..."}
+          </p>
 
           <div className="container-fluid">
-            <div className="row"
-            style={{ fontSize: "1.5rem" }}>
+            <div className="row" style={{ fontSize: "1.5rem" }}>
               <div className="col-2">
                 {
                   <img
@@ -116,22 +116,25 @@ class ArticlesView extends React.PureComponent<TProps, IState> {
                     src={`${API_URL_IMAGES}${avatar}`}
                   />
                 }
-
               </div>
 
               <div className="col-6"></div>
-              <div className="col-2">
-                {/* <i className="far fa-bookmark"></i> */}
-                <i className="fas fa-bookmark"></i></div>
+
               
               <div className="col-2">
-                {price != 0 && <i className="far fa-money-bill-alt"></i>}
+                {price != 0 && <img className="iconsSize" src={paid} alt="" />}
+              </div>
+              <div className="col-2">
+                {/* <i className="far fa-bookmark"></i> */}
+                <img className="iconsSize" src={saved} alt="" />
               </div>
             </div>
           </div>
           <p className="card-text">
             <small className="text-muted">
               {new Date(time).toLocaleDateString()}
+              <br/>
+              <span>({type})</span>
             </small>
           </p>
         </div>
