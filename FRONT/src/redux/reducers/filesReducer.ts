@@ -28,6 +28,7 @@ produce(state, draftState => {
   switch (action.type) {
     case "SET_FILES":
       const files = action.payload;
+      console.log(files)
       draftState.byId = {};
       draftState.order = [];
       files.forEach(file => {
@@ -37,6 +38,11 @@ produce(state, draftState => {
       break;
       case "SET_CHOSEN_FILE":
       return {...state, chosenFile: action.payload}      
+      case "UNSET_FILES":
+        draftState.byId = {};
+        draftState.order = [];
+        draftState.selectedFileId = null;
+        break;
     
       //TODO ADD AN ADD MULTIMEDIA SO WHEN THINGS GET UPLOADED THEY REFLECT IMMEDIATELY IN REDUX
     default:

@@ -4,13 +4,23 @@ import { connect } from "react-redux";
 import { IStore } from "../../../../interfaces/IStore";
 import { IAccount } from "../../../../interfaces/IAccount";
 import { myFetch } from "../../../../utils";
-import { SetBannerAction, SetAvatarAction, SetFilesAction } from "../../../../redux/actions";
+import {
+  SetBannerAction,
+  SetAvatarAction,
+  SetFilesAction
+} from "../../../../redux/actions";
 import { API_URL_IMAGES } from "../../../../constants";
 import UpdateProfileForm from "./UpdateProfileForm";
 import UserArticles from "./UserArticles";
 import { IFiles } from "../../../../interfaces/IFiles";
 import { IFile } from "../../../../interfaces/IFile";
-
+import Filter from "../../../shared/Filter/Filter";
+import SettingUserFiles from "./SettingUserFiles/SettingUserFiles";
+import history from "../../../../history";
+import upload from "../../../../icons/upload.png";
+import video from "../../../../icons/video.png";
+import user from "../../../../icons/user.png";
+import {decode} from 'jsonwebtoken';
 
 interface IGlobalStateProps {
   account: IAccount;
@@ -26,13 +36,13 @@ interface IGlobalActionProps {
 interface IState {
   banner: string;
   avatarChosen: string;
-  toggleContent: "edit" | "articles";
-  // type: "" | "article" | "image" | "video";
+  toggleContent: "edit" | "multimedia";
 }
 
 type TProps = IGlobalStateProps & IGlobalActionProps;
 
 class UpdateProfile extends React.Component<TProps, IState> {
+  userId = history.location.pathname.split("/").slice(-1)[0];
   fileInputRef: React.RefObject<HTMLInputElement>;
   fileInputRef2: React.RefObject<HTMLInputElement>;
   constructor(props: any) {
@@ -41,7 +51,7 @@ class UpdateProfile extends React.Component<TProps, IState> {
     this.state = {
       banner: "",
       avatarChosen: "",
-      toggleContent: "articles"
+      toggleContent: "multimedia"
     };
 
     this.fileInputRef = React.createRef();
@@ -52,11 +62,11 @@ class UpdateProfile extends React.Component<TProps, IState> {
 
   uploadBanner() {
     const { account, setBanner } = this.props;
-    console.log("entroooooooo");
+    // console.log("entroooooooo");
     console.log(this.fileInputRef2.current);
     console.log(account);
     if (this.fileInputRef2.current?.files?.length && account) {
-      console.log("oppaa");
+      // console.log("oppaa");
       const { token } = account;
       const formData = new FormData();
       formData.append("file", this.fileInputRef2.current?.files[0]);
@@ -76,7 +86,7 @@ class UpdateProfile extends React.Component<TProps, IState> {
 
   uploadAvatar() {
     const { account, setAvatar } = this.props;
-    console.log("entro");
+    // console.log("entro");
     console.log(account);
     if (this.fileInputRef.current?.files?.length && account) {
       const { token } = account;
@@ -96,12 +106,15 @@ class UpdateProfile extends React.Component<TProps, IState> {
     }
   }
 
- 
-
   render() {
     const { account, files } = this.props;
     const { avatar, banner } = account;
     const { toggleContent } = this.state;
+    const token: any = localStorage.getItem("token");
+    const {id}: any = decode(token);
+   
+    
+    
 
     return (
       <>
@@ -125,27 +138,29 @@ class UpdateProfile extends React.Component<TProps, IState> {
               <br />
               <div className="container-fluid uploadBanner">
                 <div className="row">
-                  <div className="col-2"></div>
-                  <div className="col-6 toggleIcons">
-                    <i
-                      className="far fa-newspaper iconsSize"
-                      onClick={() => this.setState({ toggleContent: "articles" })}
-                    ></i>
-                    <i className="fas fa-camera iconsSize"></i>
-                    <i className="fab fa-youtube iconsSize"></i>
-                    <i
-                      className="fas fa-user-cog mr-2  iconsSize"
+                  <div className="col-1"></div>
+                  <div className="col-5 toggleIcons">
+                  {id == this.userId && <img
+                      className="iconsSize"
+                      src={video}
+                      alt=""
+                      onClick={() =>
+                        this.setState({ toggleContent: "multimedia" })
+                      }
+                    />}
+                    {id == this.userId && <img
+                      className="iconsSize"
+                      src={user}
+                      alt=""
                       onClick={() => this.setState({ toggleContent: "edit" })}
-                    ></i>
+                    />}
                   </div>
-                  <div className="col-2"></div>
-                  <div className="col-2 text-right">
+                  {/* Upload Banner */}
+                  <div className="col-3"></div>
+                  {id == this.userId && <div className="col-3 text-right">
                     <label htmlFor="banner">
-                      <i className="far fa-images iconsSize" 
-                      data-toggle="tooltip" data-placement="top"
-                      title="Update your banner"
-                      ></i>
-                       {/* TODO -fix tooltip desing */}
+                      <img className="iconsSize" src={upload} alt="" />
+                      {/* TODO -fix tooltip desing */}
                     </label>
                     <input
                       onChange={this.uploadBanner}
@@ -154,13 +169,13 @@ class UpdateProfile extends React.Component<TProps, IState> {
                       style={{ display: "none" }}
                       ref={this.fileInputRef2}
                     />
-                  </div>
+                  </div>}
                 </div>
               </div>
             </div>
           </div>
           <div className="row sharedBorder mt-3">
-            <div className="col-2 mt-3">
+           <div className="col-2">
               {!avatar ? (
                 <img
                   className="avatarProfile mb-1"
@@ -175,28 +190,28 @@ class UpdateProfile extends React.Component<TProps, IState> {
                 />
               )}
               <br />
-              <label htmlFor="avatar">
+              {id == this.userId && <div>
+               <label htmlFor="avatar">
                 <i className="fas fa-plus-circle uploadAvatar iconsSize"></i>
               </label>
-              <input
+               <input
                 id="avatar"
                 style={{ display: "none" }}
                 type="file"
                 ref={this.fileInputRef}
                 onChange={this.uploadAvatar}
               />
+              </div>}
             </div>
-
-            
-            {toggleContent === "articles" && files.order.map(id => (
-              <div key={id} className="col-sm-6 col-md-4 col-12 ">
-                <UserArticles file={files.byId[+id]}></UserArticles>
-                <br />
-              </div>
-            ))}
-            {toggleContent === "edit" && <UpdateProfileForm ></UpdateProfileForm>}
-           {/* {toggleContent === "articles" && <UserArticles></UserArticles>} */}
-           {/* TODO - add images and movies */}
+            <div className="row ">
+              <div className="col-12 d-flex justify-content-center mt-4"></div>
+            </div>
+            {toggleContent === "multimedia" && (
+              <SettingUserFiles></SettingUserFiles>
+            )}
+            {toggleContent === "edit" && (
+              <UpdateProfileForm></UpdateProfileForm>
+            )}
           </div>
         </div>
       </>

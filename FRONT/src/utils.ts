@@ -15,7 +15,7 @@ export const myFetch = async ({
   formData?: FormData;
   token?: string;
 }) => {
-  
+
   let headers = new Headers();
   let body = undefined;
   if (json) {
@@ -25,6 +25,7 @@ export const myFetch = async ({
     body = formData;
   }
   if (token) {
+    console.log(token)
     headers.set("Authorization", `Bearer ${token}`);
   }
   console.log("response")

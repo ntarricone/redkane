@@ -14,6 +14,7 @@ import { SetChosenFileAction } from "../../../../redux/actions";
 import paid from "../../../../icons/money.png";
 import saved from "../../../../icons/save-button.png";
 
+
 interface IGlobalStateProps {}
 
 interface IGlobalActionProps {
@@ -33,7 +34,7 @@ interface IState {
 
 type TProps = IProps & IGlobalStateProps & IGlobalActionProps;
 
-class ArticlesView extends React.PureComponent<TProps, IState> {
+class MultimediaView extends React.PureComponent<TProps, IState> {
   constructor(props: TProps) {
     super(props);
 
@@ -68,7 +69,6 @@ class ArticlesView extends React.PureComponent<TProps, IState> {
     const { file } = this.props;
     const { path, multimediaId, description, title, time, price, type } = file;
     const { name, surname, avatar, userId } = this.state;
-
     return (
       <div
         className="card animated fadeIn delay-0.5s"
@@ -104,9 +104,12 @@ class ArticlesView extends React.PureComponent<TProps, IState> {
             {description?.substring(0, 100) + "..."}
           </p>
 
+          {/* AVATAR. LIINK TO USERS MULTIMEDIA */}
           <div className="container-fluid">
             <div className="row" style={{ fontSize: "1.5rem" }}>
               <div className="col-2">
+               <Link to ={`/updateProfile/${userId
+                }`}>
                 {
                   <img
                     data-toggle="tooltip"
@@ -116,6 +119,8 @@ class ArticlesView extends React.PureComponent<TProps, IState> {
                     src={`${API_URL_IMAGES}${avatar}`}
                   />
                 }
+                </Link>
+
               </div>
 
               <div className="col-6"></div>
@@ -151,4 +156,4 @@ const mapDispatchToProps: IGlobalActionProps = {
   setChosenFile: SetChosenFileAction
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ArticlesView);
+export default connect(mapStateToProps, mapDispatchToProps)(MultimediaView);

@@ -31,8 +31,12 @@ interface ISetFilesAction {
 interface ISetChosenFileAction{
   type: "SET_CHOSEN_FILE";
   payload: IFile
+  
 }
 
+interface IUnsetFilesAction {
+  type: "UNSET_FILES";
+}
 
 
 export type TAction =
@@ -41,4 +45,5 @@ export type TAction =
   | ISetBannerAction
   | ISetAvatarAction
   | ISetFilesAction
-  | ISetChosenFileAction;
+  | ISetChosenFileAction
+  | IUnsetFilesAction;

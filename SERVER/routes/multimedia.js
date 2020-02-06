@@ -18,7 +18,7 @@ const multer = require("multer");
   
 
 
-
+//GET
 router.get("/", multimedia.getMultimedia);
 router.get("/:type", multimedia.getMultimediaByType);
 router.post("/createArticle", upload, multimedia.createArticle);
