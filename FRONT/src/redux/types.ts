@@ -28,6 +28,10 @@ interface ISetFilesAction {
   payload: IFile[];
 }
 
+interface IUnsetFilesAction {
+  type: "UNSET_FILES";
+}
+
 
 
 export type TAction =
@@ -35,4 +39,5 @@ export type TAction =
   | ILogoutAction
   | ISetBannerAction
   | ISetAvatarAction
-  | ISetFilesAction;
+  | ISetFilesAction
+  | IUnsetFilesAction;

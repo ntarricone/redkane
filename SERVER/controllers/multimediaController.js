@@ -165,6 +165,7 @@ multimediaController.getMultimediaByType = (request, response) => {
           console.log(error);
           response.sendStatus(400);
         } else {
+          console.log(results)
           response.send(results);
         }
       }
@@ -172,13 +173,18 @@ multimediaController.getMultimediaByType = (request, response) => {
   }
 };
 
-// GET ALL MULTIMEDIA FILES BY USER AND TYPE. ID FROM PARAMS!
+// GET ALL MULTIMEDIA FILES BY USER AND TYPE. 
+//TODO IF/ELSE PARA QUE MUELSTRE TODOS LOS ARTÏCULOS
 multimediaController.getMultimediaByUserAndType = (request, response) => {
-  const { id } = request.params;
+  console.log("entraaaa")
   const { authorization } = request.headers;
+  const { id } = request.params;
+  const {type} = request.params;
+  console.log(type)
+  
   console.log("id" + id);
   if (authorization) {
-    const token = authorization.replace("Bearer ", "");
+    const token = request.headers.authorization.split(' ')[1];
     jwt.verify(token, myPrivateKey);
     connection.query(
       `
@@ -186,11 +192,12 @@ multimediaController.getMultimediaByUserAndType = (request, response) => {
     FROM multimedia
     WHERE type = '${type}' AND id = '${id}'
     `,
-      (error, [results]) => {
+      (error, results) => {
         if (error) {
           console.log(error);
           response.sendStatus(400);
         } else {
+          console.log(results)
           response.send(results);
         }
       }

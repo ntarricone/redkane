@@ -103,7 +103,7 @@ class App extends React.Component<TProps> {
               <UploadArticle type={"article"} />
             </Route>
 
-            <Route exact path="/updateProfile"  component ={UpdateProfile}>
+            <Route exact path="/updateProfile/:id"  component ={UpdateProfile}>
             </Route>
             <Route path="/singleMultimedia/:id"  component ={SingleMultimedia}>
             </Route>

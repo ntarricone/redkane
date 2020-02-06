@@ -14,6 +14,7 @@ produce(state, draftState => {
   switch (action.type) {
     case "SET_FILES":
       const files = action.payload;
+      console.log(files)
       draftState.byId = {};
       draftState.order = [];
       draftState.selectedFileId = null;
@@ -22,6 +23,11 @@ produce(state, draftState => {
         draftState.order.push(file.multimediaId);
       });
       break;
+      case "UNSET_FILES":
+        draftState.byId = {};
+        draftState.order = [];
+        draftState.selectedFileId = null;
+        break;
     
     default:
       return state;

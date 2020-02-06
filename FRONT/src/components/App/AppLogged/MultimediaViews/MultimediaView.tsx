@@ -11,6 +11,7 @@ import { myFetch } from "../../../../utils";
 import "./MultimediaView.css";
 import { Link } from "react-router-dom";
 import ReactHtmlParser from "react-html-parser";
+import {decode} from 'jsonwebtoken';
 
 interface IGlobalStateProps {}
 
@@ -29,7 +30,7 @@ interface IState {
 
 type TProps = IProps & IGlobalStateProps & IGlobalActionProps;
 
-class ArticlesView extends React.PureComponent<TProps, IState> {
+class MultimediaView extends React.PureComponent<TProps, IState> {
   constructor(props: TProps) {
     super(props);
 
@@ -60,6 +61,7 @@ class ArticlesView extends React.PureComponent<TProps, IState> {
     const { file } = this.props;
     const { textArea, path, multimediaId, type } = file;
     const { name, surname, avatar, userId } = this.state;
+    const token = localStorage.getItem("token");
     let textito = textArea?.substr(0,200)
     console.log("textitooooo" + textito);
     let texto: any = ReactHtmlParser(`'${textito}'`);
@@ -97,11 +99,13 @@ class ArticlesView extends React.PureComponent<TProps, IState> {
              > {}</p>:
         
 
-
+          {/* AVATAR. LIINK TO USERS MULTIMEDIA */}
           <div className="container-fluid">
             <div className="row"
             style={{ fontSize: "1.5rem" }}>
               <div className="col-2">
+               <Link to ={`/updateProfile/${userId
+                }`}>
                 {
                   <img
                     data-toggle="tooltip"
@@ -111,6 +115,7 @@ class ArticlesView extends React.PureComponent<TProps, IState> {
                     src={`${API_URL_IMAGES}${avatar}`}
                   />
                 }
+                </Link>
 
               </div>
 
@@ -139,4 +144,4 @@ const mapStateToProps = ({ account }: IStore): IGlobalStateProps => ({
   account
 });
 
-export default connect(mapStateToProps)(ArticlesView);
+export default connect(mapStateToProps)(MultimediaView);

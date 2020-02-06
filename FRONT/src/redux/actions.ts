@@ -25,3 +25,7 @@ export const SetFilesAction = (files: IFile[]): TAction => ({
   type: "SET_FILES",
   payload: files
 });
+
+export const UnsetFilesAction = (): TAction => ({
+  type: "UNSET_FILES",
+});

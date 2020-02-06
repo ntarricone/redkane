@@ -36,6 +36,7 @@ class Navbar extends React.PureComponent<TProps> {
   }
   render() {
     const { account } = this.props;
+ 
     return (
       <>
         <nav
@@ -84,7 +85,7 @@ class Navbar extends React.PureComponent<TProps> {
                 <a href="">Action</a>
                 </div>
                 <div>
-                <Link to="/updateProfile">
+                <Link to={`/updateProfile/${account?.id}`}>
                   {!account?.avatar ? <span>***</span> : ""}
                   Update your profile
                   {/* TODO - add red asterix if avatar doesn´t exist */}
