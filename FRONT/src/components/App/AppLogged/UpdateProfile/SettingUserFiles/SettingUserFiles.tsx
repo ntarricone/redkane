@@ -60,6 +60,7 @@ class Home extends React.PureComponent<TProps, IState> {
           console.log(files);
           if (files) {
             setFiles(files);
+            console.log(files)
           }
         }),
       200
@@ -70,25 +71,10 @@ class Home extends React.PureComponent<TProps, IState> {
     const { files } = this.props;
     return (
       <>
-        <div className="container">
-          <div className="row justify-content-center">
-            <div className="top" style={{ width: "30rem" }}>
-              <input
-                type="text"
-                placeholder="Search content..."
-                className="form-control"
-              />
-            </div>
-          </div>
-          <div className="row ">
-            <div className="col-12 d-flex justify-content-center">
-              {/* <Filter></Filter> */}
+        
 
-            </div>
-          </div>
-
-          <div className="row">
-            <div className="col-12 ">
+          <div className="row mb-2">
+            <div className="col-7 ">
               <div className="btn-group ">
                 <button
                   className="btn btn-sm btn-default btn-sorteable"
@@ -117,22 +103,15 @@ class Home extends React.PureComponent<TProps, IState> {
                 <button className="btn btn-sm btn-default btn-sorteable">
                   Fecha <i className="fa fa-sort"></i>
                 </button>
-                {/* <button className="btn btn-sm btn-default btn-sorteable">
+                 <button className="btn btn-sm btn-default btn-sorteable">
                   Costo <i className="fa fa-sort"></i>
                 </button>
-                <button className="btn btn-sm btn-default btn-sorteable">
-                  Tipo de Contenido <i className="fa fa-sort"></i>
-                </button>
-                <button className="btn btn-sm btn-default btn-sorteable">
-                  Vistas <i className="fa fa-sort"></i>
-                </button>
-                <button className="btn btn-sm btn-default btn-sorteable">
-                  Credibilidad <i className="fa fa-sort"></i>
-                </button> */}
+                <div className="col-5">
+                <Filter></Filter>
+                </div>
               </div>
             </div>
           </div>
-        </div>
         <div className="container">
           <div className="row">
             {files.order.map(id => (
@@ -143,6 +122,7 @@ class Home extends React.PureComponent<TProps, IState> {
             ))}
           </div>
         </div>
+
 
       </>
     );

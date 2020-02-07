@@ -152,6 +152,7 @@ usersController.getUsers = (req, res) => {
     connection.query(sql, (error, results) => {
       if (error) console.log(error);
       res.send(results);
+      console.log(results)
     });
   } catch {
     res.sendStatus(401);
