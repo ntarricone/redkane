@@ -118,10 +118,6 @@ class UpdateProfileForm extends React.Component<TProps, IState> {
           icon: "success",
           timer: 4000
         })
-        // this.setState({ updatedMessage: "User updated correctly" });
-        // setTimeout(() => {
-        //   this.setState({ updatedMessage: "" });
-        // }, 2000);
         setAccount({
           name,
           surname,

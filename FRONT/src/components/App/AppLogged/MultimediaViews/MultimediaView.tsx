@@ -74,7 +74,7 @@ class MultimediaView extends React.PureComponent<TProps, IState> {
         className="card animated fadeIn delay-0.5s"
         // style={{ height: "30vw"}}
       >
-        {path.includes("youtube") ? (
+        {file.path.includes("youtube") ? (
           <iframe
             style={{ height: "13vw" }}
             src={path + "?start=0&end=5"}

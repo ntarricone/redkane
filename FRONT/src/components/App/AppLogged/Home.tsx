@@ -57,38 +57,22 @@ class Home extends React.PureComponent<TProps, IState> {
     );
     // setTimeout(() => clearTimeout(timeOut), 151)
   }
+  
   render() {
     const { files } = this.props;
     return (
       <>
-        {/* {!token && <AppUnlogged></AppUnlogged>} 
-        <UpdateProfile></UpdateProfile>
-        { token && <AppLogged></AppLogged>} */}
         <div className="container">
           <div className="row">
             <div className="col-12 col-sm d-flex justify-content-center marginTopUploader">
               <ContentUploader></ContentUploader>
             </div>
           </div>
-          <div className="row justify-content-center">
-            <div className="mt-4" style={{ width: "30rem" }}>
-              <input
-                type="text"
-                placeholder="Search content..."
-                className="form-control"
-              />
-            </div>
-          </div>
-          <div className="row ">
-            <div className="col-12 d-flex justify-content-center mt-4">
-              <Filter></Filter>
+          
 
-            </div>
-          </div>
-
-          <div className="row">
-            <div className="col-12 ">
-              <div className="btn-group ">
+          <div className="row mb-2">
+            <div className="col-7 ">
+              <div className="btn-group search-group">
                 <button
                   className="btn btn-sm btn-default btn-sorteable"
                   onClick={() => this.settingFiles("")}
@@ -116,18 +100,12 @@ class Home extends React.PureComponent<TProps, IState> {
                 <button className="btn btn-sm btn-default btn-sorteable">
                   Fecha <i className="fa fa-sort"></i>
                 </button>
-                <button className="btn btn-sm btn-default btn-sorteable">
+                <button className="btn btn-sm btn-default btn-sorteable filterButton">
                   Costo <i className="fa fa-sort"></i>
                 </button>
-                <button className="btn btn-sm btn-default btn-sorteable">
-                  Tipo de Contenido <i className="fa fa-sort"></i>
-                </button>
-                <button className="btn btn-sm btn-default btn-sorteable">
-                  Vistas <i className="fa fa-sort"></i>
-                </button>
-                <button className="btn btn-sm btn-default btn-sorteable">
-                  Credibilidad <i className="fa fa-sort"></i>
-                </button>
+                <div className="col-5">
+                <Filter></Filter>
+                </div>
               </div>
             </div>
           </div>

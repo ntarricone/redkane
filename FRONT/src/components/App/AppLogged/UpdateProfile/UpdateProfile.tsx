@@ -35,6 +35,7 @@ interface IGlobalActionProps {
 
 interface IState {
   banner: string;
+  avatar: string;
   avatarChosen: string;
   toggleContent: "edit" | "multimedia";
 }
@@ -50,6 +51,7 @@ class UpdateProfile extends React.Component<TProps, IState> {
 
     this.state = {
       banner: "",
+      avatar: "",
       avatarChosen: "",
       toggleContent: "multimedia"
     };
@@ -58,6 +60,23 @@ class UpdateProfile extends React.Component<TProps, IState> {
     this.fileInputRef2 = React.createRef();
     this.uploadAvatar = this.uploadAvatar.bind(this);
     this.uploadBanner = this.uploadBanner.bind(this);
+  }
+
+  componentDidMount() {
+    const token = localStorage.getItem("token");
+    if(token){
+    (async () => {
+      myFetch({ path: `/users/${this.userId}`, token }).then(response => {
+        if (response) {
+          this.setState( response);
+        }
+      });
+      
+      // this.setState({ banner, avatar});
+    })();
+  }
+    
+    
   }
 
   uploadBanner() {
@@ -77,6 +96,7 @@ class UpdateProfile extends React.Component<TProps, IState> {
         formData
       }).then(({ banner }) => {
         if (banner) {
+          this.setState({banner: banner});
           setBanner(banner);
         }
       });
@@ -99,6 +119,8 @@ class UpdateProfile extends React.Component<TProps, IState> {
         formData
       }).then(({ avatar }) => {
         if (avatar) {
+          this.setState({avatar: avatar});
+          console.log(avatar)
           setAvatar(avatar);
         }
       });
@@ -108,8 +130,8 @@ class UpdateProfile extends React.Component<TProps, IState> {
 
   render() {
     const { account, files } = this.props;
-    const { avatar, banner } = account;
-    const { toggleContent } = this.state;
+    // const { avatar, banner } = account;
+    const { toggleContent, banner, avatar } = this.state;
     const token: any = localStorage.getItem("token");
     const {id}: any = decode(token);
    

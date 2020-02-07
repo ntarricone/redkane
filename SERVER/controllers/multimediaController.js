@@ -11,6 +11,7 @@ const lngDetector = new LanguageDetect();
 //constants
 const myPrivateKey = "mySecretKey";
 const msg = "REQUIRED FILE IS MISSING";
+const msg2 = "NOT MATCHING RESULTS";
 
 //CREATE ARTICLE
 multimediaController.createArticle = (request, response) => {
@@ -19,7 +20,6 @@ multimediaController.createArticle = (request, response) => {
   const { id } = jwt.verify(token, myPrivateKey);
 
   if (token) {
-    console.log(request.file.filename);
     const path = request.file.filename;
     const { title, category, type, textArea, description } = request.body;
     const price = request.body.price ? request.body.price : 0;
@@ -38,7 +38,6 @@ multimediaController.createArticle = (request, response) => {
         console.log(error);
         response.sendStatus(400);
       } else {
-        console.log(results.insertId);
         connection.query(
           `
             SELECT *
@@ -68,7 +67,6 @@ multimediaController.createImage = (request, response) => {
   const { id } = jwt.verify(token, myPrivateKey);
 
   if (token) {
-    console.log(request.file.filename);
     const path = request.file.filename;
     const { title, category, type, description } = request.body;
     const price = request.body.price ? request.body.price : 0;
@@ -81,13 +79,11 @@ multimediaController.createImage = (request, response) => {
     VALUES('${path}', '${title}', '${type}', '${category}', '${price}',
      '${description}', '${language}' ,${id});
   `;
-    console.log(sql);
     connection.query(sql, (error, results) => {
       if (error) {
         console.log(error);
         response.sendStatus(400);
       } else {
-        console.log(results.insertId);
         connection.query(
           `
             SELECT *
@@ -111,13 +107,11 @@ multimediaController.createImage = (request, response) => {
 
 //CREATE VIDEO
 multimediaController.createVideo = (request, response) => {
-  console.log("entro");
   const token = request.headers.authorization.replace("Bearer ", "");
   const { id } = jwt.verify(token, myPrivateKey);
   if (token) {
     const { title, category, type, description, path } = request.body;
     const price = request.body.price ? request.body.price : 0;
-    console.log(request.body.title);
     const [language] = lngDetector.detect(description);
     connection.query(
       `
@@ -182,7 +176,6 @@ multimediaController.getMultimedia = (request, response) => {
 multimediaController.getMultimediaByType = (request, response) => {
   const { authorization } = request.headers;
   const { type } = request.params;
-  console.log(type);
   if (authorization) {
     const token = authorization.replace("Bearer ", "");
     jwt.verify(token, myPrivateKey);
@@ -196,7 +189,6 @@ multimediaController.getMultimediaByType = (request, response) => {
           console.log(error);
           response.sendStatus(400);
         } else {
-          console.log(results)
           response.send(results);
         }
       }
@@ -228,8 +220,9 @@ multimediaController.getMultimediaByUserAndType = (request, response) => {
           console.log(error);
           response.sendStatus(400);
         } else {
-          console.log(results)
           response.send(results);
+          console.log(results)
+         
         }
       }
     );
@@ -239,7 +232,6 @@ multimediaController.getMultimediaByUserAndType = (request, response) => {
 //OPEN SINGLE MULTIMEDIA
 multimediaController.getOneMultimedia = (request, response) => {
   const { multimediaId } = request.params;
-  console.log(multimediaId);
   const { authorization } = request.headers;
   if (authorization) {
     const token = authorization.replace("Bearer ", "");
@@ -305,7 +297,6 @@ multimediaController.updateArticle = (request, response) => {
               } else {
                 const [multimedia] = results;
                 response.send(results[0]);
-                console.log(multimedia);
               }
             }
           );
@@ -319,7 +310,6 @@ multimediaController.updateArticle = (request, response) => {
 multimediaController.deleteMultimedia = (request, response) => {
   const { multimediaId } = request.params;
   const { isDeleted } = request.body;
-  console.log(multimediaId);
   const { authorization } = request.headers;
   const token = authorization.replace("Bearer ", "");
   const { isAdmin } = jwt.verify(token, myPrivateKey);
@@ -342,8 +332,34 @@ multimediaController.deleteMultimedia = (request, response) => {
   }
 };
 
-//ARTICLES LIKED BY AN USER
-multimediaController.getMultimediaLikedByUser = (request, response) => {};
+//SEARCH BOX
+multimediaController.searchByWordMultimedia = (request, response) => {
+  const { key } = request.body
+  const { authorization } = request.headers;
+  if (authorization) {
+    const token = authorization.replace("Bearer ", "");
+    jwt.verify(token, myPrivateKey);
+    connection.query(
+      `
+      SELECT *
+      FROM multimedia
+      WHERE title LIKE "%${key}%" OR textArea LIKE "%${key}%" 
+      ORDER BY time DESC
+        `,
+      (error, results) => {
+        if (results && results.length > 0) {
+          response.send(results);
+          console
+        } else {
+          response.send(msg2);
+        }
+
+      }
+    )
+  }
+    
+};
+
 
 //LIKE AN ARTICLE
 multimediaController.likeMultimedia = (request, response) => {};

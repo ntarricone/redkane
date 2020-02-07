@@ -41,7 +41,7 @@ produce(state, draftState => {
       case "UNSET_FILES":
         draftState.byId = {};
         draftState.order = [];
-        draftState.selectedFileId = null;
+        // draftState.selectedFileId = null;
         break;
     
       //TODO ADD AN ADD MULTIMEDIA SO WHEN THINGS GET UPLOADED THEY REFLECT IMMEDIATELY IN REDUX
