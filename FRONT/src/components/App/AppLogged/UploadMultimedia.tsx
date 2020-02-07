@@ -3,6 +3,9 @@ import { IStore } from "../../../interfaces/IStore";
 import { myFetch } from "../../../utils";
 import { connect } from "react-redux";
 import { IAccount } from "../../../interfaces/IAccount";
+import { AddFileAction } from "../../../redux/actions";
+import { IFile } from "../../../interfaces/IFile";
+import swal from "sweetalert";
 
 interface IState {
   title: string;
@@ -19,7 +22,11 @@ interface IGlobalStateProps {
   account: IAccount | null;
 }
 
-type TProps = IGlobalStateProps & IProps;
+interface IGlobalActionProps {
+  addFile(file: IFile):void;
+}
+
+type TProps = IGlobalStateProps & IGlobalActionProps & IProps;
 
 class AploadMultimedia extends React.PureComponent<TProps, IState> {
   fileInputRef: React.RefObject<HTMLInputElement>;
@@ -66,11 +73,18 @@ class AploadMultimedia extends React.PureComponent<TProps, IState> {
         token,
         formData
       }).then(json => {
+        console.log(json)
         if (json) {
-          console.log("ok");
-          //addFile(json);
+          swal({
+            title: "Success!",
+            text: "You´ve successfully uploaded your image!",
+            icon: "success",
+            timer: 2000
+          });
+          this.props.addFile(json);
         }
       });
+
       this.setState(initialState);
       this.fileInputRef.current.value = "";
     } else {
@@ -82,6 +96,16 @@ class AploadMultimedia extends React.PureComponent<TProps, IState> {
         method: "POST",
         json: { title, type, price, category, path, description },
         token
+      }).then(json => {
+        if(json){
+          swal({
+            title: "Success!",
+            text: "You´ve successfully uploaded your image!",
+            icon: "success",
+            timer: 2000
+          });
+          this.props.addFile(json);
+        }
       });
     }
   }
@@ -97,9 +121,10 @@ class AploadMultimedia extends React.PureComponent<TProps, IState> {
         {/* Uploading image or adding youtube link */}
         <div>
           {type === "image" ? (
-            <input type="file" ref={this.fileInputRef} id="file-name" />
+            <input required type="file" ref={this.fileInputRef} id="file-name" />
           ) : (
             <input
+            required
               placeholder="Youtube Link"
               type="text"
               className="form-control"
@@ -189,4 +214,8 @@ const mapStateToProps = ({ account }: IStore): IGlobalStateProps => ({
   account
 });
 
-export default connect(mapStateToProps)(AploadMultimedia);
+const mapDispatchToProps: IGlobalActionProps = {
+  addFile: AddFileAction
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AploadMultimedia);

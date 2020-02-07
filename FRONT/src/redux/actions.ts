@@ -29,8 +29,18 @@ export const SetFilesAction = (files: IFile[]): TAction => ({
 export const SetChosenFileAction = (file: IFile): TAction => ({
   type: "SET_CHOSEN_FILE",
   payload: file
-});
+})
 
 export const UnsetFilesAction = (): TAction => ({
-  type: "UNSET_FILES",
+  type: "UNSET_FILES"
+});
+
+export const DeleteFileAction = (id: number): TAction => ({
+  type: "DELETE_FILE",
+  payload: id
+});
+
+export const AddFileAction = (file: IFile): TAction => ({
+  type: "ADD_FILE",
+  payload: file
 });

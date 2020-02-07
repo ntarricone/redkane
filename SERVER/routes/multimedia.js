@@ -30,6 +30,6 @@ router.get("/single/:multimediaId", multimedia.getOneMultimedia);
 router.post("/update/:multimediaId", upload, multimedia.updateArticle);
 // router.put("/like/:id", multimedia.likeMultimedia);
 // router.put("/dislike/:id", multimedia.dislikeMultimedia);
-router.put("/delete/:multimediaId", multimedia.deleteMultimedia);
+router.delete("/delete/:multimediaId", multimedia.deleteMultimedia);
 
 module.exports = router;

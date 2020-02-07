@@ -4,6 +4,7 @@ import { IAccount } from "../../../interfaces/IAccount";
 import { SetAccountAction } from "../../../redux/actions";
 import { connect } from "react-redux";
 import "./Login.css";
+import swal from "sweetalert";
 
 interface IProps {
   notRegistered():void
@@ -65,7 +66,12 @@ class Login extends React.PureComponent<TProps, IState> {
         localStorage.setItem("token", token);
         localStorage.setItem("avatar", avatar);
         setAccount(generateAccountFromToken({token, avatar, banner, name, surname, profession, about_me, youtube, linkedin}));
-        
+        swal({
+          title: "Success!",
+          text: "You've successfully logged in!",
+          icon: "success",
+          timer: 2000
+        });
       } else {
         this.setState({ error: "Credenciales inválidas" });
         window.alert("Invalid email or password");

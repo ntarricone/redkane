@@ -237,7 +237,7 @@ class UploadArticle extends React.PureComponent {
             <div className="col-1"></div>
           </div>
         </div>
-        {/* Previo of Image or video only for update */}
+        {/* Preview of Image or video only for update */}
         {this.id_multimedia !== "0" && (
           <div className="container">
             <div className="row">
@@ -245,11 +245,10 @@ class UploadArticle extends React.PureComponent {
               <div className="col-10 mt-2 ml-3 ">
                 <div>
                   {type !== "video" && (
-                    <img
-                      style={{ width: "97%", height: "50vh" }}
-                      src={API_URL_MULTIMEDIA + path}
-                      alt=""
-                    />
+                    <div className="multimediaImage mt-3"
+                    style={{ backgroundImage: `url(${API_URL_MULTIMEDIA + path})` }}
+                    ></div>
+
                   )}
                   {type === "video" && (
                     <iframe
@@ -323,7 +322,7 @@ class UploadArticle extends React.PureComponent {
             <div className="col-1"></div>
             <div className="col-10 mt-5">
               <textarea
-                placeholder="Tell us in a paragraph what would your article is about"
+                placeholder="Tell us in a paragraph what would your multimedia is about"
                 className="form-control"
                 value={description}
                 onChange={e => this.setState({ description: e.target.value })}

@@ -44,7 +44,7 @@ class MultimediaView extends React.PureComponent<TProps, IState> {
       avatar: "",
       userId: null
     };
-    this.setingFile = this.setingFile.bind(this);
+    this.settingFile = this.settingFile.bind(this);
   }
   //setting card owner´s details
   componentDidMount() {
@@ -62,19 +62,23 @@ class MultimediaView extends React.PureComponent<TProps, IState> {
     });
   }
 
-  setingFile(file: IFile) {
+  settingFile(file: IFile) {
     this.props.setChosenFile(file);
   }
   render() {
     const { file } = this.props;
-    const { path, multimediaId, description, title, time, price, type } = file;
-    const { name, surname, avatar, userId } = this.state;
+    const { multimediaId, description, time, price, type } = file;
+    let {path, title} = file;
+    const { name, surname, userId } = this.state;
+    let {avatar} = this.state;
+    path = path? path: "defaultBanner.jpg";
+    avatar = avatar? avatar: "avatar.png";
+    title = title? title : "TITLE";
     return (
       <div
         className="card animated fadeIn delay-0.5s"
-        // style={{ height: "30vw"}}
       >
-        {path.includes("youtube") ? (
+        {path?.includes("youtube") ? (
           <iframe
             style={{ height: "13vw" }}
             src={path + "?start=0&end=5"}
@@ -93,12 +97,11 @@ class MultimediaView extends React.PureComponent<TProps, IState> {
         <div className="card-body" style={{ backgroundColor: "#fafafa" }}>
           <Link
             to={`/singleMultimedia/${multimediaId}`}
-            onClick={() => this.setingFile(file)}
+            onClick={() => this.settingFile(file)}
           >
             <h5 className="card-title text-dark webLinks">{title}</h5>
           </Link>
 
-          {/* //ADD A VARIABLE TO ADD THE TEXT AS A STRING AND THEN CROP  */}
           <p className="card-text text-dark" style={{ minHeight: "8vh" }}>
             {" "}
             {description?.substring(0, 100) + "..."}
@@ -130,8 +133,7 @@ class MultimediaView extends React.PureComponent<TProps, IState> {
                 {price != 0 && <img className="iconsSize" src={paid} alt="" />}
               </div>
               <div className="col-2">
-                {/* <i className="far fa-bookmark"></i> */}
-                <img className="iconsSize" src={saved} alt="" />
+                  <img className="iconsSize" src={saved} alt="" />
               </div>
             </div>
           </div>

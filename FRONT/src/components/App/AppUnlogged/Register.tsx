@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { SetAccountAction } from "../../../redux/actions";
 import { IAccount } from "../../../interfaces/IAccount";
 import "./Register.css";
+import swal from "sweetalert";
 
 interface IProps {
   notRegistered():void
@@ -105,6 +106,12 @@ class Register extends React.PureComponent<TProps, IState> {
           about_me,
           youtube,
           linkedin
+        });
+        swal({
+          title: "Success!",
+          text: "You've successfully logged in!",
+          icon: "success",
+          timer: 2000
         });
       } else {
         this.setState({ error: "User already registered" });
