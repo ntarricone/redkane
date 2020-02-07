@@ -1,5 +1,6 @@
 import React from "react";
 import "./UpdateProfile.css";
+
 import { connect } from "react-redux";
 import { IStore } from "../../../../interfaces/IStore";
 import { IAccount } from "../../../../interfaces/IAccount";
@@ -123,17 +124,15 @@ class UpdateProfile extends React.Component<TProps, IState> {
           <div className="row ">
             <div className="col-12 sharedBorder mt-5">
               {!banner ? (
-                <img
-                  className="banner mt-4"
-                  src={API_URL_IMAGES + "defaultBanner.jpg"}
-                  alt=""
-                />
+                
+                <div className="banner mt-3"
+                style={{ backgroundImage: `url(${API_URL_IMAGES + "defaultBanner.jpg"})` }}
+                ></div>
               ) : (
-                <img
-                  className="banner mt-4"
-                  src={API_URL_IMAGES + banner}
-                  alt=""
-                />
+                <div className="banner mt-3"
+                style={{ backgroundImage: `url(${API_URL_IMAGES + banner})` }}
+                ></div>
+ 
               )}
               <br />
               <div className="container-fluid uploadBanner">

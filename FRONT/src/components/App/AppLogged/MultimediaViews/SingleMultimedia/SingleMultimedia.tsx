@@ -5,13 +5,21 @@ import { IFiles } from "../../../../../interfaces/IFiles";
 import { myFetch } from "../../../../../utils";
 import { API_URL_MULTIMEDIA, API_URL_IMAGES } from "../../../../../constants";
 import "./SingleMultimedia.css";
-import linkedinIcon from "../../../../../icons/linkedin.png";
-import youtubeIcon from "../../../../../icons/youtube.png";
 import ReactHtmlParser from "react-html-parser";
-import { SetChosenFileAction } from "../../../../../redux/actions";
+import {
+  SetChosenFileAction,
+  DeleteFileAction,
+  UnsetFilesAction
+} from "../../../../../redux/actions";
 import { IFile } from "../../../../../interfaces/IFile";
 import { decode } from "jsonwebtoken";
 import { Link } from "react-router-dom";
+import linkedinIcon from "../../../../../icons/linkedin.png";
+import youtubeIcon from "../../../../../icons/youtube.png";
+import deleteIcon from "../../../../../icons/trash.png";
+import editIcon from "../../../../../icons/edit.png";
+import swal from "sweetalert";
+import history from "../../../../../history";
 
 interface IGlobalStateProps {
   files: IFiles;
@@ -19,6 +27,8 @@ interface IGlobalStateProps {
 
 interface IGlobalActionProps {
   setChosenFile(file: IFile): void;
+  deleteFile(id: number): void;
+  unsetFiles(): void;
 }
 
 interface IProps {
@@ -74,6 +84,7 @@ class SingleMultimedia extends React.PureComponent<TProps, IState> {
     };
     this.setFile = this.setFile.bind(this);
     this.setUser = this.setUser.bind(this);
+    this.deleteMultimedia = this.deleteMultimedia.bind(this);
   }
 
   componentDidMount() {
@@ -158,6 +169,31 @@ class SingleMultimedia extends React.PureComponent<TProps, IState> {
     }
   }
 
+  deleteMultimedia(id_multimedia: number) {
+    swal({
+      title: "Are you sure?",
+      text: "By clicking ok you will delete this file permanently",
+      icon: "warning",
+      dangerMode: true
+    }).then(willDelete => {
+      if (willDelete) {
+        const token: any = localStorage.getItem("token");
+        myFetch({
+          path: `/multimedia/delete/${id_multimedia}`,
+          method: "DELETE",
+          token
+        }).then(response => {
+          console.log(response);
+          if (response) {
+            this.props.unsetFiles();
+            swal("Deleted!", "Your multimedia has been deleted!", "success");
+            history.push(`/`);
+          }
+        });
+      }
+    });
+  }
+
   setUser(id: number) {
     myFetch({ path: `/users/${id}` }).then(user => {
       if (user) {
@@ -174,20 +210,20 @@ class SingleMultimedia extends React.PureComponent<TProps, IState> {
 
   render() {
     const {
-      title,
       textArea,
       description,
-      path,
       name,
       surname,
-      email,
-      avatar,
       youtube,
       linkedin,
       time,
       id: idCreator,
       type
     } = this.state;
+    let {avatar, path, title} = this.state;
+    title = title? title: "Title missing :("
+    avatar = avatar? avatar: "avatar.png";
+    path = path? path: "defaultBanner.jpg";
     const token: any = localStorage.getItem("token");
     const { id: idLogged }: any = decode(token);
     return (
@@ -201,7 +237,6 @@ class SingleMultimedia extends React.PureComponent<TProps, IState> {
                 <div>
                   <h1>{title}</h1>
                 </div>
-
               </div>
             </div>
             <div className="col-1"></div>
@@ -227,16 +262,17 @@ class SingleMultimedia extends React.PureComponent<TProps, IState> {
               <small className="text-muted">
                 {new Date(time).toLocaleDateString()}
               </small>
-              <small className="text-muted">{" " + email}</small>
             </div>
             <div className="col-4"></div>
             <div className="col-2 iconsDisplay">
-            {idCreator === idLogged && (
-                 <Link to={`/uploadArticle/${this.id_multimedia}`}><small> <button type="button" className="btn-sm btn-success">
-                    Edit
-                  </button></small>
-                  </Link>
-                )}
+              {idCreator === idLogged && (
+                <img
+                  onClick={() => this.deleteMultimedia(this.id_multimedia)}
+                  className="iconsSize"
+                  src={deleteIcon}
+                  alt=""
+                />
+              )}
               {linkedin && (
                 <a href={linkedin}>
                   <img className="iconsSize" src={linkedinIcon} alt="" />{" "}
@@ -273,11 +309,17 @@ class SingleMultimedia extends React.PureComponent<TProps, IState> {
             <div className="row">
               <div className="col-1"></div>
               <div className="col-10">
-                <img
+                <div
+                  className="multimediaImage"
+                  style={{
+                    backgroundImage: `url(${API_URL_MULTIMEDIA + path})`
+                  }}
+                ></div>
+                {/* <img
                   style={{ width: "100%", height: "50vh" }}
                   src={API_URL_MULTIMEDIA + path}
                   alt=""
-                />
+                /> */}
               </div>
               <div className="col-1"></div>
             </div>
@@ -288,7 +330,17 @@ class SingleMultimedia extends React.PureComponent<TProps, IState> {
           <div className="row">
             <div className="col-1"></div>
             <div className="col-10">
-              <h3>Summary</h3>
+              <div className="row">
+                <h3 className="ml-3">Summary</h3>
+
+                {idCreator === idLogged && (
+                  <Link to={`/uploadArticle/${this.id_multimedia}`}>
+                    <small>
+                      <img className="iconsSize" src={editIcon} alt="" />
+                    </small>
+                  </Link>
+                )}
+              </div>
               <hr />
               <p>{description}</p>
             </div>
@@ -296,17 +348,19 @@ class SingleMultimedia extends React.PureComponent<TProps, IState> {
           </div>
         </div>
         {/* TEXT  */}
-       { type === "article" && <div className="container mt-5">
-          <div className="row">
-            <div className="col-1"></div>
-            <div className="col-10">
-              <h3>Content</h3>
-              <hr />
-              <p>{ReactHtmlParser(`${textArea}`)}</p>
+        {type === "article" && (
+          <div className="container mt-5">
+            <div className="row">
+              <div className="col-1"></div>
+              <div className="col-10">
+                <h3>Content</h3>
+                <hr />
+                <p>{ReactHtmlParser(`${textArea}`)}</p>
+              </div>
+              <div className="col-1"></div>
             </div>
-            <div className="col-1"></div>
           </div>
-        </div>}
+        )}
       </>
     );
   }
@@ -317,7 +371,9 @@ const mapStateToProps = ({ files }: IStore): IGlobalStateProps => ({
 });
 
 const mapDispatchToProps: IGlobalActionProps = {
-  setChosenFile: SetChosenFileAction
+  setChosenFile: SetChosenFileAction,
+  deleteFile: DeleteFileAction,
+  unsetFiles: UnsetFilesAction
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(SingleMultimedia);

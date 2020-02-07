@@ -1,26 +1,24 @@
 import { IAccount } from "../interfaces/IAccount";
 import { IFile } from "../interfaces/IFile";
 
-
-interface ISetAccountAction{
-    type: "SET_ACCOUNT";
-    payload: IAccount
+interface ISetAccountAction {
+  type: "SET_ACCOUNT";
+  payload: IAccount;
 }
 
 interface ILogoutAction {
   type: "LOGOUT";
 }
 
-interface ISetBannerAction{
+interface ISetBannerAction {
   type: "SET_BANNER";
-  payload: string
+  payload: string;
 }
 
-interface ISetAvatarAction{
+interface ISetAvatarAction {
   type: "SET_AVATAR";
-  payload: string
+  payload: string;
 }
-
 
 //working with files
 interface ISetFilesAction {
@@ -28,16 +26,24 @@ interface ISetFilesAction {
   payload: IFile[];
 }
 
-interface ISetChosenFileAction{
+interface ISetChosenFileAction {
   type: "SET_CHOSEN_FILE";
-  payload: IFile
-  
+  payload: IFile;
 }
 
 interface IUnsetFilesAction {
   type: "UNSET_FILES";
 }
 
+interface IDeleteFileAction {
+  type: "DELETE_FILE";
+  payload: number;
+}
+
+interface IAddFileAction {
+  type: "ADD_FILE";
+  payload: IFile;
+}
 
 export type TAction =
   | ISetAccountAction
@@ -46,4 +52,6 @@ export type TAction =
   | ISetAvatarAction
   | ISetFilesAction
   | ISetChosenFileAction
-  | IUnsetFilesAction;
+  | IUnsetFilesAction
+  | IDeleteFileAction
+  | IAddFileAction;

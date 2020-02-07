@@ -82,7 +82,7 @@ class Home extends React.PureComponent<TProps, IState> {
           </div>
           <div className="row ">
             <div className="col-12 d-flex justify-content-center">
-              <Filter></Filter>
+              {/* <Filter></Filter> */}
 
             </div>
           </div>
@@ -117,7 +117,7 @@ class Home extends React.PureComponent<TProps, IState> {
                 <button className="btn btn-sm btn-default btn-sorteable">
                   Fecha <i className="fa fa-sort"></i>
                 </button>
-                <button className="btn btn-sm btn-default btn-sorteable">
+                {/* <button className="btn btn-sm btn-default btn-sorteable">
                   Costo <i className="fa fa-sort"></i>
                 </button>
                 <button className="btn btn-sm btn-default btn-sorteable">
@@ -128,7 +128,7 @@ class Home extends React.PureComponent<TProps, IState> {
                 </button>
                 <button className="btn btn-sm btn-default btn-sorteable">
                   Credibilidad <i className="fa fa-sort"></i>
-                </button>
+                </button> */}
               </div>
             </div>
           </div>

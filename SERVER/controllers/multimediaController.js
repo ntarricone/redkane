@@ -70,10 +70,10 @@ multimediaController.createImage = (request, response) => {
   if (token) {
     console.log(request.file.filename);
     const path = request.file.filename;
-    const { title, category, type, description } = request.body;
+    const { title, type, description } = request.body;
     const price = request.body.price ? request.body.price : 0;
     // console.log(price)
-
+    const category = request.body.category? request.body.category : "other";
     const [language] = lngDetector.detect(description);
     const sql = `
     INSERT
@@ -88,18 +88,21 @@ multimediaController.createImage = (request, response) => {
         response.sendStatus(400);
       } else {
         console.log(results.insertId);
+        const {insertId} = results;
         connection.query(
           `
             SELECT *
             FROM multimedia
-            WHERE multimediaId = '${id}'
+            WHERE multimediaId = '${insertId}'
           `,
           (error, results) => {
             if (error) {
               console.log(error);
               response.sendStatus(400);
             } else {
+              console.log(results)
               const [file] = results;
+              console.log(file)
               response.send(file);
             }
           }
@@ -126,23 +129,26 @@ multimediaController.createVideo = (request, response) => {
     VALUES('${path}', '${title}', '${type}', '${category}', '${price}',
     '${description}', '${language}', ${id})
   `,
-      error => {
+      (error, results) => {
         if (error) {
           console.log(error);
           response.sendStatus(400);
         } else {
+          const {insertId} = results;
           connection.query(
             `
             SELECT *
             FROM multimedia
-            WHERE path = '${path}'
+            WHERE multimediaId = '${insertId}'
           `,
             (error, results) => {
               if (error) {
                 console.log(error);
                 response.sendStatus(400);
               } else {
+                console.log(results)
                 const [file] = results;
+                console.log(file)
                 response.send(file);
               }
             }
@@ -163,8 +169,10 @@ multimediaController.getMultimedia = (request, response) => {
     jwt.verify(token, myPrivateKey);
     connection.query(
       `
-        SELECT *
-        FROM multimedia
+      SELECT *
+      FROM multimedia
+      ORDER BY time
+      DESC
         `,
       (error, results) => {
         if (error) {
@@ -190,6 +198,8 @@ multimediaController.getMultimediaByType = (request, response) => {
       `
         SELECT *
         FROM multimedia WHERE type = '${type}'
+        ORDER BY time
+        DESC
         `,
       (error, results) => {
         if (error) {
@@ -317,25 +327,27 @@ multimediaController.updateArticle = (request, response) => {
 
 //DELETE ARTICLE
 multimediaController.deleteMultimedia = (request, response) => {
+  console.log("entro")
   const { multimediaId } = request.params;
-  const { isDeleted } = request.body;
   console.log(multimediaId);
   const { authorization } = request.headers;
   const token = authorization.replace("Bearer ", "");
-  const { isAdmin } = jwt.verify(token, myPrivateKey);
   jwt.verify(token, myPrivateKey);
-  if (authorization | isAdmin) {
+  if (authorization) {
     connection.query(
       `
-    UPDATE 
-    multimedia SET isDeleted = ${isDeleted}
-    WHERE multimediaId = '${multimediaId}'
+      DELETE FROM multimedia WHERE multimediaId=${multimediaId};
     `,
-      (error, results) => {
+      (error) => {
+        let aux = null;
         if (error) {
-          return response.sendStatus(400);
+          aux = false;
+          console.log(error)
+          return response.send(aux);
         } else {
-          response.sendStatus(200);
+          aux = true;
+          console.log(aux)
+          response.send(aux);
         }
       }
     );
