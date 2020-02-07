@@ -9,6 +9,7 @@ import { IFile } from "../../../interfaces/IFile";
 import { myFetch } from "../../../utils";
 import { IFiles } from "../../../interfaces/IFiles";
 import MultimediaView from "./MultimediaViews/MultimediaView";
+import free from "../../../../icons/video.png";
 
 
 interface IGlobalStateProps {
@@ -22,6 +23,7 @@ interface IGlobalActionProps {
 
 interface IState {
   type: "" | "article" | "image" | "video";
+  price: number | null;
 }
 
 type TProps = IGlobalStateProps & IGlobalActionProps;
@@ -31,7 +33,8 @@ class Home extends React.PureComponent<TProps, IState> {
     super(props);
 
     this.state = {
-      type: ""
+      type: "",
+      price: null
     };
     this.settingFiles = this.settingFiles.bind(this);
   }
@@ -55,7 +58,7 @@ class Home extends React.PureComponent<TProps, IState> {
         }),
       200
     );
-    // setTimeout(() => clearTimeout(timeOut), 151)
+    
   }
   
   render() {
@@ -98,13 +101,13 @@ class Home extends React.PureComponent<TProps, IState> {
                   Videos <i className="fa fa-sort"></i>
                 </button>
                 <button className="btn btn-sm btn-default btn-sorteable">
-                  Fecha <i className="fa fa-sort"></i>
+                  Category <i className="fa fa-sort"></i>
                 </button>
                 <button className="btn btn-sm btn-default btn-sorteable filterButton">
-                  Costo <i className="fa fa-sort"></i>
+                  Free <i className="fa fa-sort"></i>
                 </button>
                 <div className="col-5">
-                <Filter></Filter>
+                <Filter parent = {"home"}></Filter>
                 </div>
               </div>
             </div>

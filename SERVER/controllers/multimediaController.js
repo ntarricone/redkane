@@ -347,7 +347,7 @@ multimediaController.deleteMultimedia = (request, response) => {
 };
 
 //SEARCH BOX
-multimediaController.searchByWordMultimedia = (request, response) => {
+multimediaController.searchMultimediaByWord = (request, response) => {
   const { key } = request.body
   const { authorization } = request.headers;
   if (authorization) {
@@ -374,9 +374,60 @@ multimediaController.searchByWordMultimedia = (request, response) => {
     
 };
 
+//SEARCH BOX BY USER ID
+multimediaController.searchMultimediaByWordAndUser = (request, response) => {
+  const { key } = request.body;
+  const { id: idUser } = request.params;
+  const { authorization } = request.headers;
+  if (authorization) {
+    const token = authorization.replace("Bearer ", "");
+    jwt.verify(token, myPrivateKey);
+    connection.query(
+      `
+      SELECT *
+      FROM multimedia
+      WHERE id = ${idUser}
+      AND (title LIKE "%${key}%" OR textArea LIKE "%${key}%")
+      ORDER BY time DESC
+        `,
+      (error, results) => {
+        if (results && results.length > 0) {
+          response.send(results);
 
-//LIKE AN ARTICLE
-multimediaController.likeMultimedia = (request, response) => {};
+        } else {
+          response.send(msg2);
+        }
+
+      }
+    )
+  }
+    
+};
+
+
+//GET MULTIMEDIA BY PRICE
+multimediaController.getMultimediaByPrice = (request, response) => {
+  const { authorization } = request.headers;
+  const { price } = request.params; //REVIEW
+  if (authorization) {
+    const token = authorization.replace("Bearer ", "");
+    jwt.verify(token, myPrivateKey);
+    connection.query(
+      `
+        SELECT *
+        FROM multimedia WHERE price = ${price}
+        `,
+      (error, results) => {
+        if (error) {
+          console.log(error);
+          response.sendStatus(400);
+        } else {
+          response.send(results);
+        }
+      }
+    );
+  }
+};
 
 //DISLIKE AN ARTICLE
 multimediaController.dislikeMultimedia = (request, response) => {};
