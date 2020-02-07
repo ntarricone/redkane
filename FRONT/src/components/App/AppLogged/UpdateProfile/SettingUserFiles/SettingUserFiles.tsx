@@ -104,10 +104,10 @@ class Home extends React.PureComponent<TProps, IState> {
                   Fecha <i className="fa fa-sort"></i>
                 </button>
                  <button className="btn btn-sm btn-default btn-sorteable">
-                  Costo <i className="fa fa-sort"></i>
+                  Free <i className="fa fa-sort"></i>
                 </button>
                 <div className="col-5">
-                <Filter></Filter>
+                <Filter parent= {"user"} ></Filter>
                 </div>
               </div>
             </div>
