@@ -62,10 +62,10 @@ class Login extends React.PureComponent<TProps, IState> {
     }).then(json => {
       if (json) {
         console.log(json)
-        const { token, avatar, banner, name, surname, profession, about_me, youtube, linkedin } = json;
+        const { token, avatar, banner, name, surname, profession, about_me, youtube, linkedin, isCreator } = json;
         localStorage.setItem("token", token);
         localStorage.setItem("avatar", avatar);
-        setAccount(generateAccountFromToken({token, avatar, banner, name, surname, profession, about_me, youtube, linkedin}));
+        setAccount(generateAccountFromToken({token, avatar, banner, name, surname, profession, about_me, youtube, linkedin, isCreator}));
         swal({
           title: "Success!",
           text: "You've successfully logged in!",

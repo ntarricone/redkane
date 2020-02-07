@@ -15,7 +15,8 @@ const initialState: IAccount = {
   banner: "",
   about_me: "",
   youtube: "",
-  linkedin: ""
+  linkedin: "",
+  isCreator: false
 };
 
 export default (state: IAccount = initialState, action: TAction): IAccount =>

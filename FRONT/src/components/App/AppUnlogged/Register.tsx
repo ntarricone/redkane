@@ -91,7 +91,8 @@ class Register extends React.PureComponent<TProps, IState> {
           about_me,
           youtube,
           linkedin,
-          email
+          email,
+          isCreator
         } = json;
         localStorage.setItem("token", token);
         this.props.setAccount({
@@ -105,7 +106,8 @@ class Register extends React.PureComponent<TProps, IState> {
           profession,
           about_me,
           youtube,
-          linkedin
+          linkedin,
+          isCreator
         });
         swal({
           title: "Success!",
