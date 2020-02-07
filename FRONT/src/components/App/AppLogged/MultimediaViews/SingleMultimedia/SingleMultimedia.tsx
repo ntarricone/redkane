@@ -348,7 +348,7 @@ class SingleMultimedia extends React.PureComponent<TProps, IState> {
           </div>
         </div>
         {/* TEXT  */}
-        {type === "article" && (
+        {type === "article"  && (
           <div className="container mt-5">
             <div className="row">
               <div className="col-1"></div>

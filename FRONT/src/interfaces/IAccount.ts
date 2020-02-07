@@ -14,4 +14,5 @@ export interface IAccount /*extends ITokenPayload*/{
     about_me: string;
     youtube: string;
     linkedin?: string;
+    isCreator: boolean;
 }

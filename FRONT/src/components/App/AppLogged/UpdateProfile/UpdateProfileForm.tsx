@@ -109,7 +109,8 @@ class UpdateProfileForm extends React.Component<TProps, IState> {
           banner,
           about_me,
           linkedin,
-          youtube
+          youtube,
+          isCreator
         } = response;
         console.log("usuario actualizado");
         swal(
@@ -134,7 +135,8 @@ class UpdateProfileForm extends React.Component<TProps, IState> {
           about_me,
           token,
           youtube,
-          linkedin
+          linkedin,
+          isCreator
         });
       } else {
         console.log("no actualizado");

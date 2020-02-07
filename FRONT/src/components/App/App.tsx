@@ -65,7 +65,8 @@ class App extends React.Component<TProps> {
           email,
           isAdmin,
           youtube,
-          linkedin
+          linkedin,
+          isCreator
         } = user;
         setAccount({
           token,
@@ -79,7 +80,8 @@ class App extends React.Component<TProps> {
           email,
           isAdmin,
           youtube,
-          linkedin
+          linkedin,
+          isCreator
         });
       } else {
       }

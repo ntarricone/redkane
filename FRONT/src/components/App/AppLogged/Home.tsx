@@ -67,7 +67,7 @@ class Home extends React.PureComponent<TProps, IState> {
         <div className="container">
           <div className="row">
             <div className="col-12 col-sm d-flex justify-content-center marginTopUploader">
-              <ContentUploader></ContentUploader>
+             {this.props.account.isCreator? <ContentUploader></ContentUploader>: ""}
             </div>
           </div>
           <div className="row justify-content-center">

@@ -50,7 +50,8 @@ usersController.createUser = (req, res) => {
                     about_me,
                     linkedin,
                     youtube,
-                    banner
+                    banner,
+                    isCreator
                   }
                 ] = results;
                 const token = jwt.sign(
@@ -74,7 +75,8 @@ usersController.createUser = (req, res) => {
                   about_me,
                   linkedin,
                   youtube,
-                  banner
+                  banner,
+                  isCreator: Boolean(isCreator)
                 });
               } else {
                 res.sendStatus(400);
@@ -110,7 +112,8 @@ usersController.login = (request, response) => {
             about_me,
             name,
             youtube,
-            linkedin
+            linkedin,
+            isCreator
           }
         ] = results;
         const token = jwt.sign(
@@ -130,7 +133,8 @@ usersController.login = (request, response) => {
           about_me,
           name,
           youtube,
-          linkedin
+          linkedin,
+          isCreator: Boolean(isCreator)
         });
       } else {
         response.sendStatus(400);
