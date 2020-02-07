@@ -21,7 +21,8 @@ import history from "../../../../history";
 import upload from "../../../../icons/upload.png";
 import video from "../../../../icons/video.png";
 import user from "../../../../icons/user.png";
-import {decode} from 'jsonwebtoken';
+import { decode } from "jsonwebtoken";
+import BecomeCreator from "./BecomeCreator/BecomeCreator";
 
 interface IGlobalStateProps {
   account: IAccount;
@@ -65,19 +66,17 @@ class UpdateProfile extends React.Component<TProps, IState> {
 
   componentDidMount() {
     const token = localStorage.getItem("token");
-    if(token){
-    (async () => {
-      myFetch({ path: `/users/${this.userId}`, token }).then(response => {
-        if (response) {
-          this.setState( response);
-        }
-      });
-      
-      // this.setState({ banner, avatar});
-    })();
-  }
-    
-    
+    if (token) {
+      (async () => {
+        myFetch({ path: `/users/${this.userId}`, token }).then(response => {
+          if (response) {
+            this.setState(response);
+          }
+        });
+
+        // this.setState({ banner, avatar});
+      })();
+    }
   }
 
   uploadBanner() {
@@ -97,7 +96,7 @@ class UpdateProfile extends React.Component<TProps, IState> {
         formData
       }).then(({ banner }) => {
         if (banner) {
-          this.setState({banner: banner});
+          this.setState({ banner: banner });
           setBanner(banner);
         }
       });
@@ -120,8 +119,8 @@ class UpdateProfile extends React.Component<TProps, IState> {
         formData
       }).then(({ avatar }) => {
         if (avatar) {
-          this.setState({avatar: avatar});
-          console.log(avatar)
+          this.setState({ avatar: avatar });
+          console.log(avatar);
           setAvatar(avatar);
         }
       });
@@ -134,10 +133,7 @@ class UpdateProfile extends React.Component<TProps, IState> {
     // const { avatar, banner } = account;
     const { toggleContent, banner, avatar } = this.state;
     const token: any = localStorage.getItem("token");
-    const {id}: any = decode(token);
-   
-    
-    
+    const { id }: any = decode(token);
 
     return (
       <>
@@ -146,57 +142,68 @@ class UpdateProfile extends React.Component<TProps, IState> {
           <div className="row ">
             <div className="col-12 sharedBorder mt-5">
               {!banner ? (
-                
-                <div className="banner mt-3"
-                style={{ backgroundImage: `url(${API_URL_IMAGES + "defaultBanner.jpg"})` }}
+                <div
+                  className="banner mt-3"
+                  style={{
+                    backgroundImage: `url(${API_URL_IMAGES +
+                      "defaultBanner.jpg"})`
+                  }}
                 ></div>
               ) : (
-                <div className="banner mt-3"
-                style={{ backgroundImage: `url(${API_URL_IMAGES + banner})` }}
+                <div
+                  className="banner mt-3"
+                  style={{ backgroundImage: `url(${API_URL_IMAGES + banner})` }}
                 ></div>
- 
               )}
               <br />
+              {/* Options bar */}
               <div className="container-fluid uploadBanner">
                 <div className="row">
                   <div className="col-1"></div>
                   <div className="col-5 toggleIcons">
-                  {id == this.userId && <img
-                      className="iconsSize"
-                      src={video}
-                      alt=""
-                      onClick={() =>
-                        this.setState({ toggleContent: "multimedia" })
-                      }
-                    />}
-                    {id == this.userId && <img
-                      className="iconsSize"
-                      src={user}
-                      alt=""
-                      onClick={() => this.setState({ toggleContent: "edit" })}
-                    />}
+                    {id == this.userId && (
+                      <img
+                        className="iconsSize"
+                        src={video}
+                        alt=""
+                        onClick={() =>
+                          this.setState({ toggleContent: "multimedia" })
+                        }
+                      />
+                    )}
+                    {id == this.userId && (
+                      <img
+                        className="iconsSize"
+                        src={user}
+                        alt=""
+                        onClick={() => this.setState({ toggleContent: "edit" })}
+                      />
+                    )}
                   </div>
                   {/* Upload Banner */}
                   <div className="col-3"></div>
-                  {id == this.userId && <div className="col-3 text-right">
-                    <label htmlFor="banner">
-                      <img className="iconsSize" src={upload} alt="" />
-                      {/* TODO -fix tooltip desing */}
-                    </label>
-                    <input
-                      onChange={this.uploadBanner}
-                      type="file"
-                      id="banner"
-                      style={{ display: "none" }}
-                      ref={this.fileInputRef2}
-                    />
-                  </div>}
+                  {id == this.userId && (
+                    <div className="col-3 text-right">
+                      <label htmlFor="banner">
+                        <img className="iconsSize" src={upload} alt="" />
+                        {/* TODO -fix tooltip desing */}
+                      </label>
+                      <input
+                        onChange={this.uploadBanner}
+                        type="file"
+                        id="banner"
+                        style={{ display: "none" }}
+                        ref={this.fileInputRef2}
+                      />
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
           </div>
+          {/* Upload avatar */}
           <div className="row sharedBorder mt-3">
-           <div className="col-2">
+            <div className="col-2">
               {!avatar ? (
                 <img
                   className="avatarProfile mb-1"
@@ -211,25 +218,54 @@ class UpdateProfile extends React.Component<TProps, IState> {
                 />
               )}
               <br />
-              {id == this.userId && <div>
-               <label htmlFor="avatar">
-                <i className="fas fa-plus-circle uploadAvatar iconsSize"></i>
-              </label>
-               <input
-                id="avatar"
-                style={{ display: "none" }}
-                type="file"
-                ref={this.fileInputRef}
-                onChange={this.uploadAvatar}
-              />
-              </div>}
+              {id == this.userId && (
+                <div>
+                  <label htmlFor="avatar">
+                    <i className="fas fa-plus-circle uploadAvatar iconsSize"></i>
+                  </label>
+                  <input
+                    id="avatar"
+                    style={{ display: "none" }}
+                    type="file"
+                    ref={this.fileInputRef}
+                    onChange={this.uploadAvatar}
+                  />
+                </div>
+              )}
             </div>
             <div className="row ">
               <div className="col-12 d-flex justify-content-center mt-4"></div>
             </div>
-            {toggleContent === "multimedia" && (
-              <SettingUserFiles></SettingUserFiles>
-            )}
+            {toggleContent === "multimedia" &&
+              (account.isCreator ? (
+                <SettingUserFiles></SettingUserFiles>
+              ) : (
+                <div
+                  className="text-danger text-center mt-5 createYourContentDiv  "
+                  style={{ height: "35vh" }}
+                >
+                  <h1 className="animated rotateInDownLeft">
+                    Why not create your own content?{" "}
+                  </h1>
+                  <br />
+                  <h1 className="animated rotateInDownRight">
+                    {" "}
+                    Would you like to be a kaner?
+                  </h1>
+                  <button
+                    data-toggle="modal"
+                    data-target="#becomeCreator"
+                    className="btn btn-block mt-1 mb-2 buttonColor mt-3 animated bounceInUp"
+                    style={{ width: "20%" }}
+                  >
+                    Yes, please!
+                  </button>
+
+                </div>
+              ))}
+
+            <BecomeCreator id={id}></BecomeCreator>
+
             {toggleContent === "edit" && (
               <UpdateProfileForm></UpdateProfileForm>
             )}

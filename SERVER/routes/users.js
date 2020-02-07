@@ -28,6 +28,7 @@ router.put('/editPassword/:id', users.editPassword);
 router.post('/register', users.createUser);
 router.post('/login', users.login);
 router.post('/saveUnsaveMultimedia', users.saveUnsaveMultimedia);
+router.post('/confirmCreator/:id', users.confirmCreator);
 
 //PUT
 router.put('/followUser/:id', users.followUser);

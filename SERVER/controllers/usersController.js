@@ -27,8 +27,8 @@ usersController.createUser = (req, res) => {
   `,
       (err, results) => {
         if (err) {
-          console.log(err)
-          console.log("entri")
+          console.log(err);
+          console.log("entri");
           res.status(400).send("El usuario ya existe");
         } else {
           connection.query(
@@ -152,7 +152,7 @@ usersController.getUsers = (req, res) => {
     connection.query(sql, (error, results) => {
       if (error) console.log(error);
       res.send(results);
-      console.log(results)
+      console.log(results);
     });
   } catch {
     res.sendStatus(401);
@@ -415,6 +415,31 @@ usersController.uploadAvatar = (req, response) => {
       }
     );
   }
+};
+
+//ADD AS CREATOR
+usersController.confirmCreator = (request, response) => {
+  console.log("entroooooo");
+  const { id } = request.params;
+  connection.query(
+    `UPDATE users
+       SET isCreator = 1
+       WHERE id = ${id}`,
+    err => {
+      if (err) {
+        response.sendStatus(400);
+      } else {
+        connection.query(
+          `SELECT *
+             FROM users 
+             WHERE id = ${id}`,
+          (err, [results]) => {
+            err ? console.log(err) : response.send(results);
+          }
+        );
+      }
+    }
+  );
 };
 
 //FOLLOW USER
