@@ -23,6 +23,7 @@ router.get("/", multimedia.getMultimedia);
 router.get("/:type", multimedia.getMultimediaByType);
 router.get("/byUserAndType/:id/:type", multimedia.getMultimediaByUserAndType);
 router.get("/single/:multimediaId", multimedia.getOneMultimedia);
+router.get("/byPrice/:price", multimedia.getMultimediaByPrice);
 
 
 //POST
@@ -30,7 +31,8 @@ router.post("/createArticle", upload, multimedia.createArticle);
 router.post("/createImage", upload, multimedia.createImage);
 router.post("/createVideo", upload, multimedia.createVideo);
 router.post("/update/:multimediaId", upload, multimedia.updateArticle);
-router.post("/searchByWord", multimedia.searchByWordMultimedia);
+router.post("/searchByWord", multimedia.searchMultimediaByWord);
+router.post("/searchByWordAndId/:id", multimedia.searchMultimediaByWordAndUser);
 
 //PUT
 // router.put("/like/:id", multimedia.likeMultimedia);
