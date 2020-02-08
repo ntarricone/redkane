@@ -15,6 +15,8 @@ import Home from "./AppLogged/Home";
 import Navbar from "../shared/Navbar/Navbar";
 import history from "../../history"
 import SingleMultimedia from "./AppLogged/MultimediaViews/SingleMultimedia/SingleMultimedia";
+import ConfirmCreator from "./ConfirmCreator/ConfirmCreator";
+
 
 
 interface IProps  {
@@ -30,7 +32,7 @@ interface IGlobalActionProps {
 
 type TProps = IGlobalStateProps & IGlobalActionProps & IProps;
 
-class App extends React.Component<TProps> {
+class App extends React.PureComponent<TProps> {
   constructor(props: any) {
     super(props);
 
@@ -109,6 +111,9 @@ class App extends React.Component<TProps> {
             <Route exact path="/updateProfile/:id"  component ={UpdateProfile}>
             </Route>
             <Route path="/singleMultimedia/:id"  component ={SingleMultimedia}>
+            </Route>
+
+            <Route path="/adminConfirmCreator/:id"  component ={ConfirmCreator}>
             </Route>
             
           </Switch>

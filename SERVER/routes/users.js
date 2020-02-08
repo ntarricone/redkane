@@ -29,6 +29,7 @@ router.post('/register', users.createUser);
 router.post('/login', users.login);
 router.post('/saveUnsaveMultimedia', users.saveUnsaveMultimedia);
 router.post('/confirmCreator/:id', users.confirmCreator);
+router.post('/updateSocialMedia/:id', users.updateSocialMedia);
 
 //PUT
 router.put('/followUser/:id', users.followUser);

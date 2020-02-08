@@ -70,6 +70,7 @@ class UpdateProfile extends React.Component<TProps, IState> {
       (async () => {
         myFetch({ path: `/users/${this.userId}`, token }).then(response => {
           if (response) {
+            console.log(response)
             this.setState(response);
           }
         });
@@ -241,8 +242,8 @@ class UpdateProfile extends React.Component<TProps, IState> {
                 <SettingUserFiles></SettingUserFiles>
               ) : (
                 <div
-                  className="text-danger text-center mt-5 createYourContentDiv  "
-                  style={{ height: "35vh" }}
+                  className=" text-center mt-3 createYourContentDiv  "
+                  style={{ height: "35vh", color: "#e51428"}}
                 >
                   <h1 className="animated rotateInDownLeft">
                     Why not create your own content?{" "}
@@ -250,13 +251,13 @@ class UpdateProfile extends React.Component<TProps, IState> {
                   <br />
                   <h1 className="animated rotateInDownRight">
                     {" "}
-                    Would you like to be a kaner?
+                    Apply to become a Kaner
                   </h1>
                   <button
                     data-toggle="modal"
                     data-target="#becomeCreator"
                     className="btn btn-block mt-1 mb-2 buttonColor mt-3 animated bounceInUp"
-                    style={{ width: "20%" }}
+                    style={{ width: "30%" }}
                   >
                     Yes, please!
                   </button>

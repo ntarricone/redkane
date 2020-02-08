@@ -14,12 +14,13 @@ import {
 import { IFile } from "../../../../../interfaces/IFile";
 import { decode } from "jsonwebtoken";
 import { Link } from "react-router-dom";
-import linkedinIcon from "../../../../../icons/linkedin.png";
-import youtubeIcon from "../../../../../icons/youtube.png";
+import linkedinIcon from "../../../../../icons/linkedin2.png";
+import youtubeIcon from "../../../../../icons/youtube2.png";
 import deleteIcon from "../../../../../icons/trash.png";
 import editIcon from "../../../../../icons/edit.png";
 import swal from "sweetalert";
 import history from "../../../../../history";
+import logoKane from "../../../../../images/logoKane.png";
 
 interface IGlobalStateProps {
   files: IFiles;
@@ -85,12 +86,14 @@ class SingleMultimedia extends React.PureComponent<TProps, IState> {
     this.setFile = this.setFile.bind(this);
     this.setUser = this.setUser.bind(this);
     this.deleteMultimedia = this.deleteMultimedia.bind(this);
+    this.button = this.button.bind(this);
   }
 
   componentDidMount() {
     this.setFile();
   }
 
+  
   setFile() {
     console.log(this.props.files.chosenFile);
     if (this.props.files.chosenFile.multimediaId !== 0) {
@@ -204,6 +207,10 @@ class SingleMultimedia extends React.PureComponent<TProps, IState> {
     });
   }
 
+  button(){
+    console.log("hewoooww")
+  }
+
   // setFile(multimediaId: number) {
 
   // }
@@ -220,10 +227,10 @@ class SingleMultimedia extends React.PureComponent<TProps, IState> {
       id: idCreator,
       type
     } = this.state;
-    let {avatar, path, title} = this.state;
-    title = title? title: "Title missing :("
-    avatar = avatar? avatar: "avatar.png";
-    path = path? path: "defaultBanner.jpg";
+    let { avatar, path, title, price } = this.state;
+    title = title ? title : "Title missing :(";
+    avatar = avatar ? avatar : "avatar.png";
+    path = path ? path : "defaultBanner.jpg";
     const token: any = localStorage.getItem("token");
     const { id: idLogged }: any = decode(token);
     return (
@@ -314,12 +321,17 @@ class SingleMultimedia extends React.PureComponent<TProps, IState> {
                   style={{
                     backgroundImage: `url(${API_URL_MULTIMEDIA + path})`
                   }}
-                ></div>
-                {/* <img
-                  style={{ width: "100%", height: "50vh" }}
-                  src={API_URL_MULTIMEDIA + path}
-                  alt=""
-                /> */}
+                >
+                  {price !== 0 && <img
+                    src={logoKane}
+                    alt=""
+                    style={{
+                      height: "70%",
+                      width: "50%",
+                      filter: "grayscale(84%)"
+                    }}
+                  />}
+                </div>
               </div>
               <div className="col-1"></div>
             </div>
@@ -348,7 +360,7 @@ class SingleMultimedia extends React.PureComponent<TProps, IState> {
           </div>
         </div>
         {/* TEXT  */}
-        {type === "article"  && (
+        {type === "article" && (
           <div className="container mt-5">
             <div className="row">
               <div className="col-1"></div>

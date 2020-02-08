@@ -224,7 +224,7 @@ multimediaController.getMultimediaByUserAndType = (request, response) => {
       `
     SELECT *
     FROM multimedia
-    WHERE type = '${type}' AND id = '${id}'
+    WHERE type = '${type}' AND id = ${id}
     `,
       (error, results) => {
         if (error) {
