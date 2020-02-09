@@ -76,7 +76,7 @@ class MultimediaView extends React.PureComponent<TProps, IState> {
     title = title? title : "TITLE";
     return (
       <div
-        className="card animated fadeIn delay-0.5s"
+        className="card animated fadeIn delay-0.5s cardStyle"
       >
         {path?.includes("youtube") ? (
           <iframe

@@ -21,6 +21,7 @@ export const myFetch = async ({
   if (json) {
     headers.set("Content-Type", "application/json");
     body = JSON.stringify(json);
+    console.log(body)
   } else if (formData) {
     body = formData;
   }

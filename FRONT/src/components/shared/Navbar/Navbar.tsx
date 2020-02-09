@@ -9,6 +9,8 @@ import { API_URL_IMAGES } from "../../../constants";
 import { Router } from "react-router-dom";
 import history from "../../../history";
 import ContentUploader from "../ContentUploader/ContentUploader";
+import redkaneNav from "../../../images/redkaneNav.png"
+import redkaneLive from "../../../images/redkaneLive.png"
 
 interface IProps {}
 interface IGlobalStateProps {
@@ -37,10 +39,79 @@ class Navbar extends React.PureComponent<TProps> {
   }
   render() {
     const { account } = this.props;
- 
+
     return (
       <>
-        <nav
+        <nav className="navbar navbar-expand-lg navbar-dark navbarBackground">
+          <Link to="/" className="navbar-brand" href="#">
+            <img
+              style={{ height: "4.7vh" }}
+              src={redkaneNav}
+              alt=""
+            />
+          </Link>
+          <button
+          style={{color: "white"}}
+            className="navbar-toggler"
+            type="button"
+            data-toggle="collapse"
+            data-target="#navbarText"
+            aria-controls="navbarText"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span className="navbar-toggler-icon"></span>
+          </button>
+          <div className="collapse navbar-collapse" id="navbarText">
+            <ul className="navbar-nav mr-auto"></ul>
+            <img
+              style={{ height: "8vh" }}
+              src={redkaneLive}
+              alt=""
+            />
+            <span className="ml-3">{account?.email}</span>
+            <div className="dropdown">
+
+            {!account?.avatar ? (
+              <img
+                style={{ height: "6vh", width: "3vw", borderRadius: "50%" }}
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+                src={API_URL_IMAGES + "avatar.png"}
+              />
+            ) : (
+              <img
+                style={{ height: "6vh", width: "3vw", borderRadius: "50%" }}
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+                src={API_URL_IMAGES + account?.avatar}
+              ></img>
+            )}
+            <div className="dropdown" aria-labelledby="dropdownMenuButton">
+              <div className="dropdown-content">
+                <div>
+                  <Link to={`/updateProfile/${account?.id}`}>
+                    {!account?.avatar && (
+                      <span className="text-danger">***</span>
+                    )}
+                    Update your profile
+                    {/* TODO - add red asterix if avatar doesn´t exist */}
+                  </Link>
+                </div>
+                <div>
+                  <a href="" onClick={this.logout}>
+                    Logout
+                  </a>
+                </div>
+              </div>
+              </div>
+              </div>
+            </div>
+          {/* </div> */}
+        </nav>
+        {/* <nav
           style={{ height: "7vh" }}
           className="navbar navbar-expand-lg navbar-light navbarBackground"
         >
@@ -65,49 +136,45 @@ class Navbar extends React.PureComponent<TProps> {
           <div className="collapse navbar-collapse" id="navbarText">
             <ul className="navbar-nav mr-auto"></ul>
             <span className="mr-3">{account?.email}</span>
-            {/* <ContentUploader></ContentUploader> */}
             <div className="dropdown">
-            {! account?.avatar ? (
+              {!account?.avatar ? (
                 <img
-                style={{ height: "6vh", width: "3vw", borderRadius: "50%" }}
-                data-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="false"
-                src={API_URL_IMAGES + "avatar.png"}
+                  style={{ height: "6vh", width: "3vw", borderRadius: "50%" }}
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                  src={API_URL_IMAGES + "avatar.png"}
                 />
               ) : (
                 <img
-                style={{ height: "6vh", width: "3vw", borderRadius: "50%" }}
-                data-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="false"
-                src={API_URL_IMAGES + account?.avatar}
-              ></img>
+                  style={{ height: "6vh", width: "3vw", borderRadius: "50%" }}
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                  src={API_URL_IMAGES + account?.avatar}
+                ></img>
               )}
 
-
               <div className="dropdown" aria-labelledby="dropdownMenuButton">
-              <div className="dropdown-content">
-                <div>
-                {/* <a href="">Action</a> */}
-                </div>
-                <div>
-                <Link to={`/updateProfile/${account?.id}`}>
-                  {!account?.avatar && <span className="text-danger">***</span>}
-                  Update your profile
-                  {/* TODO - add red asterix if avatar doesn´t exist */}
-                </Link>
-                </div>
-                <div>
-                <a href="" onClick={this.logout}>
-                  Logout
-                </a>
-                </div>
+                <div className="dropdown-content">
+                  <div>
+                    <Link to={`/updateProfile/${account?.id}`}>
+                      {!account?.avatar && (
+                        <span className="text-danger">***</span>
+                      )}
+                      Update your profile
+                    </Link>
+                  </div>
+                  <div>
+                    <a href="" onClick={this.logout}>
+                      Logout
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </nav>
+        </nav> */}
       </>
     );
   }

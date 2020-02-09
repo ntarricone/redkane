@@ -9,8 +9,8 @@ import { IFile } from "../../../interfaces/IFile";
 import { myFetch } from "../../../utils";
 import { IFiles } from "../../../interfaces/IFiles";
 import MultimediaView from "./MultimediaViews/MultimediaView";
-import free from "../../../../icons/video.png";
-
+import InfiniteScroll from "react-infinite-scroll-component";
+import produce from "immer";
 
 interface IGlobalStateProps {
   account: IAccount;
@@ -24,6 +24,8 @@ interface IGlobalActionProps {
 interface IState {
   type: "" | "article" | "image" | "video";
   price: number | null;
+  counter: number;
+  hasMore: boolean;
 }
 
 type TProps = IGlobalStateProps & IGlobalActionProps;
@@ -34,22 +36,38 @@ class Home extends React.PureComponent<TProps, IState> {
 
     this.state = {
       type: "",
-      price: null
+      price: null,
+      counter: 6,
+      hasMore: true
     };
     this.settingFiles = this.settingFiles.bind(this);
+    this.cookies = this.cookies.bind(this);
   }
 
   componentDidMount() {
     this.settingFiles(this.state.type);
+    this.cookies();
   }
 
   settingFiles(type: any) {
-    console.log(type);
+    console.log("Ooooooooooooooooooooooo");
+    if (this.state.counter >= 36) {
+      this.setState({ hasMore: false });
+      return;
+    }
 
-    this.setState({ type: type });
+    let { counter } = this.state;
+
+    this.setState({ type: type, counter: counter + 3 });
+    console.log(counter);
     setTimeout(
       ({ token } = this.props.account, { setFiles } = this.props) =>
-        myFetch({ path: `/multimedia/${type}`, token }).then(files => {
+        myFetch({
+          method: "POST",
+          path: `/multimedia/${type}`,
+          token,
+          json: { counter }
+        }).then(files => {
           console.log("entri");
           console.log(files);
           if (files) {
@@ -58,9 +76,15 @@ class Home extends React.PureComponent<TProps, IState> {
         }),
       200
     );
-    
   }
-  
+
+  //TODO - COOKIES FOR ARTICLLEEE
+
+  cookies(){
+document.cookie = "juanitoooo"
+console.log(document.cookie)
+  }
+
   render() {
     const { files } = this.props;
     return (
@@ -68,10 +92,13 @@ class Home extends React.PureComponent<TProps, IState> {
         <div className="container">
           <div className="row">
             <div className="col-12 col-sm d-flex justify-content-center marginTopUploader">
-             {this.props.account.isCreator? <ContentUploader></ContentUploader>: ""}
+              {this.props.account.isCreator ? (
+                <ContentUploader></ContentUploader>
+              ) : (
+                ""
+              )}
             </div>
           </div>
-          
 
           <div className="row mb-2">
             <div className="col-7 ">
@@ -107,22 +134,36 @@ class Home extends React.PureComponent<TProps, IState> {
                   Free <i className="fa fa-sort"></i>
                 </button>
                 <div className="col-5">
-                <Filter parent = {"home"}></Filter>
+                  <Filter parent={"home"}></Filter>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div className="container">
-          <div className="row">
-            {files.order.map(id => (
-              <div key={id} className="col-sm-6 col-md-4 col-12 ">
-                <MultimediaView file={files.byId[+id]}></MultimediaView>
-                <br />
-              </div>
-            ))}
+
+        <InfiniteScroll
+          dataLength={files.order.length}
+          next={() => this.settingFiles(this.state.type)}
+          hasMore={this.state.hasMore}
+          loader={<h4>Loading...</h4>}
+          // onScroll={this.settingFiles}
+          endMessage={
+            <p style={{ textAlign: "center" }}>
+              <b>Yay! You have seen it all</b>
+            </p>
+          }
+        >
+          <div className="container">
+            <div className="row">
+              {files.order.map(id => (
+                <div key={id} className="col-sm-6 col-md-4 col-12 ">
+                  <MultimediaView file={files.byId[+id]}></MultimediaView>
+                  <br />
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
+        </InfiniteScroll>
 
         {/* <ImagesView></ImagesView>
           <VideosView></VideosView> */}
