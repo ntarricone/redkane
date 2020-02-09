@@ -1,6 +1,6 @@
 import React from "react";
 import { IStore } from "../../../interfaces/IStore";
-import { myFetch } from "../../../utils";
+import { myFetch, getYoutubeId } from "../../../utils";
 import { connect } from "react-redux";
 import { IAccount } from "../../../interfaces/IAccount";
 import { AddFileAction } from "../../../redux/actions";
@@ -23,7 +23,7 @@ interface IGlobalStateProps {
 }
 
 interface IGlobalActionProps {
-  addFile(file: IFile):void;
+  addFile(file: IFile): void;
 }
 
 type TProps = IGlobalStateProps & IGlobalActionProps & IProps;
@@ -44,7 +44,7 @@ class AploadMultimedia extends React.PureComponent<TProps, IState> {
     this.uploadFile = this.uploadFile.bind(this);
   }
 
-  //TODO - ADD ADDED FILE TO REDUX
+
   uploadFile() {
     const initialState = {
       title: "",
@@ -54,7 +54,7 @@ class AploadMultimedia extends React.PureComponent<TProps, IState> {
     };
     const { account, type } = this.props;
     const { title, price, description } = this.state;
-    let {path, category} = this.state;
+    let { path, category } = this.state;
     const token: any = localStorage.getItem("token");
 
     if (this.fileInputRef.current?.files?.length && account) {
@@ -73,7 +73,7 @@ class AploadMultimedia extends React.PureComponent<TProps, IState> {
         token,
         formData
       }).then(json => {
-        console.log(json)
+        console.log(json);
         if (json) {
           swal({
             title: "Success!",
@@ -88,19 +88,17 @@ class AploadMultimedia extends React.PureComponent<TProps, IState> {
       this.setState(initialState);
       this.fileInputRef.current.value = "";
     } else {
-      path = path.replace("https://www.youtube.com/watch?v=", "http://www.youtube.com/embed/")
-      category = "other";
-      console.log(path)
+      category = category? category : "other";
       myFetch({
         path: "/multimedia/createVideo",
         method: "POST",
         json: { title, type, price, category, path, description },
         token
       }).then(json => {
-        if(json){
+        if (json) {
           swal({
             title: "Success!",
-            text: "You´ve successfully uploaded your image!",
+            text: "You´ve successfully uploaded your video!",
             icon: "success",
             timer: 2000
           });
@@ -110,21 +108,24 @@ class AploadMultimedia extends React.PureComponent<TProps, IState> {
     }
   }
 
-  
- 
+
   render() {
     const { type } = this.props;
     //TODO controlar el imput tipe price. Scroll en el select
-    //TODO - arreglar que se puedan poner links the youtube en vez de subir archivos
     return (
       <>
         {/* Uploading image or adding youtube link */}
         <div>
           {type === "image" ? (
-            <input required type="file" ref={this.fileInputRef} id="file-name" />
+            <input
+              required
+              type="file"
+              ref={this.fileInputRef}
+              id="file-name"
+            />
           ) : (
             <input
-            required
+              required
               placeholder="Youtube Link"
               type="text"
               className="form-control"
@@ -148,7 +149,7 @@ class AploadMultimedia extends React.PureComponent<TProps, IState> {
           <div className="form-group col-md-6">
             <label>Category:</label>
             <select
-            required
+              required
               className="form-control"
               data-spy="scroll"
               value={this.state.category}
@@ -216,6 +217,6 @@ const mapStateToProps = ({ account }: IStore): IGlobalStateProps => ({
 
 const mapDispatchToProps: IGlobalActionProps = {
   addFile: AddFileAction
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(AploadMultimedia);

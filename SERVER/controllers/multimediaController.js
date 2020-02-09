@@ -432,4 +432,72 @@ multimediaController.getMultimediaByPrice = (request, response) => {
 //DISLIKE AN ARTICLE
 multimediaController.dislikeMultimedia = (request, response) => {};
 
+//ADD PURCHASE
+multimediaController.addPurchase = (request, response) => {
+  const {multimediaId} = request.params;
+  const token = request.headers.authorization.replace("Bearer ", "");
+  const { id } = jwt.verify(token, myPrivateKey);
+  if (token) {
+    const { paypalId  } = request.body;
+    connection.query(
+      `SELECT *
+       FROM purchases
+       WHERE idBuyer = ${id} AND multimediaId = ${multimediaId}`, (_, results) =>{
+
+      if (results && results.length){
+        console.log(results);
+        response.send("Already purchased");
+      }else{
+        connection.query(
+          `
+        INSERT
+        INTO purchases (idBuyer, multimediaId, paypalId)
+        VALUES('${id}', '${multimediaId}', '${paypalId}')
+      `,
+          (error, results) => {
+            let aux = false;
+            if (error) {
+              console.log(error);
+              response.send(aux);
+            } else {
+              aux = true;
+              console.log(results);
+              response.send(aux)
+            }
+          }
+        );
+      }
+    })
+
+  }
+};
+
+//CHECKING IF PURCHASED
+multimediaController.isPurchased = (request, response) => {
+  const { multimediaId } = request.params;
+  const { authorization } = request.headers;
+  if (authorization) {
+    const token = authorization.replace("Bearer ", "");
+    jwt.verify(token, myPrivateKey);
+    const { id } = jwt.verify(token, myPrivateKey);
+    connection.query(
+      `
+    SELECT *
+    FROM purchases
+    WHERE multimediaId = '${multimediaId}' 
+    AND idBuyer = ${id}
+    `,
+      (error, results) => {
+        let aux = true;
+        if (results && results.length) {
+          response.send(aux);
+        } else {
+          aux = false;
+          response.send(aux);
+        }
+      }
+    );
+  }
+};
+
 module.exports = multimediaController;

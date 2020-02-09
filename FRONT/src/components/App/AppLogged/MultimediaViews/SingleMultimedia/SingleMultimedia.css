@@ -18,3 +18,9 @@
     justify-content: center;
     align-items: center;
 }
+
+.watermark{
+    height: 70%;
+    width: 50%;
+    filter: grayscale(84%);
+}

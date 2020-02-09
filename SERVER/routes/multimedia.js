@@ -24,10 +24,12 @@ router.get("/:type", multimedia.getMultimediaByType);
 router.get("/byUserAndType/:id/:type", multimedia.getMultimediaByUserAndType);
 router.get("/single/:multimediaId", multimedia.getOneMultimedia);
 router.get("/byPrice/:price", multimedia.getMultimediaByPrice);
+router.get("/isPurchased/:multimediaId", multimedia.isPurchased);
 
 
 //POST
 router.post("/createArticle", upload, multimedia.createArticle);
+router.post("/addPurchase/:multimediaId", multimedia.addPurchase);
 router.post("/createImage", upload, multimedia.createImage);
 router.post("/createVideo", upload, multimedia.createVideo);
 router.post("/update/:multimediaId", upload, multimedia.updateArticle);

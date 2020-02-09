@@ -73,4 +73,17 @@ export const generateAccountFromToken = ({
   return { token, id, email, isAdmin, name, avatar, banner, surname, profession, about_me, youtube, linkedin, isCreator };
 };
 
+//GET YOUTUBE ID
+export const getYoutubeId = (path: string) =>  {
+  if (path.includes("watch")) {
+    return path.split("v=")[1];
+  }else if (path.includes("embed")){
+    return path.split('d/')[1]
+  }else if (path.includes('youtu.be')){
+    return path.split('e/')[1]
+  }else{
+    return path
+  }
+}
+
 

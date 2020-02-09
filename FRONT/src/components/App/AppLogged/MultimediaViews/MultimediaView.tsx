@@ -7,7 +7,7 @@ import {
   API_URL_MULTIMEDIA,
   API_URL_IMAGES
 } from "../../../../constants";
-import { myFetch } from "../../../../utils";
+import { myFetch, getYoutubeId } from "../../../../utils";
 import "./MultimediaView.css";
 import { Link } from "react-router-dom";
 import { SetChosenFileAction } from "../../../../redux/actions";
@@ -81,9 +81,8 @@ class MultimediaView extends React.PureComponent<TProps, IState> {
         {path?.includes("youtube") ? (
           <iframe
             style={{ height: "13vw" }}
-            src={path + "?start=0&end=5"}
+            src={`https://www.youtube.com/embed/${getYoutubeId(path)}?start=0&end=5`}
             allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
           ></iframe>
         ) : (
           <img
