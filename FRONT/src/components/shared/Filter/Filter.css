@@ -13,3 +13,8 @@
     font-weight: 400;
     border-radius:0;
 } 
+
+.selectedFilter{
+    border-bottom: 2px solid red !important;
+    box-shadow: none !important;
+}

@@ -14,7 +14,6 @@ import { SetChosenFileAction } from "../../../../redux/actions";
 import paid from "../../../../icons/money.png";
 import saved from "../../../../icons/save-button.png";
 
-
 interface IGlobalStateProps {}
 
 interface IGlobalActionProps {
@@ -30,6 +29,7 @@ interface IState {
   surname: string;
   avatar: string;
   userId: number | null;
+  isPurchased: boolean;
 }
 
 type TProps = IProps & IGlobalStateProps & IGlobalActionProps;
@@ -42,15 +42,30 @@ class MultimediaView extends React.PureComponent<TProps, IState> {
       name: "",
       surname: "",
       avatar: "",
-      userId: null
+      userId: null,
+      isPurchased: false
     };
     this.settingFile = this.settingFile.bind(this);
   }
   //setting card owner´s details
   componentDidMount() {
     const { file } = this.props;
-    const { id } = file;
+    const { id, multimediaId } = file;
     const token: any = localStorage.getItem("token");
+    console.log(id);
+    this.getUser(id, token);
+    this.setPurchaseStatus(multimediaId, token);
+  }
+
+  setPurchaseStatus(multimediaId: number, token: any) {
+    myFetch({ path: `/multimedia/isPurchased/${multimediaId}`, token }).then(
+      response => {
+        this.setState({ isPurchased: response });
+      }
+    );
+  }
+
+  getUser(id: number, token: any) {
     myFetch({ path: `/users/${id}`, token }).then(user => {
       console.log(user);
       this.setState({
@@ -68,37 +83,46 @@ class MultimediaView extends React.PureComponent<TProps, IState> {
   render() {
     const { file } = this.props;
     const { multimediaId, description, time, price, type } = file;
-    let {path, title} = file;
-    const { name, surname, userId } = this.state;
-    let {avatar} = this.state;
-    path = path? path: "defaultBanner.jpg";
-    avatar = avatar? avatar: "avatar.png";
-    title = title? title : "TITLE";
+    let { path, title } = file;
+    const { name, surname, userId, isPurchased } = this.state;
+    let { avatar } = this.state;
+    path = path ? path : "defaultBanner.jpg";
+    avatar = avatar ? avatar : "avatar.png";
+    title = title ? title : "TITLE";
     return (
       <div
         className="card animated fadeIn delay-0.5s cardStyle"
+        style={{ height: "62vh" }}
       >
         {path?.includes("youtube") ? (
           <iframe
-            style={{ height: "13vw" }}
-            src={`https://www.youtube.com/embed/${getYoutubeId(path)}?start=0&end=5`}
+            style={{ height: "59%" }}
+            src={`https://www.youtube.com/embed/${getYoutubeId(
+              path
+            )}?start=0&end=5`}
             allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
           ></iframe>
         ) : (
+          
           <img
             className="card-img-top"
-            style={{ height: "13vw" }}
+            style={{ height: "50%" }}
             src={`${API_URL_MULTIMEDIA}${path}`}
             alt="Card image cap"
           />
         )}
-
+        {/* Title */}
         <div className="card-body" style={{ backgroundColor: "#fafafa" }}>
           <Link
             to={`/singleMultimedia/${multimediaId}`}
             onClick={() => this.settingFile(file)}
           >
-            <h5 className="card-title text-dark webLinks">{title}</h5>
+            <h5 className="card-title text-dark webLinks">
+              {type === "image" && <i className="fas fa-camera"></i>}
+              {/* {type === "video" && <i className="fab fa-youtube"></i>} */} 
+              {type === "article" && <i className="far fa-newspaper"></i>}
+              {" " + title}
+            </h5>
           </Link>
 
           <p className="card-text text-dark" style={{ minHeight: "8vh" }}>
@@ -110,37 +134,38 @@ class MultimediaView extends React.PureComponent<TProps, IState> {
           <div className="container-fluid">
             <div className="row" style={{ fontSize: "1.5rem" }}>
               <div className="col-2">
-               <Link to ={`/updateProfile/${userId
-                }`}>
-                {
-                  <img
-                    data-toggle="tooltip"
-                    data-placement="top"
-                    title={`${name} ${surname}`}
-                    className="cardAvatar"
-                    src={`${API_URL_IMAGES}${avatar}`}
-                  />
-                }
+                <Link to={`/updateProfile/${userId}`}>
+                  {
+                    <img
+                      data-toggle="tooltip"
+                      data-placement="top"
+                      title={`${name} ${surname}`}
+                      className="cardAvatar"
+                      src={`${API_URL_IMAGES}${avatar}`}
+                    />
+                  }
                 </Link>
-
               </div>
 
               <div className="col-6"></div>
 
-              
               <div className="col-2">
-                {price != 0 && <img className="iconsSize" src={paid} alt="" />}
+                {price !== 0 && !isPurchased && (
+                  <img className="iconsSize" src={paid} alt="" />
+                )}
+                {price !== 0 && isPurchased && (
+                  <i className="far fa-check-circle text-success"></i>
+                )}
               </div>
               <div className="col-2">
-                  <img className="iconsSize" src={saved} alt="" />
+                <img className="iconsSize" src={saved} alt="" />
               </div>
             </div>
           </div>
           <p className="card-text">
             <small className="text-muted">
-              {new Date(time).toLocaleDateString()}
-              <br/>
-              <span>({type})</span>
+              {/* {new Date(time).toLocaleDateString()} */}
+              <br />
             </small>
           </p>
         </div>

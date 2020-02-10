@@ -159,7 +159,6 @@ multimediaController.getMultimedia = (request, response) => {
   console.log("entrokkk")
   console.log(request.body.counter)
   const { authorization } = request.headers;
-  const {counter} = request.body;
   if (authorization) {
     const token = authorization.replace("Bearer ", "");
     jwt.verify(token, myPrivateKey);
@@ -189,13 +188,17 @@ multimediaController.getMoreMultimedia = (request, response) => {
   console.log(request.body.counter)
   const { authorization } = request.headers;
   const {counter} = request.body;
+  let {type} = request.body;
+  type = type === ""? type: `type = '${type}' AND`;
+  console.log(type)
+  console.log(type)
   if (authorization) {
     const token = authorization.replace("Bearer ", "");
     jwt.verify(token, myPrivateKey);
     connection.query(
       `
       SELECT *
-      FROM multimedia WHERE category != 'redkaneLive'
+      FROM multimedia WHERE ${type} category != 'redkaneLive'
       ORDER BY time
       DESC
       LIMIT ${counter};
@@ -226,6 +229,7 @@ multimediaController.getMultimediaByType = (request, response) => {
         AND category != 'redkaneLive'
         ORDER BY time
         DESC
+        LIMIT 6
         `,
       (error, results) => {
         if (error) {
@@ -438,29 +442,31 @@ multimediaController.searchMultimediaByWordAndUser = (request, response) => {
 
 
 //GET MULTIMEDIA BY PRICE
-multimediaController.getMultimediaByPrice = (request, response) => {
-  const { authorization } = request.headers;
-  const { price } = request.params; 
-  if (authorization) {
-    const token = authorization.replace("Bearer ", "");
-    jwt.verify(token, myPrivateKey);
-    connection.query(
-      `
-        SELECT *
-        FROM multimedia WHERE price = ${price}
-        `,
-      (error, results) => {
-        if (error) {
-          console.log(error);
-          response.sendStatus(400);
-        } else {
-          response.send(results);
+// multimediaController.getMultimediaByPrice = (request, response) => {
+//   const { authorization } = request.headers;
+//   const { price } = request.params; 
+//   if (authorization) {
+//     const token = authorization.replace("Bearer ", "");
+//     jwt.verify(token, myPrivateKey);
+//     connection.query(
+//       `
+//         SELECT *
+//         FROM multimedia WHERE price = ${price}
+//         ORDER BY time
+//         DESC
+//         `,
+//       (error, results) => {
+//         if (error) {
+//           console.log(error);
+//           response.sendStatus(400);
+//         } else {
+//           response.send(results);
           
-        }
-      }
-    );
-  }
-};
+//         }
+//       }
+//     );
+//   }
+// };
 
 //GET MULTIMEDIA BY PRICE
 multimediaController.getMultimediaByPrice = (request, response) => {
@@ -473,6 +479,8 @@ multimediaController.getMultimediaByPrice = (request, response) => {
       `
         SELECT *
         FROM multimedia WHERE price = ${price}
+        ORDER BY time
+        DESC
         `,
       (error, results) => {
         if (error) {
@@ -497,7 +505,7 @@ multimediaController.getMultimediaByPriceAndUser = (request, response) => {
     connection.query(
       `
         SELECT *
-        FROM multimedia WHERE price = ${price}
+        FROM multimedia WHERE price = ${price} AND category != 'redkaneLive'
         AND id = ${id}
         `,
       (error, results) => {
@@ -525,6 +533,8 @@ multimediaController.getMultimediaCategories = (request, response) => {
       `
         SELECT *
         FROM multimedia WHERE category = '${category}'
+        ORDER BY time
+        DESC
         `,
       (error, results) => {
         if (results && results.length > 0) {
@@ -673,6 +683,7 @@ multimediaController.isPurchased = (request, response) => {
       (error, results) => {
         let aux = true;
         if (results && results.length) {
+          console.log(aux)
           response.send(aux);
         } else {
           aux = false;

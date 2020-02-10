@@ -10,12 +10,11 @@ import { myFetch } from "../../../utils";
 import { IFiles } from "../../../interfaces/IFiles";
 import MultimediaView from "./MultimediaViews/MultimediaView";
 import InfiniteScroll from "react-infinite-scroll-component";
-import produce from "immer";
+import "../../shared/Filter/Filter.css"
 
 interface IGlobalStateProps {
   account: IAccount;
   files: IFiles;
-  
 }
 
 interface IGlobalActionProps {
@@ -24,13 +23,12 @@ interface IGlobalActionProps {
 }
 
 interface IState {
-  type: "" | "article" | "image" | "video";
+  type: "" | "article" | "image" | "video" | "free";
   price: number | null;
   category: string;
   counter: number;
   hasMore: boolean;
 }
-
 
 type TProps = IGlobalStateProps & IGlobalActionProps;
 
@@ -50,12 +48,10 @@ class Home extends React.PureComponent<TProps, IState> {
     this.settingCategory = this.settingCategory.bind(this);
     this.settingMoreFiles = this.settingMoreFiles.bind(this);
     this.cookies = this.cookies.bind(this);
-
-
   }
 
   componentDidMount() {
-    this.props.unsetFiles();
+    // this.props.unsetFiles();
     const token = localStorage.getItem("token");
     this.settingFiles(this.state.type);
     this.cookies();
@@ -63,13 +59,12 @@ class Home extends React.PureComponent<TProps, IState> {
 
   settingFiles(type: any) {
     console.log("Ooooooooooooooooooooooo");
- 
-    this.setState({ type: type });
+    this.setState({ counter: 9, hasMore: true, type: type });
     setTimeout(
       ({ token } = this.props.account, { setFiles } = this.props) =>
         myFetch({
           path: `/multimedia/${type}`,
-          token,
+          token
         }).then(files => {
           console.log("entri");
           console.log(files);
@@ -81,10 +76,9 @@ class Home extends React.PureComponent<TProps, IState> {
     );
   }
 
-  getFreeContent(){
+  getFreeContent() {
+    this.setState({ counter: 9, hasMore: false, price: 0, type: "free" });
     const { price } = this.state;
-    const { setFiles } = this.props;
-    this.setState({ price: 0 })
     const token: any = localStorage.getItem("token");
     setTimeout(
       ({ token } = this.props.account, { setFiles } = this.props) =>
@@ -95,84 +89,76 @@ class Home extends React.PureComponent<TProps, IState> {
             setFiles(files);
           }
         }),
-      200
+      300
     );
-    
-   
   }
 
-
-  settingCategory(){
+  settingCategory() {
     const initialState = { category: "" };
     const token: any = localStorage.getItem("token");
     const { category } = this.state;
     const { setFiles } = this.props;
     setTimeout(
       ({ token } = this.props.account, { setFiles } = this.props) =>
-        myFetch({ path: `/multimedia/byCategory/${category}`, token }).then(files => {
-          console.log("entri");
-          console.log(files);
-          if (files) {
-            setFiles(files);
+        myFetch({ path: `/multimedia/byCategory/${category}`, token }).then(
+          files => {
+            console.log("entri");
+            console.log(files);
+            if (files) {
+              setFiles(files);
+            }
           }
-        }),
+        ),
       200
     );
     this.setState(initialState);
-
   }
 
-
-
-  
   //GET MORE FILES
   settingMoreFiles() {
     console.log("more fiiiilesss!!");
-    if (this.state.counter >= 36) {
+    //HERE WE CAN CHANGE TO THE AMOUNT OF FILES WE WANT!
+    if (this.props.files.order.length >= 30) {
       this.setState({ hasMore: false });
       return;
     }
     let { counter } = this.state;
-    this.setState({counter: counter + 3 });
+    this.setState({ counter: counter + 3 });
     console.log(counter);
     const token: any = localStorage.getItem("token");
-        myFetch({
-          method: "POST",
-          path: `/multimedia/getMore`,
-          token,
-          json: { counter }
-        }).then(files => {
-          console.log("entri");
-          console.log(files);
-          if (files) {
-            this.props.setFiles(files);
-          }
-        })
+    const { type, price } = this.state;
+    myFetch({
+      method: "POST",
+      path: `/multimedia/getMore`,
+      token,
+      json: { counter, type, price }
+    }).then(files => {
+      console.log("entri");
+      console.log(files);
+      if (files) {
+        this.props.setFiles(files);
+      }
+    });
   }
 
   //TODO - COOKIES FOR ARTICLLEEE
 
-  cookies(){
-document.cookie = "juanitoooo"
-console.log(document.cookie)
+  cookies() {
+    document.cookie = "juanitoooo";
+    console.log(document.cookie);
   }
 
   render() {
     const { files } = this.props;
-    const { category } = this.state;
+    const { category, type } = this.state;
     return (
       <>
         <div className="container">
           <div className="row">
-            <div className="col-12 col-sm d-flex justify-content-center marginTopUploader">
-              {this.props.account.isCreator ? (
-                <ContentUploader></ContentUploader>
-              ) : (
-                ""
-              )}
-            </div>
+            <div className="col-12 col-sm d-flex justify-content-center marginTopUploader"></div>
           </div>
-
+        </div>
+        {/* 
           <div className="row mb-2 mt-2">
             <div className="col-8 ">
               <div className="btn-group search-group">
@@ -200,37 +186,113 @@ console.log(document.cookie)
                 >
                   Videos <i className="fa fa-sort"></i>
                 </button>
-                <button className="btn btn-sm btn-default btn-sorteable filterButton"
-                onClick={() => this.getFreeContent()}
+                <button
+                  className="btn btn-sm btn-default btn-sorteable filterButton"
+                  onClick={() => this.getFreeContent()}
                 >
                   Free <i className="fa fa-sort"></i>
                 </button>
                 <select
-              className="form-control"
-              style={{ width: "9rem" }}
-              data-spy="scroll"
-              value={this.state.category}
-              onChange={e => this.setState({ category: e.target.value })}
-              onClick={this.settingCategory}
-              
-            >
-              <option selected>Category...</option>
-              <option value="environmet">environmet</option>
-              <option value="politics">politics</option>
-              <option value="sports">sports</option>
-              <option value="tech">tech</option>
-              <option value="world_news">world news</option>
-              <option value="business">business</option>
-              <option value="culture">culture</option>
-              <option value="fashion">fashion</option>
-              <option value="travel">travel</option>
-              <option value="other">other</option>
-            </select>
-                
-                <div className="col-4">
-                <Filter parent = {"home"}></Filter>
+                  className="form-control"
+                  style={{ width: "9rem" }}
+                  data-spy="scroll"
+                  value={this.state.category}
+                  onChange={e => this.setState({ category: e.target.value })}
+                  onClick={this.settingCategory}
+                >
+                  <option selected>Category...</option>
+                  <option value="environmet">environmet</option>
+                  <option value="politics">politics</option>
+                  <option value="sports">sports</option>
+                  <option value="tech">tech</option>
+                  <option value="world_news">world news</option>
+                  <option value="business">business</option>
+                  <option value="culture">culture</option>
+                  <option value="fashion">fashion</option>
+                  <option value="travel">travel</option>
+                  <option value="other">other</option>
+                </select>
+
+                <div className="col-2">
+                  <Filter parent={"home"}></Filter>
+                </div>
+                <div className="col-2">
                 </div>
               </div>
+            </div>
+          </div> */}
+        <div className="container ">
+          <div className="row mt-4 mb-5">
+            <div className="col-sm-4  col-12 mt-3">
+              <i className="fas fa-search"></i>
+              <div className="btn-group search-group">
+                <button
+                  className={type === ''?'btn btn-sm selectedFilter': "btn btn-sm"}
+                  onClick={() => this.settingFiles("")}
+                >
+                  All
+                </button>
+                <button
+                  className={type === 'article'?'btn btn-sm selectedFilter': "btn btn-sm"}
+                  onClick={() => this.settingFiles("article")}
+                >
+                  Articles 
+                </button>
+                <button
+                  className={type === 'image'?'btn btn-sm selectedFilter': "btn btn-sm"}
+                  // style={{borderBottom: type === 'image'? '2px solid red': ''}}
+                  onClick={() => this.settingFiles("image")}
+                >
+                  Images 
+                </button>
+                <button
+                  className={type === 'video'?'btn btn-sm selectedFilter': "btn btn-sm"}
+                  onClick={() => this.settingFiles("video")}
+                >
+                  Videos 
+                </button>
+                <button
+                  className={type === 'free'?'btn btn-sm selectedFilter': "btn btn-sm"}
+                  onClick={() => this.getFreeContent()}
+                >
+                  Free 
+                </button>
+              </div>
+            </div>
+            <div className="col-sm-2 col-6 mt-3">
+              <select
+                className="form-control"
+                style={{ width: "11rem" }}
+                data-spy="scroll"
+                value={this.state.category}
+                onChange={e => this.setState({ category: e.target.value })}
+                onClick={this.settingCategory}
+              >
+                <option selected>Category...</option>
+                <option value="environmet">environmet</option>
+                <option value="politics">politics</option>
+                <option value="sports">sports</option>
+                <option value="tech">tech</option>
+                <option value="world_news">world news</option>
+                <option value="business">business</option>
+                <option value="culture">culture</option>
+                <option value="fashion">fashion</option>
+                <option value="travel">travel</option>
+                <option value="other">other</option>
+              </select>
+            </div>
+            <div className="col-sm-3 col-6 mt-3">
+              <Filter parent={"home"}></Filter>
+            </div>
+            <div
+              className="col-sm-3 col-12 mt-2"
+              style={{ display: "flex", justifyContent: "space-evenly" }}
+            >
+              {this.props.account.isCreator ? (
+                <ContentUploader></ContentUploader>
+              ) : (
+                ""
+              )}
             </div>
           </div>
         </div>
@@ -239,7 +301,7 @@ console.log(document.cookie)
           dataLength={files.order.length}
           next={() => this.settingMoreFiles()}
           hasMore={this.state.hasMore}
-          loader={<h4>Loading...</h4>}
+          loader={<h4 style={{ textAlign: "center" }}>Loading...</h4>}
           // onScroll={this.settingFiles}
           endMessage={
             <p style={{ textAlign: "center" }}>
@@ -258,12 +320,10 @@ console.log(document.cookie)
             </div>
           </div>
         </InfiniteScroll>
-
       </>
     );
   }
 }
-
 
 const mapStateToProps = ({ account, files }: IStore): IGlobalStateProps => ({
   account,

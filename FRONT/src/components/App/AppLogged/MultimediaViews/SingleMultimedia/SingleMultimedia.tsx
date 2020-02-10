@@ -188,6 +188,7 @@ class SingleMultimedia extends React.PureComponent<TProps, IState> {
       path: `/multimedia/isPurchased/${this.id_multimedia}`,
       token
     }).then(response => {
+      console.log(response);
       if (response) this.setState({ isPurchased: response });
     });
   }
@@ -250,7 +251,7 @@ class SingleMultimedia extends React.PureComponent<TProps, IState> {
   }
 
   purchaseImage() {
-    console.log("purchasing image!")
+    console.log("purchasing image!");
   }
 
   render() {
@@ -287,7 +288,7 @@ class SingleMultimedia extends React.PureComponent<TProps, IState> {
             <div className="col-10" style={{ marginTop: "8%" }}>
               <div className="row ml-1">
                 <div>
-                  <h1>{title}</h1> 
+                  <h1>{title}</h1>
                 </div>
               </div>
             </div>
@@ -315,9 +316,9 @@ class SingleMultimedia extends React.PureComponent<TProps, IState> {
                 {new Date(time).toLocaleDateString()}
               </small>
             </div>
-            
+
             <div className="col-4"></div>
-            
+
             <div className="col-2 iconsDisplay">
               {idCreator === loggedId && (
                 <img
@@ -338,9 +339,8 @@ class SingleMultimedia extends React.PureComponent<TProps, IState> {
                 </a>
               )}
             </div>
-            
           </div>
-          
+
           <div className="col-1"></div>
         </div>
         {/* multimedia */}
@@ -425,6 +425,7 @@ class SingleMultimedia extends React.PureComponent<TProps, IState> {
             {/* Image purchase button */}
             <div className="col-3">
               {!path.includes("youtu") &&
+                price !== 0 &&
                 idCreator !== loggedId &&
                 !isPurchased && (
                   <button
@@ -435,12 +436,21 @@ class SingleMultimedia extends React.PureComponent<TProps, IState> {
                     Buy this image!
                   </button>
                 )}
-                {isPurchased && <span className="badge badge-success ml-5">purchased</span>}
+              {isPurchased && (
+                <span className="badge badge-success badgeMargin">
+                  purchased
+                </span>
+              )}
+              {price === 0 && (
+                <span
+                style={{marginLeft: "45%"}}
+                 className="badge badge-warning">free</span>
+              )}
             </div>
           </div>
         </div>
         {/* TEXT  */}
-        { (type === 'article' && price == 0)  && (
+        {type === "article" && price == 0 && (
           <div className="container mt-5">
             <div className="row">
               <div className="col-1"></div>

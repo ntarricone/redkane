@@ -24,3 +24,7 @@
     width: 50%;
     filter: grayscale(84%);
 }
+
+.badgeMargin{
+    margin-left: 29%;
+}

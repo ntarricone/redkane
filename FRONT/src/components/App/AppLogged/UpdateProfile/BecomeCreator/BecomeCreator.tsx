@@ -58,7 +58,7 @@ class BecomeCreator extends React.Component<TProps, IState> {
       personalStatement: `${personalStatement}`,
       youtube: `${youtube}`,
       linkedin: `${linkedin}`,
-      confirmLink: `http://localhost:3000/users/confirmCreator/${id}`
+      confirmLink: `http://localhost:3001/adminConfirmCreator/${id}`
     };
     console.log(params)
 

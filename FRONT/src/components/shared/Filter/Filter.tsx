@@ -85,10 +85,8 @@ class Filter extends React.PureComponent<TProps, IState> {
     const { key } = this.state;
     return (
       <>
-        <div className="container-fluid">
-          <div className="row">
-            <div className="col-lg-12">
-              <div className=" search" style={{ width: "25rem" }}>
+ 
+              <div className=" search">
                 <input
                   type="text"
                   id="myInput"
@@ -105,9 +103,8 @@ class Filter extends React.PureComponent<TProps, IState> {
                   }}
                 />
               </div>
-            </div>
-          </div>
-        </div>
+       
+          
       </>
     );
   }
