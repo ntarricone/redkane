@@ -19,7 +19,8 @@ const multer = require("multer");
 
 
 //GET
-router.get("/", multimedia.getMultimedia);
+router.post("/getMore", multimedia.getMoreMultimedia); //CHANGE FROM GET!!!!!!***
+router.get("/", multimedia.getMultimedia); 
 router.get("/:type", multimedia.getMultimediaByType);
 router.get("/byUserAndType/:id/:type", multimedia.getMultimediaByUserAndType);
 router.get("/single/:multimediaId", multimedia.getOneMultimedia);

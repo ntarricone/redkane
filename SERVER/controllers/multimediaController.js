@@ -158,16 +158,49 @@ multimediaController.createVideo = (request, response) => {
 
 //GET ALL MULTIMEDIA
 multimediaController.getMultimedia = (request, response) => {
+  console.log("entrokkk")
+  console.log(request.body.counter)
   const { authorization } = request.headers;
+  const {counter} = request.body;
   if (authorization) {
     const token = authorization.replace("Bearer ", "");
     jwt.verify(token, myPrivateKey);
     connection.query(
       `
       SELECT *
-      FROM multimedia
+      FROM multimedia WHERE category != 'redkaneLive'
       ORDER BY time
       DESC
+      LIMIT 6;
+        `,
+      (error, results) => {
+        if (error) {
+          console.log(error);
+          response.sendStatus(400);
+        } else {
+          response.send(results);
+        }
+      }
+    );
+  }
+};
+
+//GET MORE ALL MULTIMEDIA
+multimediaController.getMoreMultimedia = (request, response) => {
+  console.log("entrokkk")
+  console.log(request.body.counter)
+  const { authorization } = request.headers;
+  const {counter} = request.body;
+  if (authorization) {
+    const token = authorization.replace("Bearer ", "");
+    jwt.verify(token, myPrivateKey);
+    connection.query(
+      `
+      SELECT *
+      FROM multimedia WHERE category != 'redkaneLive'
+      ORDER BY time
+      DESC
+      LIMIT ${counter};
         `,
       (error, results) => {
         if (error) {
