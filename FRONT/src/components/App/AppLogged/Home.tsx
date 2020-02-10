@@ -37,10 +37,11 @@ class Home extends React.PureComponent<TProps, IState> {
     this.state = {
       type: "",
       price: null,
-      counter: 6,
+      counter: 9,
       hasMore: true
     };
     this.settingFiles = this.settingFiles.bind(this);
+    this.settingMoreFiles = this.settingMoreFiles.bind(this);
     this.cookies = this.cookies.bind(this);
   }
 
@@ -51,22 +52,13 @@ class Home extends React.PureComponent<TProps, IState> {
 
   settingFiles(type: any) {
     console.log("Ooooooooooooooooooooooo");
-    if (this.state.counter >= 36) {
-      this.setState({ hasMore: false });
-      return;
-    }
-
-    let { counter } = this.state;
-
-    this.setState({ type: type, counter: counter + 3 });
-    console.log(counter);
+ 
+    this.setState({ type: type });
     setTimeout(
       ({ token } = this.props.account, { setFiles } = this.props) =>
         myFetch({
-          method: "POST",
           path: `/multimedia/${type}`,
           token,
-          json: { counter }
         }).then(files => {
           console.log("entri");
           console.log(files);
@@ -76,6 +68,31 @@ class Home extends React.PureComponent<TProps, IState> {
         }),
       200
     );
+  }
+
+  //GET MORE FILES
+  settingMoreFiles() {
+    console.log("more fiiiilesss!!");
+    if (this.state.counter >= 36) {
+      this.setState({ hasMore: false });
+      return;
+    }
+    let { counter } = this.state;
+    this.setState({counter: counter + 3 });
+    console.log(counter);
+    const token: any = localStorage.getItem("token");
+        myFetch({
+          method: "POST",
+          path: `/multimedia/getMore`,
+          token,
+          json: { counter }
+        }).then(files => {
+          console.log("entri");
+          console.log(files);
+          if (files) {
+            this.props.setFiles(files);
+          }
+        })
   }
 
   //TODO - COOKIES FOR ARTICLLEEE
@@ -143,7 +160,7 @@ console.log(document.cookie)
 
         <InfiniteScroll
           dataLength={files.order.length}
-          next={() => this.settingFiles(this.state.type)}
+          next={() => this.settingMoreFiles()}
           hasMore={this.state.hasMore}
           loader={<h4>Loading...</h4>}
           // onScroll={this.settingFiles}
