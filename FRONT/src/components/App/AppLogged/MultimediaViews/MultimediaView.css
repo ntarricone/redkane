@@ -4,3 +4,8 @@
     border-radius: 50%;
     margin-left: -14px;
 }
+
+.cardStyle:hover{
+    transform: scale(1.020);
+    box-shadow: 2px 3px 6px -4px;
+}

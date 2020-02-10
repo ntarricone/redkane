@@ -66,20 +66,24 @@ class BecomeCreator extends React.Component<TProps, IState> {
       .send("gmail", "template_378oGZQC", params, "user_awOkEod8V5OPyDAHyaGPf")
       .then(
         result => {
+          console.log(result.text);
             swal(
                 {title: 'You´ve successfully applied to be a creator!',
                 text: 'We´ll shortly confirm your account',
                 icon: "success",
                 timer: 4000
-              })
+              });
+              myFetch({ method: 'POST', path: `/users/updateSocialMedia/${id}`, json:{youtube, linkedin}
+            });
         },
         error => {
+          console.log(error);
             swal(
                 {title: 'Sorry there has been an error',
                 text: 'Please try registering again',
                 icon: "error",
                 timer: 4000
-              })
+              });
         }
       );
   }

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import CKEditor from "ckeditor4-react";
-import { myFetch } from "../../../utils";
+import { myFetch, getYoutubeId } from "../../../utils";
 import swal from "sweetalert";
 import history from "../../../history";
 import { connect } from "react-redux";
@@ -8,6 +8,7 @@ import { SetChosenFileAction } from "../../../redux/actions";
 import { API_URL_MULTIMEDIA } from "../../../constants";
 import {decode} from 'jsonwebtoken';
 
+import YouTube from "react-youtube";
 
 class UploadArticle extends React.PureComponent {
   id_multimedia = history.location.pathname.split("/").slice(-1)[0];
@@ -223,6 +224,12 @@ class UploadArticle extends React.PureComponent {
     const { isAdmin } = decode(token)
     
     console.log(type);
+
+    //youtube video configuration
+    const opts = {
+      height: "400",
+      width: "880"
+    };
     return (
       <>
         {/* Title */}
@@ -251,18 +258,15 @@ class UploadArticle extends React.PureComponent {
               <div className="col-10 mt-2 ml-3 ">
                 <div>
                   {type !== "video" && (
-                    <div className="multimediaImage mt-3"
-                    style={{ backgroundImage: `url(${API_URL_MULTIMEDIA + path})` }}
+                    <div
+                      className="multimediaImage mt-3"
+                      style={{
+                        backgroundImage: `url(${API_URL_MULTIMEDIA + path})`
+                      }}
                     ></div>
-
                   )}
                   {type === "video" && (
-                    <iframe
-                    style={{ width: "97%", height: "50vh" }}
-                      src={path + "?start=0&end=5"}
-                      allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                    ></iframe>
+                    <YouTube opts={opts} videoId={getYoutubeId(path)} />
                   )}
                 </div>
               </div>

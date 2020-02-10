@@ -4,8 +4,10 @@ import { connect } from "react-redux";
 import { IStore } from "../../../../interfaces/IStore";
 import { IAccount } from "../../../../interfaces/IAccount";
 import { myFetch } from "../../../../utils";
-import {  SetAccountAction} from "../../../../redux/actions";
-import swal from 'sweetalert';
+import { SetAccountAction } from "../../../../redux/actions";
+import swal from "sweetalert";
+import youtubeIcon from "../../../../icons/youtube2.png";
+import linkedinIcon from "../../../../icons/linkedin2.png";
 
 interface IGlobalStateProps {
   account: IAccount;
@@ -31,7 +33,6 @@ interface IState {
 type TProps = IGlobalStateProps & IGlobalActionProps;
 
 class UpdateProfileForm extends React.Component<TProps, IState> {
-
   constructor(props: any) {
     super(props);
 
@@ -53,7 +54,6 @@ class UpdateProfileForm extends React.Component<TProps, IState> {
     this.updateAccount = this.updateAccount.bind(this);
     this.updatePassword = this.updatePassword.bind(this);
   }
-
 
   updatePassword() {
     //TODO - NOT WORKING
@@ -113,12 +113,12 @@ class UpdateProfileForm extends React.Component<TProps, IState> {
           isCreator
         } = response;
         console.log("usuario actualizado");
-        swal(
-          {title: 'Updated!',
-          text: 'User updated correctly',
+        swal({
+          title: "Updated!",
+          text: "User updated correctly",
           icon: "success",
           timer: 4000
-        })
+        });
         setAccount({
           name,
           surname,
@@ -158,143 +158,157 @@ class UpdateProfileForm extends React.Component<TProps, IState> {
 
     return (
       <>
-
-            {/* the form starts here */}
-            <div className="col-6 mt-4 ml-1 animated zoomInUp ">
-              <div className="container">
-                <div className="row centered-form">
-                  <div className="panel panel-default">
-                    <div className="panel-body">
-                      <div className="row">
-                        {/* FIRST NAME */}
-                        <div className="col-xs-6 col-sm-6 col-md-6">
-                          <div className="form-group">
-                            <input
-                              type="text"
-                              className="form-control input-sm"
-                              placeholder="First Name"
-                              value={name ? name : account.name}
-                              onChange={({ target: { value } }) =>
-                                this.setState({ name: value })
-                              }
-                            />
-                          </div>
-                        </div>
-                        {/* SURNAME */}
-                        <div className="col-xs-6 col-sm-6 col-md-6">
-                          <div className="form-group">
-                            <input
-                              type="text"
-                              className="form-control input-sm"
-                              placeholder="Last Name"
-                              value={surname ? surname : account.surname}
-                              onChange={({ target: { value } }) =>
-                                this.setState({ surname: value })
-                              }
-                            />
-                          </div>
-                        </div>
-                      </div>
-                      {/* PROFESSION*/}
+        {/* the form starts here */}
+        <div className="col-8 mt-4 ml-1 animated zoomInUp ">
+          <div className="container">
+            <div className="row centered-form">
+              <div className="panel panel-default">
+                <div className="panel-body">
+                  <div className="row">
+                    {/* FIRST NAME */}
+                    <div className="col-xs-6 col-sm-6 col-md-6">
                       <div className="form-group">
                         <input
                           type="text"
                           className="form-control input-sm"
-                          placeholder="Profession"
-                          value={profession ? profession : account.profession}
+                          placeholder="First Name"
+                          value={name}
                           onChange={({ target: { value } }) =>
-                            this.setState({ profession: value })
+                            this.setState({ name: value })
                           }
                         />
                       </div>
-                      {/* ABOUT_ME */}
-                      <textarea
-                        placeholder="Write a description about you"
-                        className="form-control mt-3"
-                        value={about_me ? about_me : account.about_me}
-                        onChange={({ target: { value } }: any) =>
-                          this.setState({ about_me: value })
-                        }
-                      ></textarea>
-
-                      <button
-                        className="btn  btn-block mt-3 buttonColor"
-                        onClick={this.updateAccount}
-                      >
-                        Update profile
-                      </button>
-                      <span>{this.state.updatedMessage}</span>
-
-                      <div className="row mt-4">
-                        {/* OLD PASSWORD */}
-                        <div className="col-xs-6 col-sm-6 col-md-6">
-                          <div className="form-group">
-                            <input
-                              type="password"
-                              className="form-control input-sm"
-                              placeholder="Old password"
-                              value={oldPassword}
-                              onChange={({ target: { value } }) =>
-                                this.setState({ oldPassword: value })
-                              }
-                            />
-                          </div>
-                        </div>
-                        {/* NEW PASSWORD */}
-                        <div className="col-xs-6 col-sm-6 col-md-6">
-                          <div className="form-group">
-                            <input
-                              type="password"
-                              className="form-control input-sm"
-                              placeholder="New password"
-                              value={newPassword}
-                              onChange={({ target: { value } }) =>
-                                this.setState({ newPassword: value })
-                              }
-                            />
-                          </div>
-                        </div>
-                        <button
-                          className="btn btn-block mt-1 mb-2 buttonColor passButton"
-                          onClick={this.updatePassword}
-                        >
-                          Update Password
-                        </button>
+                    </div>
+                    {/* SURNAME */}
+                    <div className="col-xs-6 col-sm-6 col-md-6">
+                      <div className="form-group">
+                        <input
+                          type="text"
+                          className="form-control input-sm"
+                          placeholder="Last Name"
+                          value={surname}
+                          onChange={({ target: { value } }) =>
+                            this.setState({ surname: value })
+                          }
+                        />
                       </div>
                     </div>
+                  </div>
+                  {/* PROFESSION*/}
+                  <div className="form-group">
+                    <input
+                      type="text"
+                      className="form-control input-sm"
+                      placeholder="Profession"
+                      value={profession}
+                      onChange={({ target: { value } }) =>
+                        this.setState({ profession: value })
+                      }
+                    />
+                  </div>
+                  {/* ABOUT_ME */}
+                  <textarea
+                    placeholder="Write a description about you"
+                    className="form-control mt-3"
+                    value={about_me}
+                    onChange={({ target: { value } }: any) =>
+                      this.setState({ about_me: value })
+                    }
+                  ></textarea>
+
+                    {/* YOUTUBE */}
+                    <div
+                    className="row"
+                    style={{ width: "100%", marginLeft: "0.2rem" }}
+                  >
+                    <img
+                      src={youtubeIcon}
+                      alt=""
+                      style={{ width: "2rem" }}
+                      className="mt-3"
+                    />
+
+                    <input
+                      style={{ width: "93%" }}
+                      placeholder="Youtube"
+                      className="form-control mt-3 input-sm ml-2 "
+                      type="text"
+                      value={youtube}
+                      onChange={({ target: { value } }) =>
+                        this.setState({ youtube: value })
+                      }
+                    />
+                  </div>
+                  {/* Linkedin */}
+                  <div
+                    className="row mt-3"
+                    style={{ width: "100%", marginLeft: "0.2rem" }}
+                  >
+                    <img
+                      src={linkedinIcon}
+                      alt=""
+                      style={{ width: "2rem", height: "2rem" }}
+                    />
+                    <input
+                      style={{ width: "93%" }}
+                      className="form-control input-sm ml-2"
+                      placeholder="Linkedin"
+                      type="text"
+                      value={linkedin}
+                      onChange={({ target: { value } }) =>
+                        this.setState({ linkedin: value })
+                      }
+                    />
+                  </div>
+                  <button
+                    className="btn  btn-block mt-3 buttonColor"
+                    onClick={this.updateAccount}
+                  >
+                    Update profile
+                  </button>
+                  <span>{this.state.updatedMessage}</span>
+
+                  <div className="row mt-4">
+                    {/* OLD PASSWORD */}
+                    <div className="col-xs-6 col-sm-6 col-md-6">
+                      <div className="form-group">
+                        <input
+                          type="password"
+                          className="form-control input-sm"
+                          placeholder="Old password"
+                          value={oldPassword}
+                          onChange={({ target: { value } }) =>
+                            this.setState({ oldPassword: value })
+                          }
+                        />
+                      </div>
+                    </div>
+                    {/* NEW PASSWORD */}
+                    <div className="col-xs-6 col-sm-6 col-md-6">
+                      <div className="form-group">
+                        <input
+                          type="password"
+                          className="form-control input-sm"
+                          placeholder="New password"
+                          value={newPassword}
+                          onChange={({ target: { value } }) =>
+                            this.setState({ newPassword: value })
+                          }
+                        />
+                      </div>
+                    </div>
+                    <button
+                      className="btn btn-block mt-1 mb-2 buttonColor passButton"
+                      onClick={this.updatePassword}
+                    >
+                      Update Password
+                    </button>
                   </div>
                 </div>
               </div>
             </div>
-
-            {/* Social Media Links */}
-            <div className="col-3 mt-3">
-              {/* YOUTUBE */}
-              <input
-                className="form-control input-sm socialInput"
-                placeholder="Youtube"
-                style={{ width: "62%" }}
-                type="text"
-                value={youtube? youtube: account.youtube}
-                onChange={({ target: { value } }) =>
-                  this.setState({ youtube: value })
-                }
-              />
-              <i className="fab fa-youtube"></i>
-
-              {/* LINKEDIN */}
-              <input
-                className="form-control input-sm mt-2 socialInput"
-                placeholder="Linkedin"
-                style={{ width: "62%" }}
-                type="text"
-                value={linkedin? linkedin : account.linkedin}
-                onChange={({ target: { value } }) =>
-                  this.setState({ linkedin: value })
-                }
-              />
-              <i className="fab fa-linkedin"></i>
-            </div>
+          </div>
+        </div>
 
       </>
     );

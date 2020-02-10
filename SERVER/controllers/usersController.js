@@ -417,7 +417,7 @@ usersController.uploadAvatar = (req, response) => {
   }
 };
 
-//ADD AS CREATOR
+//UPDATE TO BE CREATOR
 usersController.confirmCreator = (request, response) => {
   console.log("entroooooo");
   const { id } = request.params;
@@ -425,18 +425,36 @@ usersController.confirmCreator = (request, response) => {
     `UPDATE users
        SET isCreator = 1
        WHERE id = ${id}`,
-    err => {
+       (err, results) => {
+        let aux = false;
+        if (err) {
+          console.log(err);
+          response.send(aux);
+        } else {
+          aux = true;
+          response.send(aux);
+        }
+      }
+  );
+};
+
+//UPDATE SOCIAL MEDIA
+usersController.updateSocialMedia = (request, response) => {
+  const { id } = request.params;
+  const { youtube, linkedin } = request.body;
+  connection.query(
+    `UPDATE users
+       SET youtube = '${youtube}',
+       linkedin = '${linkedin}'
+       WHERE id = ${id}`,
+    (err, results) => {
+      let aux = false;
       if (err) {
-        response.sendStatus(400);
+        console.log(err);
+        response.send(aux);
       } else {
-        connection.query(
-          `SELECT *
-             FROM users 
-             WHERE id = ${id}`,
-          (err, [results]) => {
-            err ? console.log(err) : response.send(results);
-          }
-        );
+        aux = true;
+        response.send(aux);
       }
     }
   );

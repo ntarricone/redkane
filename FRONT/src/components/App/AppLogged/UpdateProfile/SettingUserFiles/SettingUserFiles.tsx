@@ -59,6 +59,7 @@ class settingFiles extends React.PureComponent<TProps, IState> {
     console.log(type);
     const token: any = localStorage.getItem("token")
     this.setState({ type: type });
+    console.log(type)
     setTimeout(
       ( { setFiles } = this.props) =>
         myFetch({ path: `/multimedia/byUserAndType/${this.userId}/${type}`, token }).then(files => {

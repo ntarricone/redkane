@@ -9,8 +9,8 @@ import { IFile } from "../../../interfaces/IFile";
 import { myFetch } from "../../../utils";
 import { IFiles } from "../../../interfaces/IFiles";
 import MultimediaView from "./MultimediaViews/MultimediaView";
-import free from "../../../../icons/video.png";
-
+import InfiniteScroll from "react-infinite-scroll-component";
+import produce from "immer";
 
 interface IGlobalStateProps {
   account: IAccount;
@@ -27,6 +27,8 @@ interface IState {
   type: "" | "article" | "image" | "video";
   price: number | null;
   category: string;
+  counter: number;
+  hasMore: boolean;
 }
 
 
@@ -39,26 +41,36 @@ class Home extends React.PureComponent<TProps, IState> {
     this.state = {
       type: "",
       price: 0,
-      category: ""
+      category: "",
+      counter: 9,
+      hasMore: true
     };
-    this.settingFiles = this.settingFiles.bind(this);
+
     this.getFreeContent = this.getFreeContent.bind(this);
     this.settingCategory = this.settingCategory.bind(this);
+    this.settingMoreFiles = this.settingMoreFiles.bind(this);
+    this.cookies = this.cookies.bind(this);
+
+
   }
 
   componentDidMount() {
     this.props.unsetFiles();
     const token = localStorage.getItem("token");
     this.settingFiles(this.state.type);
+    this.cookies();
   }
 
   settingFiles(type: any) {
-    console.log(type);
-
+    console.log("Ooooooooooooooooooooooo");
+ 
     this.setState({ type: type });
     setTimeout(
       ({ token } = this.props.account, { setFiles } = this.props) =>
-        myFetch({ path: `/multimedia/${type}`, token }).then(files => {
+        myFetch({
+          path: `/multimedia/${type}`,
+          token,
+        }).then(files => {
           console.log("entri");
           console.log(files);
           if (files) {
@@ -67,7 +79,6 @@ class Home extends React.PureComponent<TProps, IState> {
         }),
       200
     );
-    
   }
 
   getFreeContent(){
@@ -114,6 +125,38 @@ class Home extends React.PureComponent<TProps, IState> {
 
 
   
+  //GET MORE FILES
+  settingMoreFiles() {
+    console.log("more fiiiilesss!!");
+    if (this.state.counter >= 36) {
+      this.setState({ hasMore: false });
+      return;
+    }
+    let { counter } = this.state;
+    this.setState({counter: counter + 3 });
+    console.log(counter);
+    const token: any = localStorage.getItem("token");
+        myFetch({
+          method: "POST",
+          path: `/multimedia/getMore`,
+          token,
+          json: { counter }
+        }).then(files => {
+          console.log("entri");
+          console.log(files);
+          if (files) {
+            this.props.setFiles(files);
+          }
+        })
+  }
+
+  //TODO - COOKIES FOR ARTICLLEEE
+
+  cookies(){
+document.cookie = "juanitoooo"
+console.log(document.cookie)
+  }
+
   render() {
     const { files } = this.props;
     const { category } = this.state;
@@ -122,10 +165,13 @@ class Home extends React.PureComponent<TProps, IState> {
         <div className="container">
           <div className="row">
             <div className="col-12 col-sm d-flex justify-content-center marginTopUploader">
-             {this.props.account.isCreator? <ContentUploader></ContentUploader>: ""}
+              {this.props.account.isCreator ? (
+                <ContentUploader></ContentUploader>
+              ) : (
+                ""
+              )}
             </div>
           </div>
-          
 
           <div className="row mb-2 mt-2">
             <div className="col-8 ">
@@ -188,20 +234,36 @@ class Home extends React.PureComponent<TProps, IState> {
             </div>
           </div>
         </div>
-        <div className="container">
-          <div className="row">
-            {files.order.map(id => (
-              <div key={id} className="col-sm-6 col-md-4 col-12 ">
-                <MultimediaView file={files.byId[+id]}></MultimediaView>
-                <br />
-              </div>
-            ))}
+
+        <InfiniteScroll
+          dataLength={files.order.length}
+          next={() => this.settingMoreFiles()}
+          hasMore={this.state.hasMore}
+          loader={<h4>Loading...</h4>}
+          // onScroll={this.settingFiles}
+          endMessage={
+            <p style={{ textAlign: "center" }}>
+              <b>Yay! You have seen it all</b>
+            </p>
+          }
+        >
+          <div className="container">
+            <div className="row">
+              {files.order.map(id => (
+                <div key={id} className="col-sm-6 col-md-4 col-12 ">
+                  <MultimediaView file={files.byId[+id]}></MultimediaView>
+                  <br />
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
+        </InfiniteScroll>
+
       </>
     );
   }
 }
+
 
 const mapStateToProps = ({ account, files }: IStore): IGlobalStateProps => ({
   account,

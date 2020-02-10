@@ -19,7 +19,8 @@ const multer = require("multer");
 
 
 //GET
-router.get("/", multimedia.getMultimedia);
+router.post("/getMore", multimedia.getMoreMultimedia); //CHANGE FROM GET!!!!!!***
+router.get("/", multimedia.getMultimedia); 
 router.get("/:type", multimedia.getMultimediaByType);
 router.get("/byUserAndType/:id/:type", multimedia.getMultimediaByUserAndType);
 router.get("/single/:multimediaId", multimedia.getOneMultimedia);
@@ -29,10 +30,12 @@ router.get("/byCategory/:category", multimedia.getMultimediaCategories);
 router.get("/byCategoryAndUser/:id/:category", multimedia.getMultimediaCategoriesAndUser);
 router.get("/redkaneLive", multimedia.getRedkaneLiveMultimedia);
 router.get("/redkaneLive/:type", multimedia.getRedkaneLiveMultimediaByType);
+router.get("/isPurchased/:multimediaId", multimedia.isPurchased);
 
 
 //POST
 router.post("/createArticle", upload, multimedia.createArticle);
+router.post("/addPurchase/:multimediaId", multimedia.addPurchase);
 router.post("/createImage", upload, multimedia.createImage);
 router.post("/createVideo", upload, multimedia.createVideo);
 router.post("/update/:multimediaId", upload, multimedia.updateArticle);

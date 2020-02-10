@@ -156,7 +156,10 @@ multimediaController.createVideo = (request, response) => {
 
 //GET ALL MULTIMEDIA EXCEPT REDKANELIVE CONTENT
 multimediaController.getMultimedia = (request, response) => {
+  console.log("entrokkk")
+  console.log(request.body.counter)
   const { authorization } = request.headers;
+  const {counter} = request.body;
   if (authorization) {
     const token = authorization.replace("Bearer ", "");
     jwt.verify(token, myPrivateKey);
@@ -166,6 +169,36 @@ multimediaController.getMultimedia = (request, response) => {
       FROM multimedia WHERE category != 'redkaneLive'
       ORDER BY time
       DESC
+      LIMIT 6;
+        `,
+      (error, results) => {
+        if (error) {
+          console.log(error);
+          response.sendStatus(400);
+        } else {
+          response.send(results);
+        }
+      }
+    );
+  }
+};
+
+//GET MORE ALL MULTIMEDIA
+multimediaController.getMoreMultimedia = (request, response) => {
+  console.log("entrokkk")
+  console.log(request.body.counter)
+  const { authorization } = request.headers;
+  const {counter} = request.body;
+  if (authorization) {
+    const token = authorization.replace("Bearer ", "");
+    jwt.verify(token, myPrivateKey);
+    connection.query(
+      `
+      SELECT *
+      FROM multimedia WHERE category != 'redkaneLive'
+      ORDER BY time
+      DESC
+      LIMIT ${counter};
         `,
       (error, results) => {
         if (error) {
@@ -223,7 +256,7 @@ multimediaController.getMultimediaByUserAndType = (request, response) => {
       `
     SELECT *
     FROM multimedia
-    WHERE type = '${type}' AND id = '${id}'
+    WHERE type = '${type}' AND id = ${id}
     `,
       (error, results) => {
         if (error) {
@@ -581,5 +614,73 @@ multimediaController.getRedkaneLiveMultimediaByType = (request, response) => {
 
 //DISLIKE AN ARTICLE
 multimediaController.dislikeMultimedia = (request, response) => {};
+
+//ADD PURCHASE
+multimediaController.addPurchase = (request, response) => {
+  const {multimediaId} = request.params;
+  const token = request.headers.authorization.replace("Bearer ", "");
+  const { id } = jwt.verify(token, myPrivateKey);
+  if (token) {
+    const { paypalId  } = request.body;
+    connection.query(
+      `SELECT *
+       FROM purchases
+       WHERE idBuyer = ${id} AND multimediaId = ${multimediaId}`, (_, results) =>{
+
+      if (results && results.length){
+        console.log(results);
+        response.send("Already purchased");
+      }else{
+        connection.query(
+          `
+        INSERT
+        INTO purchases (idBuyer, multimediaId, paypalId)
+        VALUES('${id}', '${multimediaId}', '${paypalId}')
+      `,
+          (error, results) => {
+            let aux = false;
+            if (error) {
+              console.log(error);
+              response.send(aux);
+            } else {
+              aux = true;
+              console.log(results);
+              response.send(aux)
+            }
+          }
+        );
+      }
+    })
+
+  }
+};
+
+//CHECKING IF PURCHASED
+multimediaController.isPurchased = (request, response) => {
+  const { multimediaId } = request.params;
+  const { authorization } = request.headers;
+  if (authorization) {
+    const token = authorization.replace("Bearer ", "");
+    jwt.verify(token, myPrivateKey);
+    const { id } = jwt.verify(token, myPrivateKey);
+    connection.query(
+      `
+    SELECT *
+    FROM purchases
+    WHERE multimediaId = '${multimediaId}' 
+    AND idBuyer = ${id}
+    `,
+      (error, results) => {
+        let aux = true;
+        if (results && results.length) {
+          response.send(aux);
+        } else {
+          aux = false;
+          response.send(aux);
+        }
+      }
+    );
+  }
+};
 
 module.exports = multimediaController;
