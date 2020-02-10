@@ -6,6 +6,8 @@ import history from "../../../history";
 import { connect } from "react-redux";
 import { SetChosenFileAction } from "../../../redux/actions";
 import { API_URL_MULTIMEDIA } from "../../../constants";
+import {decode} from 'jsonwebtoken';
+
 
 class UploadArticle extends React.PureComponent {
   id_multimedia = history.location.pathname.split("/").slice(-1)[0];
@@ -19,7 +21,8 @@ class UploadArticle extends React.PureComponent {
       price: "",
       category: "",
       path: "",
-      type: ""
+      type: "",
+      
     };
 
     this.fileInputRef = React.createRef();
@@ -214,8 +217,11 @@ class UploadArticle extends React.PureComponent {
       price,
       data,
       path,
-      type
+      type,
     } = this.state;
+    const token = localStorage.getItem("token")
+    const { isAdmin } = decode(token)
+    
     console.log(type);
     return (
       <>
@@ -284,7 +290,7 @@ class UploadArticle extends React.PureComponent {
               {/* Category */}
             </div>
             <div className="col-3">
-              <select
+            {isAdmin == true ?  <select
                 className="form-control"
                 data-spy="scroll"
                 value={category}
@@ -301,7 +307,26 @@ class UploadArticle extends React.PureComponent {
                 <option value="fashion">fashion</option>
                 <option value="travel">travel</option>
                 <option value="other">other</option>
-              </select>
+                <option value="redkaneLive">redkaneLive</option>
+              </select> :
+              <select
+              className="form-control"
+              data-spy="scroll"
+              value={category}
+              onChange={e => this.setState({ category: e.target.value })}
+            >
+              <option defaultValue>Category...</option>
+              <option value="environmet">environmet</option>
+              <option value="politics">politics</option>
+              <option value="sports">sports</option>
+              <option value="tech">tech</option>
+              <option value="world_news">world news</option>
+              <option value="business">business</option>
+              <option value="culture">culture</option>
+              <option value="fashion">fashion</option>
+              <option value="travel">travel</option>
+              <option value="other">other</option>
+            </select>}
             </div>
             {/* Price */}
             <div className="col-2">
@@ -380,8 +405,9 @@ class UploadArticle extends React.PureComponent {
   }
 }
 
-const mapStateToProps = ({ files }) => ({
-  files
+const mapStateToProps = ({ files, account }) => ({
+  files,
+  account
 });
 
 const mapDispatchToProps = {

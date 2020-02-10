@@ -24,6 +24,11 @@ router.get("/:type", multimedia.getMultimediaByType);
 router.get("/byUserAndType/:id/:type", multimedia.getMultimediaByUserAndType);
 router.get("/single/:multimediaId", multimedia.getOneMultimedia);
 router.get("/byPrice/:price", multimedia.getMultimediaByPrice);
+router.get("/byPriceAndUser/:id/:price", multimedia.getMultimediaByPriceAndUser);
+router.get("/byCategory/:category", multimedia.getMultimediaCategories);
+router.get("/byCategoryAndUser/:id/:category", multimedia.getMultimediaCategoriesAndUser);
+router.get("/redkaneLive", multimedia.getRedkaneLiveMultimedia);
+router.get("/redkaneLive/:type", multimedia.getRedkaneLiveMultimediaByType);
 
 
 //POST

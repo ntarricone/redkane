@@ -218,7 +218,8 @@ class SingleMultimedia extends React.PureComponent<TProps, IState> {
       linkedin,
       time,
       id: idCreator,
-      type
+      type,
+      price
     } = this.state;
     let {avatar, path, title} = this.state;
     title = title? title: "Title missing :("
@@ -348,7 +349,7 @@ class SingleMultimedia extends React.PureComponent<TProps, IState> {
           </div>
         </div>
         {/* TEXT  */}
-        {type === "article"  && (
+        { (type === 'article' && price == 0)  && (
           <div className="container mt-5">
             <div className="row">
               <div className="col-1"></div>

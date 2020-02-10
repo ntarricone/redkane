@@ -141,9 +141,7 @@ multimediaController.createVideo = (request, response) => {
                 console.log(error);
                 response.sendStatus(400);
               } else {
-                console.log(results)
                 const [file] = results;
-                console.log(file)
                 response.send(file);
               }
             }
@@ -156,7 +154,7 @@ multimediaController.createVideo = (request, response) => {
 
 
 
-//GET ALL MULTIMEDIA
+//GET ALL MULTIMEDIA EXCEPT REDKANELIVE CONTENT
 multimediaController.getMultimedia = (request, response) => {
   const { authorization } = request.headers;
   if (authorization) {
@@ -165,7 +163,7 @@ multimediaController.getMultimedia = (request, response) => {
     connection.query(
       `
       SELECT *
-      FROM multimedia
+      FROM multimedia WHERE category != 'redkaneLive'
       ORDER BY time
       DESC
         `,
@@ -181,7 +179,7 @@ multimediaController.getMultimedia = (request, response) => {
   }
 };
 
-//GET ALL MULTIMEDIA FILES BY TYPE
+//GET ALL MULTIMEDIA FILES BY TYPE EXCEPT REDKANELIVE CONTENT
 multimediaController.getMultimediaByType = (request, response) => {
   const { authorization } = request.headers;
   const { type } = request.params;
@@ -192,6 +190,7 @@ multimediaController.getMultimediaByType = (request, response) => {
       `
         SELECT *
         FROM multimedia WHERE type = '${type}'
+        AND category != 'redkaneLive'
         ORDER BY time
         DESC
         `,
@@ -232,7 +231,7 @@ multimediaController.getMultimediaByUserAndType = (request, response) => {
           response.sendStatus(400);
         } else {
           response.send(results);
-          console.log(results)
+         
          
         }
       }
@@ -408,7 +407,7 @@ multimediaController.searchMultimediaByWordAndUser = (request, response) => {
 //GET MULTIMEDIA BY PRICE
 multimediaController.getMultimediaByPrice = (request, response) => {
   const { authorization } = request.headers;
-  const { price } = request.params; //REVIEW
+  const { price } = request.params; 
   if (authorization) {
     const token = authorization.replace("Bearer ", "");
     jwt.verify(token, myPrivateKey);
@@ -416,6 +415,157 @@ multimediaController.getMultimediaByPrice = (request, response) => {
       `
         SELECT *
         FROM multimedia WHERE price = ${price}
+        `,
+      (error, results) => {
+        if (error) {
+          console.log(error);
+          response.sendStatus(400);
+        } else {
+          response.send(results);
+          
+        }
+      }
+    );
+  }
+};
+
+//GET MULTIMEDIA BY PRICE
+multimediaController.getMultimediaByPrice = (request, response) => {
+  const { authorization } = request.headers;
+  const { price } = request.params; 
+  if (authorization) {
+    const token = authorization.replace("Bearer ", "");
+    jwt.verify(token, myPrivateKey);
+    connection.query(
+      `
+        SELECT *
+        FROM multimedia WHERE price = ${price}
+        `,
+      (error, results) => {
+        if (error) {
+          console.log(error);
+          response.sendStatus(400);
+        } else {
+          response.send(results);
+          
+        }
+      }
+    );
+  }
+};
+
+//GET MULTIMEDIA BY PRICE AND USER
+multimediaController.getMultimediaByPriceAndUser = (request, response) => {
+  const { authorization } = request.headers;
+  const { price, id } = request.params; 
+  if (authorization) {
+    const token = authorization.replace("Bearer ", "");
+    jwt.verify(token, myPrivateKey);
+    connection.query(
+      `
+        SELECT *
+        FROM multimedia WHERE price = ${price}
+        AND id = ${id}
+        `,
+      (error, results) => {
+        if (error) {
+          console.log(error);
+          response.sendStatus(400);
+        } else {
+          response.send(results);
+          console.log(results)
+          
+        }
+      }
+    );
+  }
+};
+
+//GET CATEGORIES
+multimediaController.getMultimediaCategories = (request, response) => {
+  const { authorization } = request.headers;
+  const { category } = request.params; 
+  if (authorization) {
+    const token = authorization.replace("Bearer ", "");
+    jwt.verify(token, myPrivateKey);
+    connection.query(
+      `
+        SELECT *
+        FROM multimedia WHERE category = '${category}'
+        `,
+      (error, results) => {
+        if (results && results.length > 0) {
+          response.send(results);
+        } else {
+          response.send(msg2);
+        }
+      }
+    );
+  }
+}
+
+//GET CATEGORIES BY USER
+multimediaController.getMultimediaCategoriesAndUser = (request, response) => {
+  const { authorization } = request.headers;
+  const { category, id } = request.params; 
+  if (authorization) {
+    const token = authorization.replace("Bearer ", "");
+    jwt.verify(token, myPrivateKey);
+    connection.query(
+      `
+        SELECT *
+        FROM multimedia WHERE id = ${id} 
+        AND category = '${category}'
+        `,
+      (error, results) => {
+        if (results && results.length > 0) {
+        } else {
+          response.send(msg2);
+        }
+      }
+    );
+  }
+}
+
+//GET ALL REDKANELIVE MULTIMEDIA CONTENT
+multimediaController.getRedkaneLiveMultimedia = (request, response) => {
+  const { authorization } = request.headers;
+  if (authorization) {
+    const token = authorization.replace("Bearer ", "");
+    jwt.verify(token, myPrivateKey);
+    connection.query(
+      `
+      SELECT *
+      FROM multimedia WHERE category = 'redkaneLive'
+      ORDER BY time
+      DESC
+        `,
+      (error, results) => {
+        if (error) {
+          console.log(error);
+          response.sendStatus(400);
+        } else {
+          response.send(results);
+        }
+      }
+    );
+  }
+};
+
+//GET ALL REDKANELIVE MULTIMEDIA CONTENT BY TYPE
+multimediaController.getRedkaneLiveMultimediaByType = (request, response) => {
+  const { authorization } = request.headers;
+  const { type } = request.params;
+  if (authorization) {
+    const token = authorization.replace("Bearer ", "");
+    jwt.verify(token, myPrivateKey);
+    connection.query(
+      `
+        SELECT *
+        FROM multimedia WHERE type = '${type}'
+        AND category = 'redkaneLive'
+        ORDER BY time
+        DESC
         `,
       (error, results) => {
         if (error) {

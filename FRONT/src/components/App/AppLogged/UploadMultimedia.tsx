@@ -6,6 +6,7 @@ import { IAccount } from "../../../interfaces/IAccount";
 import { AddFileAction } from "../../../redux/actions";
 import { IFile } from "../../../interfaces/IFile";
 import swal from "sweetalert";
+import {decode} from 'jsonwebtoken';
 
 interface IState {
   title: string;
@@ -114,6 +115,8 @@ class AploadMultimedia extends React.PureComponent<TProps, IState> {
  
   render() {
     const { type } = this.props;
+    const token : any = localStorage.getItem("token")
+    const { isAdmin }: any = decode(token)
     //TODO controlar el imput tipe price. Scroll en el select
     //TODO - arreglar que se puedan poner links the youtube en vez de subir archivos
     return (
@@ -147,6 +150,26 @@ class AploadMultimedia extends React.PureComponent<TProps, IState> {
         <div className="form-row">
           <div className="form-group col-md-6">
             <label>Category:</label>
+            {isAdmin == true ? <select
+            required
+              className="form-control"
+              data-spy="scroll"
+              value={this.state.category}
+              onChange={e => this.setState({ category: e.target.value })}
+            >
+              <option selected>Choose...</option>
+              <option value="environmet">environmet</option>
+              <option value="politics">politics</option>
+              <option value="sports">sports</option>
+              <option value="tech">tech</option>
+              <option value="world_news">world news</option>
+              <option value="business">business</option>
+              <option value="culture">culture</option>
+              <option value="fashion">fashion</option>
+              <option value="travel">travel</option>
+              <option value="other">other</option>
+              <option value="redkaneLive">redkaneLive</option>
+            </select> :
             <select
             required
               className="form-control"
@@ -165,7 +188,7 @@ class AploadMultimedia extends React.PureComponent<TProps, IState> {
               <option value="fashion">fashion</option>
               <option value="travel">travel</option>
               <option value="other">other</option>
-            </select>
+            </select> }
           </div>
 
           {/* Price */}

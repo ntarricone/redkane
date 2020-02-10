@@ -10,6 +10,7 @@ import { myFetch } from "../../../../../utils";
 import { IFiles } from "../../../../../interfaces/IFiles";
 import history from "../../../../../history";
 import MultimediaView from "../../MultimediaViews/MultimediaView";
+import {decode} from 'jsonwebtoken'
 
 
 interface IGlobalStateProps {
@@ -25,25 +26,30 @@ interface IGlobalActionProps {
 interface IState {
   type: "" | "article" | "image" | "video";
   userFiles: IFile[];
+  price: number;
+  category: string;
 }
 
 type TProps = IGlobalStateProps & IGlobalActionProps;
 
-class Home extends React.PureComponent<TProps, IState> {
+class settingFiles extends React.PureComponent<TProps, IState> {
   userId = history.location.pathname.split("/").slice(-1)[0];
   constructor(props: TProps) {
     super(props);
 
     this.state = {
       type: "article",
-      userFiles: []
+      userFiles: [],
+      price: 0,
+      category: ""
     };
     this.settingFiles = this.settingFiles.bind(this);
+    this.getFreeUserContent = this.getFreeUserContent.bind(this);
+    this.settingCategoryByUser = this.settingCategoryByUser.bind(this);
   }
 
   componentDidMount() {
-    this.props.unsetFiles();
-    console.log(this.state.type);
+    this.props.unsetFiles()
     const token = localStorage.getItem("token");
     this.settingFiles(this.state.type);
     
@@ -67,6 +73,46 @@ class Home extends React.PureComponent<TProps, IState> {
     );
     
   }
+
+  getFreeUserContent(){
+    const { price } = this.state;
+    this.setState({ price: 0 })
+    const token: any = localStorage.getItem("token");
+    setTimeout(
+      ( { setFiles } = this.props) =>
+        myFetch({ path: `/multimedia/byPriceAndUser/${this.userId}/${price}`, token }).then(files => {
+          console.log("entri");
+          console.log(files);
+          if (files) {
+            setFiles(files);
+            console.log(files)
+          }
+        }),
+      200
+    );
+    
+  }
+
+  settingCategoryByUser(){
+    const initialState = { category: "" };
+    const token: any = localStorage.getItem("token");
+    const { category } = this.state;
+    setTimeout(
+      ( { setFiles } = this.props) =>
+        myFetch({ path: `/multimedia/byCategoryAndUser/${this.userId}/${category}`, token }).then(files => {
+          console.log(files);
+          if (files) {
+            setFiles(files);
+            console.log(files)
+          }
+        }),
+      200
+    );
+    this.setState(initialState);
+    
+  }
+
+
   render() {
     const { files } = this.props;
     return (
@@ -100,12 +146,34 @@ class Home extends React.PureComponent<TProps, IState> {
                 >
                   Videos <i className="fa fa-sort"></i>
                 </button>
-                <button className="btn btn-sm btn-default btn-sorteable">
-                  Fecha <i className="fa fa-sort"></i>
-                </button>
-                 <button className="btn btn-sm btn-default btn-sorteable">
+                 <button className="btn btn-sm btn-default btn-sorteable"
+                 onClick={() => this.getFreeUserContent()}
+                 >
                   Free <i className="fa fa-sort"></i>
                 </button>
+                {/* CATEGORY */}
+                <select
+              className="form-control"
+              style={{ width: "9rem" }}
+              data-spy="scroll"
+              value={this.state.category}
+              
+              onChange={e => this.setState({ category: e.target.value })}
+              onClick={this.settingCategoryByUser}
+            >
+              <option selected>Category...</option>
+              <option value="environmet">environmet</option>
+              <option value="politics">politics</option>
+              <option value="sports">sports</option>
+              <option value="tech">tech</option>
+              <option value="world_news">world news</option>
+              <option value="business">business</option>
+              <option value="culture">culture</option>
+              <option value="fashion">fashion</option>
+              <option value="travel">travel</option>
+              <option value="other">other</option>
+            </select>
+                {/* FILTER */}
                 <div className="col-5">
                 <Filter parent= {"user"} ></Filter>
                 </div>
@@ -139,4 +207,4 @@ const mapDispatchToProps: IGlobalActionProps = {
   unsetFiles: UnsetFilesAction
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Home);
+export default connect(mapStateToProps, mapDispatchToProps)(settingFiles);

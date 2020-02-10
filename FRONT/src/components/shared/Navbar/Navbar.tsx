@@ -9,6 +9,8 @@ import { API_URL_IMAGES } from "../../../constants";
 import { Router } from "react-router-dom";
 import history from "../../../history";
 import ContentUploader from "../ContentUploader/ContentUploader";
+import { decode }from 'jsonwebtoken';
+import home from "../../../icons/home.png";
 
 interface IProps {}
 interface IGlobalStateProps {
@@ -22,6 +24,7 @@ interface IGlobalActionProps {
 type TProps = IGlobalStateProps & IGlobalActionProps & IProps;
 
 class Navbar extends React.PureComponent<TProps> {
+  
   constructor(props: TProps) {
     super(props);
 
@@ -37,6 +40,8 @@ class Navbar extends React.PureComponent<TProps> {
   }
   render() {
     const { account } = this.props;
+    const token: any = localStorage.getItem("token");
+    const { id }: any = decode(token)
  
     return (
       <>
@@ -47,7 +52,7 @@ class Navbar extends React.PureComponent<TProps> {
           <Link to="/" className="navbar-brand" href="#">
             <img
               style={{ height: "6vh" }}
-              src={API_URL_IMAGES + "logoKane2.png"}
+              src={home}
               alt=""
             />
           </Link>
@@ -62,8 +67,17 @@ class Navbar extends React.PureComponent<TProps> {
           >
             <span className="navbar-toggler-icon"></span>
           </button>
+          
           <div className="collapse navbar-collapse" id="navbarText">
+          
             <ul className="navbar-nav mr-auto"></ul>
+            <Link to={`/redkaneLive/${account?.id}`} className="navbar-brand" href="#">
+            <img
+              style={{ height: "6vh" }}
+              src={API_URL_IMAGES + "logoKane2.png"}
+              alt=""
+            />
+          </Link>
             <span className="mr-3">{account?.email}</span>
             {/* <ContentUploader></ContentUploader> */}
             <div className="dropdown">
@@ -92,11 +106,11 @@ class Navbar extends React.PureComponent<TProps> {
                 {/* <a href="">Action</a> */}
                 </div>
                 <div>
-                <Link to={`/updateProfile/${account?.id}`}>
-                  {!account?.avatar && <span className="text-danger">***</span>}
+                <a href="" onClick={history.push(`/updateProfile/${id}`)}>
+                   {!account?.avatar && <span className="text-danger">***</span>}
                   Update your profile
+                </a>
                   {/* TODO - add red asterix if avatar doesn´t exist */}
-                </Link>
                 </div>
                 <div>
                 <a href="" onClick={this.logout}>
