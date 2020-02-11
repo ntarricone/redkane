@@ -31,6 +31,7 @@ router.get("/byCategoryAndUser/:id/:category", multimedia.getMultimediaCategorie
 router.get("/redkaneLive", multimedia.getRedkaneLiveMultimedia);
 router.get("/redkaneLive/:type", multimedia.getRedkaneLiveMultimediaByType);
 router.get("/isPurchased/:multimediaId", multimedia.isPurchased);
+router.get("/userPurchases/:id", multimedia.getUserPurchases);
 
 
 //POST

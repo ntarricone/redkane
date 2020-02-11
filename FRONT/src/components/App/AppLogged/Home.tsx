@@ -93,11 +93,10 @@ class Home extends React.PureComponent<TProps, IState> {
     );
   }
 
-  settingCategory() {
-    const initialState = { category: "" };
-    const token: any = localStorage.getItem("token");
+
+  settingCategory(){
     const { category } = this.state;
-    const { setFiles } = this.props;
+    const token: any = localStorage.getItem("token");
     setTimeout(
       ({ token } = this.props.account, { setFiles } = this.props) =>
         myFetch({ path: `/multimedia/byCategory/${category}`, token }).then(
@@ -111,7 +110,8 @@ class Home extends React.PureComponent<TProps, IState> {
         ),
       200
     );
-    this.setState(initialState);
+    
+
   }
 
   //GET MORE FILES
@@ -160,7 +160,7 @@ class Home extends React.PureComponent<TProps, IState> {
         </div>
         {/* 
           <div className="row mb-2 mt-2">
-            <div className="col-8 ">
+            <div className="col-6 ">
               <div className="btn-group search-group">
                 <button
                   className="btn btn-sm btn-default btn-sorteable"
@@ -193,34 +193,42 @@ class Home extends React.PureComponent<TProps, IState> {
                   Free <i className="fa fa-sort"></i>
                 </button>
                 <select
-                  className="form-control"
-                  style={{ width: "9rem" }}
-                  data-spy="scroll"
-                  value={this.state.category}
-                  onChange={e => this.setState({ category: e.target.value })}
-                  onClick={this.settingCategory}
-                >
-                  <option selected>Category...</option>
-                  <option value="environmet">environmet</option>
-                  <option value="politics">politics</option>
-                  <option value="sports">sports</option>
-                  <option value="tech">tech</option>
-                  <option value="world_news">world news</option>
-                  <option value="business">business</option>
-                  <option value="culture">culture</option>
-                  <option value="fashion">fashion</option>
-                  <option value="travel">travel</option>
-                  <option value="other">other</option>
-                </select>
-
-                <div className="col-2">
-                  <Filter parent={"home"}></Filter>
-                </div>
-                <div className="col-2">
-                </div>
-              </div>
+              className="form-control"
+              style={{ width: "9rem" }}
+              data-spy="scroll"
+              value={this.state.category}
+              
+               onChange={e => {this.setState({ category: e.target.value })
+               this.settingCategory()}}
+              
+              
+            >
+              <option selected>Category...</option>
+              <option value="environmet">environmet</option>
+              <option value="politics">politics</option>
+              <option value="sports">sports</option>
+              <option value="tech">tech</option>
+              <option value="world_news">world news</option>
+              <option value="business">business</option>
+              <option value="culture">culture</option>
+              <option value="fashion">fashion</option>
+              <option value="travel">travel</option>
+              <option value="other">other</option>
+            </select>
             </div>
-          </div> */}
+            </div>
+                <div className="col-4">
+                <Filter parent = {"home"}></Filter>
+                </div>
+                <div className="col-3 col-sm ">
+              {/* {this.props.account.isCreator ? (
+                <ContentUploader></ContentUploader>
+              ) : (
+                ""
+              )}
+               */}
+            {/* </div> */}
+          {/* // </div> */}
         <div className="container ">
           <div className="row mt-4 mb-5">
             <div className="col-sm-4  col-12 mt-3">
@@ -260,26 +268,29 @@ class Home extends React.PureComponent<TProps, IState> {
               </div>
             </div>
             <div className="col-sm-2 col-6 mt-3">
-              <select
-                className="form-control"
-                style={{ width: "11rem" }}
-                data-spy="scroll"
-                value={this.state.category}
-                onChange={e => this.setState({ category: e.target.value })}
-                onClick={this.settingCategory}
-              >
-                <option selected>Category...</option>
-                <option value="environmet">environmet</option>
-                <option value="politics">politics</option>
-                <option value="sports">sports</option>
-                <option value="tech">tech</option>
-                <option value="world_news">world news</option>
-                <option value="business">business</option>
-                <option value="culture">culture</option>
-                <option value="fashion">fashion</option>
-                <option value="travel">travel</option>
-                <option value="other">other</option>
-              </select>
+            <select
+              className="form-control"
+              style={{ width: "9rem" }}
+              data-spy="scroll"
+              value={this.state.category}
+              
+               onChange={e => {this.setState({ category: e.target.value })
+               this.settingCategory()}}
+              
+              
+            >
+              <option selected>Category...</option>
+              <option value="environmet">environmet</option>
+              <option value="politics">politics</option>
+              <option value="sports">sports</option>
+              <option value="tech">tech</option>
+              <option value="world_news">world news</option>
+              <option value="business">business</option>
+              <option value="culture">culture</option>
+              <option value="fashion">fashion</option>
+              <option value="travel">travel</option>
+              <option value="other">other</option>
+            </select>
             </div>
             <div className="col-sm-3 col-6 mt-3">
               <Filter parent={"home"}></Filter>

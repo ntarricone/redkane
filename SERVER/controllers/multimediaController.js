@@ -694,4 +694,33 @@ multimediaController.isPurchased = (request, response) => {
   }
 };
 
+//GET USER PURCHASES
+multimediaController.getUserPurchases = (request, response) => {
+  console.log('donde estás?')
+  const { id } = request.params;
+  console.log(id)
+  const { authorization } = request.headers;
+  if (authorization) {
+    const token = authorization.replace("Bearer ", "");
+    jwt.verify(token, myPrivateKey);
+    connection.query(
+      `
+      SELECT title, description, time, path, type, price, category, textArea, multimedia.multimediaId, id, paypalId
+      FROM multimedia 
+      LEFT JOIN purchases on multimedia.multimediaId = purchases.multimediaId 
+      WHERE purchases.idBuyer = ${id} ORDER BY TIME DESC;
+        `,
+      (error, results) => {
+        console.log(results)
+        if (results && results.length > 0) {
+          
+        } else {
+          console.log(error);
+          response.sendStatus(400);
+        }
+      }
+    );
+  }
+};
+
 module.exports = multimediaController;
