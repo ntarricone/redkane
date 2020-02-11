@@ -13,6 +13,7 @@ import { Link } from "react-router-dom";
 import { SetChosenFileAction } from "../../../../redux/actions";
 import paid from "../../../../icons/money.png";
 import saved from "../../../../icons/save-button.png";
+import { decode } from "jsonwebtoken";
 
 interface IGlobalStateProps {}
 
@@ -89,6 +90,9 @@ class MultimediaView extends React.PureComponent<TProps, IState> {
     path = path ? path : "defaultBanner.jpg";
     avatar = avatar ? avatar : "avatar.png";
     title = title ? title : "TITLE";
+    const token: any = localStorage.getItem("token");
+    const { id: loggedId }: any = decode(token)
+    
     return (
       <div
         className="card animated fadeIn delay-0.5s cardStyle"
@@ -150,7 +154,7 @@ class MultimediaView extends React.PureComponent<TProps, IState> {
               <div className="col-6"></div>
 
               <div className="col-2">
-                {price !== 0 && !isPurchased && (
+                {price !== 0 && !isPurchased && loggedId !== userId && (
                   <img className="iconsSize" src={paid} alt="" />
                 )}
                 {price !== 0 && isPurchased && (

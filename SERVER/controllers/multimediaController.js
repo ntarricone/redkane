@@ -627,6 +627,7 @@ multimediaController.dislikeMultimedia = (request, response) => {};
 
 //ADD PURCHASE
 multimediaController.addPurchase = (request, response) => {
+  console.log("entroo")
   const {multimediaId} = request.params;
   const token = request.headers.authorization.replace("Bearer ", "");
   const { id } = jwt.verify(token, myPrivateKey);
@@ -635,9 +636,9 @@ multimediaController.addPurchase = (request, response) => {
     connection.query(
       `SELECT *
        FROM purchases
-       WHERE idBuyer = ${id} AND multimediaId = ${multimediaId}`, (_, results) =>{
-
-      if (results && results.length){
+       WHERE idBuyer = ${id} AND multimediaId = ${multimediaId}`, (error, results) =>{
+        if(error) console.log(error)
+      else if (results && results.length){
         console.log(results);
         response.send("Already purchased");
       }else{

@@ -22,50 +22,12 @@ import swal from "sweetalert";
 import history from "../../../../../history";
 import logoKane from "../../../../../images/logoKane.png";
 import YouTube from "react-youtube";
+import { PayPalButton } from "react-paypal-button-v2";
+import ReactLoading from "react-loading";
 
-interface IGlobalStateProps {
-  files: IFiles;
-}
-
-interface IGlobalActionProps {
-  setChosenFile(file: IFile): void;
-  deleteFile(id: number): void;
-  unsetFiles(): void;
-}
-
-interface IProps {
-  match: any;
-}
-
-interface IState {
-  title: string;
-  time: string;
-  path: string;
-  type: string;
-  price: number | null;
-  category: string;
-  language: string;
-  views: number | null;
-  reading_time: string;
-  description: string;
-  textArea: string;
-  id: number | null;
-  name: string;
-  surname: string;
-  avatar: string;
-  email: string;
-  youtube: string;
-  linkedin: string;
-  isVideoTimeUp: boolean;
-  loggedId: number;
-  isPurchased: boolean;
-}
-
-type TProps = IProps & IGlobalStateProps & IGlobalActionProps;
-
-class SingleMultimedia extends React.PureComponent<TProps, IState> {
+class SingleMultimedia extends React.PureComponent {
   id_multimedia = this.props.match.params.id;
-  constructor(props: TProps) {
+  constructor(props) {
     super(props);
     this.state = {
       title: "",
@@ -95,14 +57,14 @@ class SingleMultimedia extends React.PureComponent<TProps, IState> {
     this.deleteMultimedia = this.deleteMultimedia.bind(this);
     this.playVideo = this.playVideo.bind(this);
     this.setPurchaseStatus = this.setPurchaseStatus.bind(this);
-    this.payForItem = this.payForItem.bind(this);
+    this.savePurchaseInDDBB = this.savePurchaseInDDBB.bind(this);
   }
 
   componentDidMount() {
     this.setFile();
-    const token: any = localStorage.getItem("token");
+    const token = localStorage.getItem("token");
     this.setPurchaseStatus(token);
-    const { id: loggedId }: any = decode(token);
+    const { id: loggedId } = decode(token);
     this.setState({ loggedId });
   }
 
@@ -184,7 +146,7 @@ class SingleMultimedia extends React.PureComponent<TProps, IState> {
     }
   }
 
-  setPurchaseStatus(token: any) {
+  setPurchaseStatus(token) {
     myFetch({
       path: `/multimedia/isPurchased/${this.id_multimedia}`,
       token
@@ -194,7 +156,7 @@ class SingleMultimedia extends React.PureComponent<TProps, IState> {
     });
   }
 
-  deleteMultimedia(id_multimedia: number) {
+  deleteMultimedia(id_multimedia) {
     swal({
       title: "Are you sure?",
       text: "By clicking ok you will delete this file permanently",
@@ -202,7 +164,7 @@ class SingleMultimedia extends React.PureComponent<TProps, IState> {
       dangerMode: true
     }).then(willDelete => {
       if (willDelete) {
-        const token: any = localStorage.getItem("token");
+        const token = localStorage.getItem("token");
         myFetch({
           path: `/multimedia/delete/${id_multimedia}`,
           method: "DELETE",
@@ -219,7 +181,7 @@ class SingleMultimedia extends React.PureComponent<TProps, IState> {
     });
   }
 
-  setUser(id: number) {
+  setUser(id) {
     myFetch({ path: `/users/${id}` }).then(user => {
       if (user) {
         console.log(user);
@@ -230,15 +192,9 @@ class SingleMultimedia extends React.PureComponent<TProps, IState> {
   }
 
   //YOUTUBE EVENT FUNCTIONS
-  // _onReady(event: any) {
-
-  //   console.log(event);
-  //   console.log(event.target);
-  //   event.target.pauseVideo();
-  // }
 
   //plays a video and stops it if !free && !owner | NOT PURCHASED (TODO)
-  playVideo(event: any) {
+  playVideo(event) {
     const { price, loggedId, id, isPurchased } = this.state;
     this.setState({ isVideoTimeUp: false });
     console.log(this.state.isVideoTimeUp);
@@ -251,8 +207,14 @@ class SingleMultimedia extends React.PureComponent<TProps, IState> {
     }
   }
 
-  payForItem() {
-  
+  savePurchaseInDDBB(paypalId) {
+    const token = localStorage.getItem("token");
+    myFetch({
+      path: `/multimedia/addPurchase/${this.id_multimedia}`,
+      method: "POST",
+      json: { paypalId },
+      token
+    }).then(this.setState({ isPurchased: true }));
   }
 
   render() {
@@ -267,7 +229,8 @@ class SingleMultimedia extends React.PureComponent<TProps, IState> {
       id: idCreator,
       type,
       loggedId,
-      isPurchased
+      isPurchased,
+      loading
     } = this.state;
     let { avatar, path, title, price, isVideoTimeUp } = this.state;
     title = title ? title : "Title missing :(";
@@ -297,8 +260,7 @@ class SingleMultimedia extends React.PureComponent<TProps, IState> {
           </div>
         </div>
         {/* PAYPAL  */}
- 
-      
+
         {/* USER */}
         <div className="container mt-2">
           <div className="row">
@@ -397,7 +359,7 @@ class SingleMultimedia extends React.PureComponent<TProps, IState> {
                     backgroundImage: `url(${API_URL_MULTIMEDIA + path})`
                   }}
                 >
-                  {/* watermark */}
+                  {/* WATERMARK */}
                   {price !== 0 && idCreator !== loggedId && !isPurchased && (
                     <img src={logoKane} alt="" className="watermark" />
                   )}
@@ -426,19 +388,33 @@ class SingleMultimedia extends React.PureComponent<TProps, IState> {
               <hr />
               <p>{description}</p>
             </div>
-            {/* Image purchase button */}
+            {/* PAYPAL BUTTON */}
             <div className="col-3">
               {!path.includes("youtu") &&
                 price !== 0 &&
                 idCreator !== loggedId &&
                 !isPurchased && (
-                  <button
-                    className="btn btn-block mb-2 mt-1 buttonColor animated bounceInUp"
-                    style={{ width: "63%" }}
-                    onClick={this.payForItem}
-                  >
-                    Buy this image!
-                  </button>
+                  <PayPalButton
+                    style={{ layout: "horizontal", color: "black" }}
+                    clientId={
+                      "ATc97fL9cAzQaJ5ylAR6lMNSlNlMAW5cIj7-zMWORzBXamFmgwo6IIFufCGgHBskwFmmfvitrCkDsSOl"
+                    }
+                    amount={`${price}`}
+                    // shippingPreference="NO_SHIPPING" // default is "GET_FROM_FILE"
+                    onSuccess={(details, data) => {
+                      console.log(details);
+                      console.log(data);
+                      swal({
+                        title: "Success!",
+                        text: "Thanks for your purchase!",
+                        icon: "success",
+                        timer: 4000
+                      });
+                      const { orderID } = data;
+                      // OPTIONAL: Call your server to save the transaction
+                      this.savePurchaseInDDBB(orderID);
+                    }}
+                  />
                 )}
               {isPurchased && (
                 <span className="badge badge-success badgeMargin">
@@ -475,11 +451,11 @@ class SingleMultimedia extends React.PureComponent<TProps, IState> {
   }
 }
 
-const mapStateToProps = ({ files }: IStore): IGlobalStateProps => ({
+const mapStateToProps = ({ files }) => ({
   files
 });
 
-const mapDispatchToProps: IGlobalActionProps = {
+const mapDispatchToProps = {
   setChosenFile: SetChosenFileAction,
   deleteFile: DeleteFileAction,
   unsetFiles: UnsetFilesAction
