@@ -95,6 +95,7 @@ class SingleMultimedia extends React.PureComponent<TProps, IState> {
     this.deleteMultimedia = this.deleteMultimedia.bind(this);
     this.playVideo = this.playVideo.bind(this);
     this.setPurchaseStatus = this.setPurchaseStatus.bind(this);
+    this.payForItem = this.payForItem.bind(this);
   }
 
   componentDidMount() {
@@ -250,8 +251,8 @@ class SingleMultimedia extends React.PureComponent<TProps, IState> {
     }
   }
 
-  purchaseImage() {
-    console.log("purchasing image!");
+  payForItem() {
+  
   }
 
   render() {
@@ -295,6 +296,9 @@ class SingleMultimedia extends React.PureComponent<TProps, IState> {
             <div className="col-1"></div>
           </div>
         </div>
+        {/* PAYPAL  */}
+ 
+      
         {/* USER */}
         <div className="container mt-2">
           <div className="row">
@@ -431,7 +435,7 @@ class SingleMultimedia extends React.PureComponent<TProps, IState> {
                   <button
                     className="btn btn-block mb-2 mt-1 buttonColor animated bounceInUp"
                     style={{ width: "63%" }}
-                    onClick={this.purchaseImage}
+                    onClick={this.payForItem}
                   >
                     Buy this image!
                   </button>
@@ -443,8 +447,11 @@ class SingleMultimedia extends React.PureComponent<TProps, IState> {
               )}
               {price === 0 && (
                 <span
-                style={{marginLeft: "45%"}}
-                 className="badge badge-warning">free</span>
+                  style={{ marginLeft: "45%" }}
+                  className="badge badge-warning"
+                >
+                  free
+                </span>
               )}
             </div>
           </div>

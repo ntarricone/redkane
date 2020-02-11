@@ -96,14 +96,14 @@ class Home extends React.PureComponent<TProps, IState> {
 
   settingCategory(){
     const { category } = this.state;
-    const token: any = localStorage.getItem("token");
-    setTimeout(
+   setTimeout(
       ({ token } = this.props.account, { setFiles } = this.props) =>
         myFetch({ path: `/multimedia/byCategory/${category}`, token }).then(
           files => {
             console.log("entri");
             console.log(files);
             if (files) {
+              this.props.unsetFiles();
               setFiles(files);
             }
           }
