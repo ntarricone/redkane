@@ -95,7 +95,6 @@ class settingFiles extends React.PureComponent<TProps, IState> {
   }
 
   settingCategoryByUser(){
-    const initialState = { category: "" };
     const token: any = localStorage.getItem("token");
     const { category } = this.state;
     setTimeout(
@@ -109,7 +108,7 @@ class settingFiles extends React.PureComponent<TProps, IState> {
         }),
       200
     );
-    this.setState(initialState);
+    
     
   }
 
@@ -118,8 +117,6 @@ class settingFiles extends React.PureComponent<TProps, IState> {
     const { files } = this.props;
     return (
       <>
-        
-
           <div className="row mb-2">
             <div className="col-7 ">
               <div className="btn-group ">

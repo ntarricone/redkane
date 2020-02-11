@@ -1,11 +1,13 @@
 .uploader{
     width: 30rem;
-   flex-direction: row !important;
-   justify-content: center;
+    display: flex;
+    justify-content: space-evenly;
+   /* flex-direction: row !important;
+   justify-content: center; */
    align-items: center;
 
 }
 
 .icon{
-    font-size: 2.5rem;
+    font-size: 1.8rem;
 }

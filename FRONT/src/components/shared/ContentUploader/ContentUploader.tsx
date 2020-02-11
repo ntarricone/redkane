@@ -12,9 +12,9 @@ class ContentUploader extends React.PureComponent<TProps> {
   render() {
     return (
       <>
-        <div className="card uploader">
-          <div className="card-body">IMAGEN</div>
-          <div className="card-body">
+        <div className=" uploader">
+  
+          <div className="article">
             <Link to="/uploadArticle/0" className="nav-link">
               <i className="far fa-keyboard icon"></i>
             </Link>

@@ -84,12 +84,12 @@ class UpdateProfileForm extends React.Component<TProps, IState> {
     let { name, surname, profession, about_me, youtube, linkedin } = this.state;
     //If the state of the component is empty because there hasn´t been a change
     //I´m taking the value that comes from redux so it doesn´t update with empty strings
-    name = name != "" ? name : account.name;
-    surname = surname != "" ? surname : account.surname;
-    profession = profession != "" ? profession : account.profession;
-    about_me = about_me != "" ? about_me : account.about_me;
-    youtube = youtube != "" ? youtube : account.youtube;
-    linkedin = linkedin != "" ? linkedin : account.linkedin;
+    name = name !== "" ? name : account.name;
+    surname = surname !== "" ? surname : account.surname;
+    profession = profession !== "" ? profession : account.profession;
+    about_me = about_me !== "" ? about_me : account.about_me;
+    youtube = youtube !== "" ? youtube : account.youtube;
+    linkedin = linkedin !== "" ? linkedin : account.linkedin;
     myFetch({
       path: `/users/edit/${id}`,
       method: "PUT",

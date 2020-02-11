@@ -4,7 +4,7 @@ import { IStore } from "../../../interfaces/IStore";
 import { IAccount } from "../../../interfaces/IAccount";
 import "./Navbar.css";
 import { LogoutAction } from "../../../redux/actions";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { API_URL_IMAGES } from "../../../constants";
 import { Router } from "react-router-dom";
 import history from "../../../history";
@@ -16,23 +16,13 @@ import redkaneLive from "../../../images/redkaneLive.png"
 interface IProps {}
 interface IGlobalStateProps {
   account: IAccount | null;
-}
-
-interface IGlobalActionProps {
+}interface IGlobalActionProps {
   logout(): void;
-}
-
-type TProps = IGlobalStateProps & IGlobalActionProps & IProps;
-
-class Navbar extends React.PureComponent<TProps> {
+}type TProps = IGlobalStateProps & IGlobalActionProps & IProps;class Navbar extends React.PureComponent<TProps> {
   
   constructor(props: TProps) {
-    super(props);
-
-    this.logout = this.logout.bind(this);
-  }
-
-  logout() {
+    super(props);    this.logout = this.logout.bind(this);
+  }  logout() {
     const { logout } = this.props;
     localStorage.removeItem("token");
     localStorage.removeItem("avatar");
@@ -79,9 +69,7 @@ class Navbar extends React.PureComponent<TProps> {
           </Link>
             <span className="mr-3">{account?.email}</span>
             {/* <ContentUploader></ContentUploader> */}
-            <div className="dropdown">
-
-            {!account?.avatar ? (
+            <div className="dropdown">            {!account?.avatar ? (
               <img
                 style={{ height: "6vh", width: "3vw", borderRadius: "50%" }}
                 data-toggle="dropdown"
@@ -101,20 +89,17 @@ class Navbar extends React.PureComponent<TProps> {
             <div className="dropdown" aria-labelledby="dropdownMenuButton">
               <div className="dropdown-content">
                 <div>
-                  <Link to={`/updateProfile/${account?.id}`}>
+                  <Link to={`/updateProfile/${id}`}>
                     {!account?.avatar && (
                       <span className="text-danger">***</span>
                     )}
                     Update your profile
-                    {/* TODO - add red asterix if avatar doesn´t exist */}
                   </Link>
                 </div>
                 <div>
-                <a href="" onClick={history.push(`/updateProfile/${id}`)}>
-                   {!account?.avatar && <span className="text-danger">***</span>}
-                  Update your profile
-                </a>
-                  {/* TODO - add red asterix if avatar doesn´t exist */}
+                <Link to={`/userPurchases/${id}`}>
+                  Purchases
+                  </Link>
                 </div>
                 <div>
                 <a href="" onClick={this.logout}>
@@ -169,9 +154,7 @@ class Navbar extends React.PureComponent<TProps> {
                   aria-expanded="false"
                   src={API_URL_IMAGES + account?.avatar}
                 ></img>
-              )}
-
-              <div className="dropdown" aria-labelledby="dropdownMenuButton">
+              )}              <div className="dropdown" aria-labelledby="dropdownMenuButton">
                 <div className="dropdown-content">
                   <div>
                     <Link to={`/updateProfile/${account?.id}`}>
@@ -194,11 +177,11 @@ class Navbar extends React.PureComponent<TProps> {
       </>
     );
   }
-}
-
-const mapStateToProps = ({ account }: IStore) => ({ account });
-
-const mapDispatchToProps: IGlobalActionProps = {
+}const mapStateToProps = ({ account }: IStore) => ({ account });const mapDispatchToProps: IGlobalActionProps = {
   logout: LogoutAction
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Navbar);
+
+
+
+

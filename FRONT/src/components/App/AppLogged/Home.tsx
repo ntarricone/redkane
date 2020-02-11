@@ -62,8 +62,6 @@ class Home extends React.PureComponent<TProps, IState> {
   }
 
   settingFiles(type: any) {
-    console.log("Ooooooooooooooooooooooo");
- 
     this.setState({ type: type });
     setTimeout(
       ({ token } = this.props.account, { setFiles } = this.props) =>
@@ -103,10 +101,8 @@ class Home extends React.PureComponent<TProps, IState> {
 
 
   settingCategory(){
-    const initialState = { category: "" };
-    const token: any = localStorage.getItem("token");
     const { category } = this.state;
-    const { setFiles } = this.props;
+    const token: any = localStorage.getItem("token");
     setTimeout(
       ({ token } = this.props.account, { setFiles } = this.props) =>
         myFetch({ path: `/multimedia/byCategory/${category}`, token }).then(files => {
@@ -118,7 +114,7 @@ class Home extends React.PureComponent<TProps, IState> {
         }),
       200
     );
-    this.setState(initialState);
+    
 
   }
 
@@ -174,7 +170,7 @@ console.log(document.cookie)
           </div>
 
           <div className="row mb-2 mt-2">
-            <div className="col-8 ">
+            <div className="col-6 ">
               <div className="btn-group search-group">
                 <button
                   className="btn btn-sm btn-default btn-sorteable"
@@ -210,8 +206,10 @@ console.log(document.cookie)
               style={{ width: "9rem" }}
               data-spy="scroll"
               value={this.state.category}
-              onChange={e => this.setState({ category: e.target.value })}
-              onClick={this.settingCategory}
+              
+               onChange={e => {this.setState({ category: e.target.value })
+               this.settingCategory()}}
+              
               
             >
               <option selected>Category...</option>
@@ -226,12 +224,21 @@ console.log(document.cookie)
               <option value="travel">travel</option>
               <option value="other">other</option>
             </select>
-                
+            </div>
+            </div>
                 <div className="col-4">
                 <Filter parent = {"home"}></Filter>
                 </div>
-              </div>
+                <div className="col-3 col-sm ">
+              {/* {this.props.account.isCreator ? (
+                <ContentUploader></ContentUploader>
+              ) : (
+                ""
+              )}
+               */}
             </div>
+              
+           
           </div>
         </div>
 

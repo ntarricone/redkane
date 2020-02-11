@@ -88,7 +88,7 @@ class Filter extends React.PureComponent<TProps, IState> {
         <div className="container-fluid">
           <div className="row">
             <div className="col-lg-12">
-              <div className=" search" style={{ width: "25rem" }}>
+              <div className=" search" style={{ width: "19rem" }}>
                 <input
                   type="text"
                   id="myInput"

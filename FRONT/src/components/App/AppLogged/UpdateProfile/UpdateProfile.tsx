@@ -24,6 +24,9 @@ import user from "../../../../icons/user.png";
 import { decode } from "jsonwebtoken";
 import BecomeCreator from "./BecomeCreator/BecomeCreator";
 
+interface IProps {
+  match:any
+}
 interface IGlobalStateProps {
   account: IAccount;
   files: IFiles;
@@ -33,6 +36,7 @@ interface IGlobalActionProps {
   setBanner(banner: string): void;
   setAvatar(banner: string): void;
   setFiles(files: IFile[]): void;
+  
 }
 
 interface IState {
@@ -42,10 +46,10 @@ interface IState {
   toggleContent: "edit" | "multimedia";
 }
 
-type TProps = IGlobalStateProps & IGlobalActionProps;
+type TProps = IGlobalStateProps & IGlobalActionProps & IProps;
 
 class UpdateProfile extends React.Component<TProps, IState> {
-  userId = history.location.pathname.split("/").slice(-1)[0];
+  userId = this.props.match.params.id
   fileInputRef: React.RefObject<HTMLInputElement>;
   fileInputRef2: React.RefObject<HTMLInputElement>;
   constructor(props: any) {
@@ -62,10 +66,15 @@ class UpdateProfile extends React.Component<TProps, IState> {
     this.fileInputRef2 = React.createRef();
     this.uploadAvatar = this.uploadAvatar.bind(this);
     this.uploadBanner = this.uploadBanner.bind(this);
+    this.setUserProfile = this.setUserProfile.bind(this);
   }
 
   componentDidMount() {
-    const token = localStorage.getItem("token");
+   this.setUserProfile()
+  }
+  //TODO. FIX LINK
+  setUserProfile(){
+     const token = localStorage.getItem("token");
     if (token) {
       (async () => {
         myFetch({ path: `/users/${this.userId}`, token }).then(response => {
@@ -78,6 +87,7 @@ class UpdateProfile extends React.Component<TProps, IState> {
         // this.setState({ banner, avatar});
       })();
     }
+
   }
 
   uploadBanner() {
