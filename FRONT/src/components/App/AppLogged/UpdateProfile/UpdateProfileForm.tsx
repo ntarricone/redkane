@@ -145,6 +145,8 @@ class UpdateProfileForm extends React.Component<TProps, IState> {
 
   render() {
     const { account } = this.props;
+    let {isCreator} = account;
+    isCreator = Boolean(isCreator) ;
     let {
       name = account?.name,
       surname,
@@ -153,7 +155,7 @@ class UpdateProfileForm extends React.Component<TProps, IState> {
       newPassword,
       about_me,
       youtube,
-      linkedin
+      linkedin,
     } = this.state;
 
     return (
@@ -195,7 +197,7 @@ class UpdateProfileForm extends React.Component<TProps, IState> {
                     </div>
                   </div>
                   {/* PROFESSION*/}
-                  <div className="form-group">
+                  {isCreator &&<div className="form-group">
                     <input
                       type="text"
                       className="form-control input-sm"
@@ -204,20 +206,20 @@ class UpdateProfileForm extends React.Component<TProps, IState> {
                       onChange={({ target: { value } }) =>
                         this.setState({ profession: value })
                       }
-                    />
-                  </div>
+                    /> 
+                  </div>}
                   {/* ABOUT_ME */}
-                  <textarea
+                  {isCreator  && <textarea
                     placeholder="Write a description about you"
                     className="form-control mt-3"
                     value={about_me}
                     onChange={({ target: { value } }: any) =>
                       this.setState({ about_me: value })
                     }
-                  ></textarea>
+                  ></textarea>}
 
                     {/* YOUTUBE */}
-                    <div
+                   {isCreator  && <div
                     className="row"
                     style={{ width: "100%", marginLeft: "0.2rem" }}
                   >
@@ -238,9 +240,9 @@ class UpdateProfileForm extends React.Component<TProps, IState> {
                         this.setState({ youtube: value })
                       }
                     />
-                  </div>
+                  </div>}
                   {/* Linkedin */}
-                  <div
+                 {isCreator && <div
                     className="row mt-3"
                     style={{ width: "100%", marginLeft: "0.2rem" }}
                   >
@@ -259,7 +261,7 @@ class UpdateProfileForm extends React.Component<TProps, IState> {
                         this.setState({ linkedin: value })
                       }
                     />
-                  </div>
+                  </div>}
                   <button
                     className="btn  btn-block mt-3 buttonColor"
                     onClick={this.updateAccount}

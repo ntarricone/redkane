@@ -49,7 +49,7 @@
           <nav className="navbar navbar-expand-lg navbar-dark navbarBackground">
             <Link to="/" className="navbar-brand" href="#">
               <img
-                style={{ height: "4.7vh" }}
+                style={{ height: "4vh" }}
                 src={redkaneNav}
                 alt=""
               />
@@ -72,7 +72,7 @@
               <ul className="navbar-nav mr-auto"></ul>
               <Link to={`/redkaneLive/${account?.id}`} className="navbar-brand" href="#">
               <img
-                style={{ height: "5vh" }}
+                style={{ height: "4.5vh" }}
                 src={redkaneLive}
                 alt=""
               />

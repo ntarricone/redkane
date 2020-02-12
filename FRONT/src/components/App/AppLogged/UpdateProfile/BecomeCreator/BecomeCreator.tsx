@@ -51,7 +51,6 @@ class BecomeCreator extends React.Component<TProps, IState> {
     const name = this.props.account.name;
     const id = this.props.id;
 
-    ;
     let params = {
       from_name: `${name}`,
       id: `${id}`,

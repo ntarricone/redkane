@@ -1,7 +1,5 @@
-import React, { Component } from "react";
+import React from "react";
 import { connect } from "react-redux";
-import { IStore } from "../../../../../interfaces/IStore";
-import { IFiles } from "../../../../../interfaces/IFiles";
 import { myFetch, getYoutubeId } from "../../../../../utils";
 import { API_URL_MULTIMEDIA, API_URL_IMAGES } from "../../../../../constants";
 import "./SingleMultimedia.css";
@@ -23,7 +21,6 @@ import history from "../../../../../history";
 import logoKane from "../../../../../images/logoKane.png";
 import YouTube from "react-youtube";
 import { PayPalButton } from "react-paypal-button-v2";
-import ReactLoading from "react-loading";
 
 class SingleMultimedia extends React.PureComponent {
   id_multimedia = this.props.match.params.id;
@@ -214,7 +211,9 @@ class SingleMultimedia extends React.PureComponent {
       method: "POST",
       json: { paypalId },
       token
-    }).then(this.setState({ isPurchased: true }));
+    }).then(this.setState({ isPurchased: true, isVideoTimeUp: false }));
+    //TODO - SEND EMAIL TO CREATOR
+    //WHAT ABOUT AN EMAIL TO THE BUYER?
   }
 
   render() {
@@ -252,7 +251,8 @@ class SingleMultimedia extends React.PureComponent {
             <div className="col-10" style={{ marginTop: "8%" }}>
               <div className="row ml-1">
                 <div>
-                  <h1>{title}</h1>
+                  <h1>{title}</h1> 
+                  {price !== 0 && idCreator !== loggedId && <h3>{`($${price})`}</h3>}
                 </div>
               </div>
             </div>
@@ -327,12 +327,36 @@ class SingleMultimedia extends React.PureComponent {
                   <div className="animated fadeInDown slower text-center">
                     <h3 className="">Do you like what you are seeing?</h3>
                     <img src={logoKane} alt="" className="watermark" />
-                    <button
+                    <div className="mt-2"
+                    style={{width: "30%", marginLeft: "35%"}}>
+                    <PayPalButton
+                    style={{ layout: "horizontal", color: "black" }}
+                    clientId={
+                      "ATc97fL9cAzQaJ5ylAR6lMNSlNlMAW5cIj7-zMWORzBXamFmgwo6IIFufCGgHBskwFmmfvitrCkDsSOl"
+                    }
+                    amount={`${price}`}
+                    // shippingPreference="NO_SHIPPING" // default is "GET_FROM_FILE"
+                    onSuccess={(details, data) => {
+                      console.log(details);
+                      console.log(data);
+                      swal({
+                        title: "Success!",
+                        text: "Thanks for your purchase!",
+                        icon: "success",
+                        timer: 4000
+                      });
+                      const { orderID } = data;
+                      // OPTIONAL: Call your server to save the transaction
+                      this.savePurchaseInDDBB(orderID);
+                    }}
+                  />
+                  </div>
+                    {/* <button
                       className="btn btn-block mb-2 mt-3 buttonColor animated bounceInUp"
                       style={{ width: "30%", marginLeft: "35%" }}
                     >
                       Buy the full video!
-                    </button>
+                    </button> */}
                     <span className="text-center">
                       Take me back to the{" "}
                       <a
@@ -373,9 +397,9 @@ class SingleMultimedia extends React.PureComponent {
         <div className="container">
           <div className="row">
             <div className="col-1"></div>
-            <div className="col-8 mt-5">
+            <div className="col-7 mt-5">
               <div className="row">
-                <h3 className="ml-3">Summary</h3>
+                <h3 className="ml-3">Summary  </h3>
 
                 {idCreator === loggedId && (
                   <Link to={`/uploadArticle/${this.id_multimedia}`}>
@@ -389,7 +413,7 @@ class SingleMultimedia extends React.PureComponent {
               <p>{description}</p>
             </div>
             {/* PAYPAL BUTTON */}
-            <div className="col-3">
+            <div className="col-3 mt-2">
               {!path.includes("youtu") &&
                 price !== 0 &&
                 idCreator !== loggedId &&
@@ -423,13 +447,13 @@ class SingleMultimedia extends React.PureComponent {
               )}
               {price === 0 && (
                 <span
-                  style={{ marginLeft: "45%" }}
-                  className="badge badge-warning"
+                  className="badge badge-warning badgeMargin"
                 >
                   free
                 </span>
               )}
             </div>
+            <div className="col-1"></div>
           </div>
         </div>
         {/* TEXT  */}
