@@ -109,15 +109,6 @@
                     </Link>
                   </div>
                   <div>
-                <Link to={`/userPurchases/${id}`}>
-                  Purchases
-                  </Link>
-                </div>
-                  <div>
-                  {/* <a href="" onClick={history.push(`/updateProfile/${id}`)}>
-                    {!account?.avatar && <span className="text-danger">***</span>}
-                    Update your profile
-                  </a> */}
                     {/* TODO - add red asterix if avatar doesn´t exist */}
                   </div>
                   <div>

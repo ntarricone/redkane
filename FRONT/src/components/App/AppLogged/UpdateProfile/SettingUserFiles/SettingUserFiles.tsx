@@ -24,7 +24,7 @@ interface IGlobalActionProps {
 }
 
 interface IState {
-  type: "" | "article" | "image" | "video";
+  type: "" | "article" | "image" | "video" | "free";
   userFiles: IFile[];
   price: number;
   category: string;
@@ -58,7 +58,7 @@ class settingFiles extends React.PureComponent<TProps, IState> {
   settingFiles(type: any) {
     console.log(type);
     const token: any = localStorage.getItem("token")
-    this.setState({ type: type });
+    this.setState({ type: type, category: "" });
     console.log(type)
     setTimeout(
       ( { setFiles } = this.props) =>
@@ -77,7 +77,7 @@ class settingFiles extends React.PureComponent<TProps, IState> {
 
   getFreeUserContent(){
     const { price } = this.state;
-    this.setState({ price: 0 })
+    this.setState({ price: 0, category: "default" })
     const token: any = localStorage.getItem("token");
     setTimeout(
       ( { setFiles } = this.props) =>
@@ -95,30 +95,107 @@ class settingFiles extends React.PureComponent<TProps, IState> {
   }
 
   settingCategoryByUser(){
+    this.props.unsetFiles();
+    const { category, type } = this.state;
+    console.log(category)
+    // this.setState({ hasMore: false });
     const token: any = localStorage.getItem("token");
-    const { category } = this.state;
-    setTimeout(
-      ( { setFiles } = this.props) =>
-        myFetch({ path: `/multimedia/byCategoryAndUser/${this.userId}/${category}`, token }).then(files => {
-          console.log(files);
-          if (files) {
-            setFiles(files);
-            console.log(files)
-          }
-        }),
-      200
-    );
-    
+     const { setFiles } = this.props
+     myFetch({
+      method: "POST",
+      path: `/multimedia/byCategoryAndUser/${this.userId}/${category}`,
+      token,
+      json: { type }
+    }).then(files => {
+      if (files) {
+        setFiles(files);
+        this.setState(files); 
+      } 
+    });
     
   }
 
 
   render() {
     const { files } = this.props;
+    const { type } = this.state;
     return (
       <>
           <div className="row mb-2">
-            <div className="col-7 ">
+
+          <div className="container ">
+          <div className="row mt-4 mb-5">
+          <div className="col-sm-4  col-12 mt-3">
+              <div className="btn-group search-group">
+              <i className="fas fa-search mt-2"></i>
+                <button
+                  className={type === ''?'btn btn-sm selectedFilter': "btn btn-sm"}
+                  onClick={() => this.settingFiles("")}
+                >
+                  All
+                </button>
+                <button
+                  className={type === 'article'?'btn btn-sm selectedFilter': "btn btn-sm"}
+                  onClick={() => this.settingFiles("article")}
+                >
+                  Articles 
+                </button>
+                <button
+                  className={type === 'image'?'btn btn-sm selectedFilter': "btn btn-sm"}
+                  // style={{borderBottom: type === 'image'? '2px solid red': ''}}
+                  onClick={() => this.settingFiles("image")}
+                >
+                  Images 
+                </button>
+                <button
+                  className={type === 'video'?'btn btn-sm selectedFilter': "btn btn-sm"}
+                  onClick={() => this.settingFiles("video")}
+                >
+                  Videos 
+                </button>
+                <button
+                  className={type === 'free'?'btn btn-sm selectedFilter': "btn btn-sm"}
+                  onClick={() => this.getFreeUserContent()}
+                >
+                  Free 
+                </button>
+                  {/* CATEGORY */}
+                  <select
+              className="form-control"
+              style={{ width: "9rem" }}
+              data-spy="scroll"
+              value={this.state.category}
+              
+              onChange={e => {this.setState({ category: e.target.value })
+
+               setTimeout(
+                 () =>{this.settingCategoryByUser()},40)
+               }}
+            >
+              <option selected>Category...</option>
+              <option value="environmet">environmet</option>
+              <option value="politics">politics</option>
+              <option value="sports">sports</option>
+              <option value="tech">tech</option>
+              <option value="world_news">world news</option>
+              <option value="business">business</option>
+              <option value="culture">culture</option>
+              <option value="fashion">fashion</option>
+              <option value="travel">travel</option>
+              <option value="other">other</option>
+            </select>
+                {/* FILTER */}
+                <div className="col-5">
+                <Filter parent= {"user"} ></Filter>
+                </div>
+              </div>
+            </div>
+          </div>
+              </div>
+            </div>
+
+            
+            {/* <div className="col-7 ">
               <div className="btn-group ">
                 <button
                   className="btn btn-sm btn-default btn-sorteable"
@@ -148,9 +225,9 @@ class settingFiles extends React.PureComponent<TProps, IState> {
                  onClick={() => this.getFreeUserContent()}
                  >
                   Free <i className="fa fa-sort"></i>
-                </button>
+                </button> */}
                 {/* CATEGORY */}
-                <select
+                {/* <select
               className="form-control"
               style={{ width: "9rem" }}
               data-spy="scroll"
@@ -170,14 +247,14 @@ class settingFiles extends React.PureComponent<TProps, IState> {
               <option value="fashion">fashion</option>
               <option value="travel">travel</option>
               <option value="other">other</option>
-            </select>
+            </select> */}
                 {/* FILTER */}
-                <div className="col-5">
+                {/* <div className="col-5">
                 <Filter parent= {"user"} ></Filter>
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
         <div className="container">
           <div className="row">
             {files.order.map(id => (

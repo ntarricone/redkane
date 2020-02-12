@@ -522,10 +522,19 @@ multimediaController.getMultimediaByPriceAndUser = (request, response) => {
   }
 };
 
-//GET CATEGORIES
+//GET CATEGORIES BY TYPE
 multimediaController.getMultimediaCategories = (request, response) => {
   const { authorization } = request.headers;
-  const { category } = request.params; 
+  const { category } = request.params;
+  let {type} = request.body;
+  console.log(type)
+ if(type === ""){
+    type = ""
+  }
+  else if (type === "article" || "image" || "video"){
+    type = `AND type = '${type}'`
+    console.log(type)
+  }
   if (authorization) {
     const token = authorization.replace("Bearer ", "");
     jwt.verify(token, myPrivateKey);
@@ -533,10 +542,12 @@ multimediaController.getMultimediaCategories = (request, response) => {
       `
         SELECT *
         FROM multimedia WHERE category = '${category}'
+        ${type}
         ORDER BY time
         DESC
         `,
       (error, results) => {
+        console.log(results)
         if (results && results.length > 0) {
           response.send(results);
         } else {
@@ -550,7 +561,16 @@ multimediaController.getMultimediaCategories = (request, response) => {
 //GET CATEGORIES BY USER
 multimediaController.getMultimediaCategoriesAndUser = (request, response) => {
   const { authorization } = request.headers;
-  const { category, id } = request.params; 
+  const { category, id } = request.params;
+  let {type} = request.body;
+  console.log(type)
+ if(type === ""){
+    type = ""
+  }
+  else if (type === "article" || "image" || "video"){
+    type = `AND type = '${type}'`
+    console.log(type)
+  } 
   if (authorization) {
     const token = authorization.replace("Bearer ", "");
     jwt.verify(token, myPrivateKey);
@@ -558,10 +578,12 @@ multimediaController.getMultimediaCategoriesAndUser = (request, response) => {
       `
         SELECT *
         FROM multimedia WHERE id = ${id} 
-        AND category = '${category}'
+        AND (category = '${category}'
+        ${type})
         `,
       (error, results) => {
         if (results && results.length > 0) {
+          response.send(results)
         } else {
           response.send(msg2);
         }
@@ -620,6 +642,35 @@ multimediaController.getRedkaneLiveMultimediaByType = (request, response) => {
       }
     );
   }
+};
+
+//SEARCH BOX. REDKANELIVE
+multimediaController.searchMultimediaRedkaneLive = (request, response) => {
+  const { key } = request.body;
+  const { authorization } = request.headers;
+  if (authorization) {
+    const token = authorization.replace("Bearer ", "");
+    jwt.verify(token, myPrivateKey);
+    connection.query(
+      `
+      SELECT *
+      FROM multimedia
+      WHERE category = 'redkaneLive'
+      AND (title LIKE "%${key}%" OR textArea LIKE "%${key}%")
+      ORDER BY time DESC
+        `,
+      (error, results) => {
+        if (results && results.length > 0) {
+          response.send(results);
+
+        } else {
+          response.send(msg2);
+        }
+
+      }
+    )
+  }
+    
 };
 
 //DISLIKE AN ARTICLE
@@ -713,7 +764,7 @@ multimediaController.getUserPurchases = (request, response) => {
       (error, results) => {
         console.log(results)
         if (results && results.length > 0) {
-          
+          response.send(results);
         } else {
           console.log(error);
           response.sendStatus(400);

@@ -112,7 +112,7 @@ interface IGlobalStateProps {
                     Videos <i className="fa fa-sort"></i>
                   </button>
                   <div className="col-4">
-                  <Filter parent = {"home"}></Filter>
+                  <Filter parent = {"redkaneLive"}></Filter>
                   </div>
                 </div>
               </div>

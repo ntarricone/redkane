@@ -51,7 +51,7 @@ class Home extends React.PureComponent<TProps, IState> {
   }
 
   componentDidMount() {
-    // this.props.unsetFiles();
+    this.props.unsetFiles();
     const token = localStorage.getItem("token");
     this.settingFiles(this.state.type);
     this.cookies();
@@ -59,7 +59,7 @@ class Home extends React.PureComponent<TProps, IState> {
 
   settingFiles(type: any) {
     console.log("Ooooooooooooooooooooooo");
-    this.setState({ counter: 9, hasMore: true, type: type });
+    this.setState({ counter: 9, hasMore: true, type: type, category: "" });
     setTimeout(
       ({ token } = this.props.account, { setFiles } = this.props) =>
         myFetch({
@@ -77,7 +77,7 @@ class Home extends React.PureComponent<TProps, IState> {
   }
 
   getFreeContent() {
-    this.setState({ counter: 9, hasMore: false, price: 0, type: "free" });
+    this.setState({ counter: 9, hasMore: false, price: 0, type: "free", category: "default" });
     const { price } = this.state;
     const token: any = localStorage.getItem("token");
     setTimeout(
@@ -95,23 +95,24 @@ class Home extends React.PureComponent<TProps, IState> {
 
 
   settingCategory(){
-    const { category } = this.state;
+    this.props.unsetFiles();
+    const { category, type } = this.state;
+    console.log(category)
+    this.setState({ hasMore: false });
     const token: any = localStorage.getItem("token");
-    setTimeout(
-      ({ token } = this.props.account, { setFiles } = this.props) =>
-        myFetch({ path: `/multimedia/byCategory/${category}`, token }).then(
-          files => {
-            console.log("entri");
-            console.log(files);
-            if (files) {
-              setFiles(files);
-            }
-          }
-        ),
-      200
-    );
+     const { setFiles } = this.props
+     myFetch({
+      method: "POST",
+      path: `/multimedia/byCategory/${category}`,
+      token,
+      json: { type }
+    }).then(files => {
+      if (files) {
+        setFiles(files);
+        this.setState(files); 
+      } 
+    });
     
-
   }
 
   //GET MORE FILES
@@ -272,14 +273,18 @@ class Home extends React.PureComponent<TProps, IState> {
               className="form-control"
               style={{ width: "9rem" }}
               data-spy="scroll"
+              // defaultValue="selected"
               value={this.state.category}
               
                onChange={e => {this.setState({ category: e.target.value })
-               this.settingCategory()}}
+
+               setTimeout(
+                 () =>{this.settingCategory()},40)
+               }}
               
               
             >
-              <option selected>Category...</option>
+              <option value = "default">Category...</option>
               <option value="environmet">environmet</option>
               <option value="politics">politics</option>
               <option value="sports">sports</option>
@@ -313,7 +318,7 @@ class Home extends React.PureComponent<TProps, IState> {
           next={() => this.settingMoreFiles()}
           hasMore={this.state.hasMore}
           loader={<h4 style={{ textAlign: "center" }}>Loading...</h4>}
-          // onScroll={this.settingFiles}
+          onScroll={this.settingFiles}
           endMessage={
             <p style={{ textAlign: "center" }}>
               <b>Yay! You have seen it all</b>

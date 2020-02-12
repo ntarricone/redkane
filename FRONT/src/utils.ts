@@ -38,7 +38,6 @@ export const myFetch = async ({
   try {
     console.log("esta bienn")
     const json = await response.json();
-    console.log(json)
     return json;
   } catch {
     console.log("eroooooooooorrrr")

@@ -21,8 +21,10 @@ import history from "../../../../history";
 import upload from "../../../../icons/upload.png";
 import video from "../../../../icons/video.png";
 import user from "../../../../icons/user.png";
+import buy from "../../../../icons/buy.png";
 import { decode } from "jsonwebtoken";
 import BecomeCreator from "./BecomeCreator/BecomeCreator";
+import UserPurchases from "./UserPurchases/UserPurchases";
 
 interface IProps {
   match:any
@@ -43,7 +45,7 @@ interface IState {
   banner: string;
   avatar: string;
   avatarChosen: string;
-  toggleContent: "edit" | "multimedia";
+  toggleContent: "edit" | "multimedia" | "purchases";
 }
 
 type TProps = IGlobalStateProps & IGlobalActionProps & IProps;
@@ -84,7 +86,6 @@ class UpdateProfile extends React.Component<TProps, IState> {
           }
         });
 
-        // this.setState({ banner, avatar});
       })();
     }
 
@@ -92,11 +93,9 @@ class UpdateProfile extends React.Component<TProps, IState> {
 
   uploadBanner() {
     const { account, setBanner } = this.props;
-    // console.log("entroooooooo");
     console.log(this.fileInputRef2.current);
     console.log(account);
     if (this.fileInputRef2.current?.files?.length && account) {
-      // console.log("oppaa");
       const { token } = account;
       const formData = new FormData();
       formData.append("file", this.fileInputRef2.current?.files[0]);
@@ -141,7 +140,6 @@ class UpdateProfile extends React.Component<TProps, IState> {
 
   render() {
     const { account, files } = this.props;
-    // const { avatar, banner } = account;
     const { toggleContent, banner, avatar } = this.state;
     const token: any = localStorage.getItem("token");
     const { id }: any = decode(token);
@@ -188,6 +186,14 @@ class UpdateProfile extends React.Component<TProps, IState> {
                         src={user}
                         alt=""
                         onClick={() => this.setState({ toggleContent: "edit" })}
+                      />
+                    )}
+                    {id == this.userId && (
+                      <img
+                        className="iconsSize"
+                        src={buy}
+                        alt=""
+                        onClick={() => this.setState({ toggleContent: "purchases" })}
                       />
                     )}
                   </div>
@@ -244,6 +250,7 @@ class UpdateProfile extends React.Component<TProps, IState> {
                 </div>
               )}
             </div>
+            {/* Show content */}
             <div className="row ">
               <div className="col-12 d-flex justify-content-center mt-4"></div>
             </div>
@@ -279,6 +286,9 @@ class UpdateProfile extends React.Component<TProps, IState> {
 
             {toggleContent === "edit" && (
               <UpdateProfileForm></UpdateProfileForm>
+            )}
+            {toggleContent === "purchases" && (
+              <UserPurchases></UserPurchases>
             )}
           </div>
         </div>

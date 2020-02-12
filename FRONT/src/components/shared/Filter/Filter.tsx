@@ -36,13 +36,7 @@ class Filter extends React.PureComponent<TProps, IState> {
     };
 
     this.search = this.search.bind(this);
-    this.onSearchChange = this.onSearchChange.bind(this);
-  }
-
-  onSearchChange(event: any) {
-    const key = event.target.value;
-    console.log(key);
-    this.setState({ key });
+    
   }
 
   search() {
@@ -66,7 +60,19 @@ class Filter extends React.PureComponent<TProps, IState> {
     } else if (parent == "user") {
       myFetch({
         method: "POST",
-        path: `/multimedia/searchByWordAndId/${this.userId}/${key}`,
+        path: `/multimedia/searchByWordAndId/${this.userId}`,
+        token,
+        json: { key }
+      }).then(files => {
+        if (files) {
+          setFiles(files);
+          this.setState(files);
+        }
+      });
+    }  else if (parent == "redkaneLive") {
+      myFetch({
+        method: "POST",
+        path: `/multimedia/searchRedkaneLive`,
         token,
         json: { key }
       }).then(files => {
@@ -85,7 +91,6 @@ class Filter extends React.PureComponent<TProps, IState> {
     const { key } = this.state;
     return (
       <>
- 
               <div className=" search">
                 <input
                   type="text"
@@ -104,7 +109,6 @@ class Filter extends React.PureComponent<TProps, IState> {
                 />
               </div>
        
-          
       </>
     );
   }
