@@ -318,7 +318,7 @@ class Home extends React.PureComponent<TProps, IState> {
           next={() => this.settingMoreFiles()}
           hasMore={this.state.hasMore}
           loader={<h4 style={{ textAlign: "center" }}>Loading...</h4>}
-          onScroll={this.settingFiles}
+          // onScroll={this.settingFiles}
           endMessage={
             <p style={{ textAlign: "center" }}>
               <b>Yay! You have seen it all</b>
