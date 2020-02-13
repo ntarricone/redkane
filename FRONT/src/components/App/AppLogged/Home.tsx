@@ -39,7 +39,7 @@ class Home extends React.PureComponent<TProps, IState> {
     this.state = {
       type: "",
       price: 0,
-      category: "",
+      category: "default",
       counter: 9,
       hasMore: true
     };
@@ -48,6 +48,7 @@ class Home extends React.PureComponent<TProps, IState> {
     this.settingCategory = this.settingCategory.bind(this);
     this.settingMoreFiles = this.settingMoreFiles.bind(this);
     this.cookies = this.cookies.bind(this);
+    this.changeTypeToDefault = this.changeTypeToDefault.bind(this);
   }
 
   componentDidMount() {
@@ -57,6 +58,10 @@ class Home extends React.PureComponent<TProps, IState> {
     this.cookies();
   }
   
+  changeTypeToDefault(){
+    this.setState({type: "", category: "default"});
+
+  }
 
   settingFiles(type: any) {
     console.log("Ooooooooooooooooooooooo");
@@ -102,6 +107,7 @@ class Home extends React.PureComponent<TProps, IState> {
     this.setState({ hasMore: false });
     const token: any = localStorage.getItem("token");
      const { setFiles } = this.props
+     if (this.state.type !== "free"){
      myFetch({
       method: "POST",
       path: `/multimedia/byCategory/${category}`,
@@ -113,6 +119,18 @@ class Home extends React.PureComponent<TProps, IState> {
         this.setState(files); 
       } 
     });
+  }else{
+    myFetch({
+      method: "GET",
+      path: `/multimedia/byFreeAndCategory/${category}`,
+      token
+    }).then(files => {
+      if (files) {
+        setFiles(files);
+        this.setState(files); 
+      } 
+    });
+  }
     
   }
 
@@ -233,7 +251,7 @@ class Home extends React.PureComponent<TProps, IState> {
             </select>
             </div>
             <div className="col-sm-3 col-6 mt-3">
-              <Filter parent={"home"}></Filter>
+              <Filter parent={"home"} changeTypeToDefault={this.changeTypeToDefault}></Filter>
             </div>
             <div
               className="col-sm-3 col-12 mt-2"

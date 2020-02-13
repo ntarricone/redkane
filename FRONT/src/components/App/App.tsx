@@ -17,7 +17,6 @@ import history from "../../history"
 import SingleMultimedia from "./AppLogged/MultimediaViews/SingleMultimedia/SingleMultimedia";
 import RedkaneLive from "./AppLogged/RedkaneLive/RedkaneLive";
 import ConfirmCreator from "./ConfirmCreator/ConfirmCreator";
-import UserPurchases from "./AppLogged/UpdateProfile/UserPurchases/UserPurchases";
 
 
 
@@ -117,8 +116,6 @@ class App extends React.PureComponent<TProps> {
             <Route path="/redkaneLive/:id"  component ={RedkaneLive}>
             </Route>
             <Route path="/adminConfirmCreator/:id"  component ={ConfirmCreator}>
-            </Route>
-            <Route path="/userPurchases/:id"  component ={UserPurchases}>
             </Route>
             
           </Switch>

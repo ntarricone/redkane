@@ -42,6 +42,7 @@ interface IGlobalStateProps {
         category: ""
       };
       this.settingFiles = this.settingFiles.bind(this);
+      this.changeTypeToDefault = this.changeTypeToDefault.bind(this);
       
     }
   
@@ -49,6 +50,10 @@ interface IGlobalStateProps {
       this.props.unsetFiles()
       const token = localStorage.getItem("token");
       this.settingFiles(this.state.type);
+    }
+
+    changeTypeToDefault(){
+      this.setState({type: "", category: "default"});
     }
   
     settingFiles(type: any) {
@@ -112,7 +117,7 @@ interface IGlobalStateProps {
                     Videos <i className="fa fa-sort"></i>
                   </button>
                   <div className="col-4">
-                  <Filter parent = {"redkaneLive"}></Filter>
+                  <Filter parent = {"redkaneLive"}  changeTypeToDefault={this.changeTypeToDefault}></Filter>
                   </div>
                 </div>
               </div>

@@ -24,7 +24,6 @@ import user from "../../../../icons/user.png";
 import buy from "../../../../icons/buy.png";
 import { decode } from "jsonwebtoken";
 import BecomeCreator from "./BecomeCreator/BecomeCreator";
-import UserPurchases from "./UserPurchases/UserPurchases";
 import MultimediaView from "../MultimediaViews/MultimediaView";
 
 interface IProps {}
@@ -281,7 +280,7 @@ class UpdateProfile extends React.Component<TProps, IState> {
             <div className="row">
               <div className="col-12">
                 {toggleContent === "multimedia" &&
-                  (account.isCreator ? (
+                  (account.isCreator  ? (
                     <div className="container">
                       <div className="row">
                         {files.order.map(id => (
@@ -323,7 +322,6 @@ class UpdateProfile extends React.Component<TProps, IState> {
                 {toggleContent === "edit" && (
                   <UpdateProfileForm></UpdateProfileForm>
                 )}
-                {/* {toggleContent === "purchases" && <UserPurchases></UserPurchases>} */}
               </div>
             </div>
           </div>

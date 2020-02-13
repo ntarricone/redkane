@@ -46,6 +46,7 @@ class settingFiles extends React.PureComponent<TProps, IState> {
     this.getFreeUserContent = this.getFreeUserContent.bind(this);
     this.settingCategoryByUser = this.settingCategoryByUser.bind(this);
     this.getPurchases = this.getPurchases.bind(this);
+    this.changeTypeToDefault = this.changeTypeToDefault.bind(this);
   }
 
   componentDidMount() {
@@ -54,6 +55,9 @@ class settingFiles extends React.PureComponent<TProps, IState> {
     this.settingFiles(this.state.type);
   }
 
+  changeTypeToDefault(){
+    this.setState({type: "", category: "default"});
+  }
   settingFiles(type: any) {
     console.log(type);
     const token: any = localStorage.getItem("token");
@@ -234,7 +238,7 @@ class settingFiles extends React.PureComponent<TProps, IState> {
                 </select>
                 {/* FILTER */}
                 <div className="col-sm-5">
-                  <Filter parent={"user"}></Filter>
+                  <Filter parent={"user"} changeTypeToDefault={this.changeTypeToDefault}></Filter>
                 </div>
               </div>
             </div>

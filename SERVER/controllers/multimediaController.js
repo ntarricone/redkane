@@ -560,6 +560,34 @@ multimediaController.getMultimediaCategories = (request, response) => {
   }
 }
 
+
+//GET CATEGORIES WHEN FREE
+multimediaController.getByFreeAndCategory = (request, response) => {
+  const { authorization } = request.headers;
+  const { category } = request.params;
+ if (authorization) {
+    const token = authorization.replace("Bearer ", "");
+    jwt.verify(token, myPrivateKey);
+    connection.query(
+      `
+        SELECT *
+        FROM multimedia WHERE category = '${category}'
+        AND price = 0
+        ORDER BY time
+        DESC
+        `,
+      (error, results) => {
+        console.log(results)
+        if (results && results.length > 0) {
+          response.send(results);
+        } else {
+          response.send(msg2);
+        }
+      }
+    );
+  }
+}
+
 //GET CATEGORIES BY USER
 multimediaController.getMultimediaCategoriesAndUser = (request, response) => {
   const { authorization } = request.headers;

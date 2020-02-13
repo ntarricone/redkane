@@ -11,6 +11,7 @@ import { connect } from "react-redux";
 
 interface IProps {
   parent: string;
+  changeTypeToDefault():void;
 }
 interface IState {
   key: string;
@@ -99,7 +100,8 @@ class Filter extends React.PureComponent<TProps, IState> {
                   className="form-control"
                   value={this.state.key}
                   onChange={event => {
-                    this.setState({ key: event.target.value });
+                    this.setState({ key: event.target.value })
+                    this.props.changeTypeToDefault();
                   }}
                   onKeyPress={event => {
                     if (event.key === "Enter") {
