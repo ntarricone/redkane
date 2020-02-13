@@ -51,11 +51,12 @@ class Home extends React.PureComponent<TProps, IState> {
   }
 
   componentDidMount() {
-    this.props.unsetFiles();
+    // this.props.unsetFiles();
     const token = localStorage.getItem("token");
-    this.settingFiles(this.state.type);
+    this.settingFiles("");
     this.cookies();
   }
+  
 
   settingFiles(type: any) {
     console.log("Ooooooooooooooooooooooo");
@@ -118,6 +119,8 @@ class Home extends React.PureComponent<TProps, IState> {
   //GET MORE FILES
   settingMoreFiles() {
     console.log("more fiiiilesss!!");
+    console.log("ordeeer" + this.props.files.order)
+    console.log("counter" + this.state.counter)
     //HERE WE CAN CHANGE TO THE AMOUNT OF FILES WE WANT!
     if (this.props.files.order.length >= 30) {
       this.setState({ hasMore: false });
@@ -159,107 +162,39 @@ class Home extends React.PureComponent<TProps, IState> {
             <div className="col-12 col-sm d-flex justify-content-center marginTopUploader"></div>
           </div>
         </div>
-        {/* 
-          <div className="row mb-2 mt-2">
-            <div className="col-6 ">
-              <div className="btn-group search-group">
-                <button
-                  className="btn btn-sm btn-default btn-sorteable"
-                  onClick={() => this.settingFiles("")}
-                >
-                  All <i className="fa fa-sort"></i>
-                </button>
-                <button
-                  className="btn btn-sm btn-default btn-sorteable"
-                  onClick={() => this.settingFiles("article")}
-                >
-                  Articles <i className="fa fa-sort"></i>
-                </button>
-                <button
-                  className="btn btn-sm btn-default btn-sorteable"
-                  onClick={() => this.settingFiles("image")}
-                >
-                  Images <i className="fa fa-sort"></i>
-                </button>
-                <button
-                  className="btn btn-sm  btn-sorteable"
-                  onClick={() => this.settingFiles("video")}
-                >
-                  Videos <i className="fa fa-sort"></i>
-                </button>
-                <button
-                  className="btn btn-sm btn-default btn-sorteable filterButton"
-                  onClick={() => this.getFreeContent()}
-                >
-                  Free <i className="fa fa-sort"></i>
-                </button>
-                <select
-              className="form-control"
-              style={{ width: "9rem" }}
-              data-spy="scroll"
-              value={this.state.category}
-              
-               onChange={e => {this.setState({ category: e.target.value })
-               this.settingCategory()}}
-              
-              
-            >
-              <option selected>Category...</option>
-              <option value="environmet">environmet</option>
-              <option value="politics">politics</option>
-              <option value="sports">sports</option>
-              <option value="tech">tech</option>
-              <option value="world_news">world news</option>
-              <option value="business">business</option>
-              <option value="culture">culture</option>
-              <option value="fashion">fashion</option>
-              <option value="travel">travel</option>
-              <option value="other">other</option>
-            </select>
-            </div>
-            </div>
-                <div className="col-4">
-                <Filter parent = {"home"}></Filter>
-                </div>
-                <div className="col-3 col-sm ">
-              {/* {this.props.account.isCreator ? (
-                <ContentUploader></ContentUploader>
-              ) : (
-                ""
-              )}
-               */}
-            {/* </div> */}
-          {/* // </div> */}
         <div className="container ">
           <div className="row mt-4 mb-5">
             <div className="col-sm-4  col-12 mt-3">
-              <i className="fas fa-search"></i>
               <div className="btn-group search-group">
+              {type === "" && <i className="fas fa-search mt-2"></i>}
                 <button
                   className={type === ''?'btn btn-sm selectedFilter': "btn btn-sm"}
                   onClick={() => this.settingFiles("")}
                 >
                   All
                 </button>
+                {type === "article" && <i className="fas fa-search mt-2"></i>}
                 <button
                   className={type === 'article'?'btn btn-sm selectedFilter': "btn btn-sm"}
                   onClick={() => this.settingFiles("article")}
                 >
                   Articles 
                 </button>
+                {type === "image" && <i className="fas fa-search mt-2"></i>}
                 <button
                   className={type === 'image'?'btn btn-sm selectedFilter': "btn btn-sm"}
-                  // style={{borderBottom: type === 'image'? '2px solid red': ''}}
                   onClick={() => this.settingFiles("image")}
                 >
                   Images 
                 </button>
+                {type === "video" && <i className="fas fa-search mt-2"></i>}
                 <button
                   className={type === 'video'?'btn btn-sm selectedFilter': "btn btn-sm"}
                   onClick={() => this.settingFiles("video")}
                 >
                   Videos 
                 </button>
+                {type === "free" && <i className="fas fa-search mt-2"></i>}
                 <button
                   className={type === 'free'?'btn btn-sm selectedFilter': "btn btn-sm"}
                   onClick={() => this.getFreeContent()}
@@ -318,7 +253,7 @@ class Home extends React.PureComponent<TProps, IState> {
           next={() => this.settingMoreFiles()}
           hasMore={this.state.hasMore}
           loader={<h4 style={{ textAlign: "center" }}>Loading...</h4>}
-          onScroll={this.settingFiles}
+          // onScroll={this.settingFiles}
           endMessage={
             <p style={{ textAlign: "center" }}>
               <b>Yay! You have seen it all</b>

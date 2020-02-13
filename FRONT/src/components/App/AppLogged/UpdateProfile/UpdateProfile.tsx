@@ -25,10 +25,9 @@ import buy from "../../../../icons/buy.png";
 import { decode } from "jsonwebtoken";
 import BecomeCreator from "./BecomeCreator/BecomeCreator";
 import UserPurchases from "./UserPurchases/UserPurchases";
+import MultimediaView from "../MultimediaViews/MultimediaView";
 
-interface IProps {
-  match:any
-}
+interface IProps {}
 interface IGlobalStateProps {
   account: IAccount;
   files: IFiles;
@@ -38,20 +37,19 @@ interface IGlobalActionProps {
   setBanner(banner: string): void;
   setAvatar(banner: string): void;
   setFiles(files: IFile[]): void;
-  
 }
 
 interface IState {
   banner: string;
   avatar: string;
   avatarChosen: string;
-  toggleContent: "edit" | "multimedia" | "purchases";
+  toggleContent: "edit" | "multimedia";
 }
 
 type TProps = IGlobalStateProps & IGlobalActionProps & IProps;
 
 class UpdateProfile extends React.Component<TProps, IState> {
-  userId = this.props.match.params.id
+  userId = history.location.pathname.split("/").slice(-1)[0];
   fileInputRef: React.RefObject<HTMLInputElement>;
   fileInputRef2: React.RefObject<HTMLInputElement>;
   constructor(props: any) {
@@ -72,23 +70,21 @@ class UpdateProfile extends React.Component<TProps, IState> {
   }
 
   componentDidMount() {
-   this.setUserProfile()
+    this.setUserProfile();
   }
   //TODO. FIX LINK
-  setUserProfile(){
-     const token = localStorage.getItem("token");
+  setUserProfile() {
+    const token = localStorage.getItem("token");
     if (token) {
       (async () => {
         myFetch({ path: `/users/${this.userId}`, token }).then(response => {
           if (response) {
-            console.log(response)
+            console.log(response);
             this.setState(response);
           }
         });
-
       })();
     }
-
   }
 
   uploadBanner() {
@@ -150,6 +146,7 @@ class UpdateProfile extends React.Component<TProps, IState> {
         <div className="container profileBackground ">
           <div className="row ">
             <div className="col-12 sharedBorder mt-5">
+              {/* UPLOAD BANNER  */}
               {!banner ? (
                 <div
                   className="banner mt-3"
@@ -157,139 +154,178 @@ class UpdateProfile extends React.Component<TProps, IState> {
                     backgroundImage: `url(${API_URL_IMAGES +
                       "defaultBanner.jpg"})`
                   }}
-                ></div>
+                >
+                  {" "}
+                  <button className="btn btn-sm" style={{ height: "2rem", width:"2.5rem" }}>
+                  <label htmlFor="myBanner">
+                    <i
+                      data-toggle="tooltip"
+                      data-placement="top"
+                      title="Update your banner"
+                      className="fas fa-images iconsSize"
+                      style={{ backgroundColor: "white", width: "1.9rem" }}
+                    ></i>
+                  </label>
+                  <input
+                    onChange={this.uploadBanner}
+                    type="file"
+                    id="myBanner"
+                    style={{ display: "none" }}
+                    ref={this.fileInputRef2}
+                  />
+                  </button>
+                </div>
               ) : (
                 <div
                   className="banner mt-3"
                   style={{ backgroundImage: `url(${API_URL_IMAGES + banner})` }}
-                ></div>
+                >
+                <button className="btn" style={{ height: "2rem", width:"2.5rem" }}>
+                  <label htmlFor="myBanner">
+                    <i
+                      data-toggle="tooltip"
+                      data-placement="top"
+                      title="Update your banner"
+                      className="fas fa-images iconsSize"
+                      style={{ backgroundColor: "white", width: "1.9rem" }}
+                    ></i>
+                  </label>
+                  <input
+                    onChange={this.uploadBanner}
+                    type="file"
+                    id="myBanner"
+                    style={{ display: "none" }}
+                    ref={this.fileInputRef2}
+                  />
+                  </button>
+                </div>
               )}
               <br />
-              {/* Options bar */}
-              <div className="container-fluid uploadBanner">
-                <div className="row">
-                  <div className="col-1"></div>
-                  <div className="col-5 toggleIcons">
-                    {id == this.userId && (
-                      <img
-                        className="iconsSize"
-                        src={video}
-                        alt=""
+            </div>
+          </div>
+          {/* Options bar */}
+          <div className="container-fluid uploadBanner">
+            <div className="row">
+              <div className="col-2">
+                {!avatar ? (
+                  <img
+                    className="avatarProfile mb-1"
+                    src={API_URL_IMAGES + "avatar.png"}
+                    alt=""
+                  />
+                ) : (
+                  <img
+                    className="avatarProfile mb-1"
+                    src={API_URL_IMAGES + avatar}
+                    alt=""
+                  />
+                )}
+                {id == this.userId && (
+                  <div>
+                    <label htmlFor="avatar">
+                      <i className="fas fa-plus-circle uploadAvatar iconsSize"></i>
+                    </label>
+                    <input
+                      id="avatar"
+                      style={{ display: "none" }}
+                      type="file"
+                      ref={this.fileInputRef}
+                      onChange={this.uploadAvatar}
+                    />
+                  </div>
+                )}
+              </div>
+              <div className="col-sm-7 col-12 ">
+               { toggleContent === "multimedia" && <SettingUserFiles></SettingUserFiles>}
+              </div>
+              {/* Upload Banner */}
+              {id == this.userId && (
+                <div
+                  className="col-3 mt-2"
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-evenly"
+                  }}
+                >
+                  {id == this.userId && (
+                    <button className="btn " style={{ height: "0px" }}>
+                      <i
+                        className="fas fa-photo-video iconsSize"
+                        data-toggle="tooltip"
+                        data-placement="top"
+                        title="See all multimedia"
                         onClick={() =>
                           this.setState({ toggleContent: "multimedia" })
                         }
-                      />
-                    )}
-                    {id == this.userId && (
-                      <img
-                        className="iconsSize"
-                        src={user}
-                        alt=""
-                        onClick={() => this.setState({ toggleContent: "edit" })}
-                      />
-                    )}
-                    {id == this.userId && (
-                      <img
-                        className="iconsSize"
-                        src={buy}
-                        alt=""
-                        onClick={() => this.setState({ toggleContent: "purchases" })}
-                      />
-                    )}
-                  </div>
-                  {/* Upload Banner */}
-                  <div className="col-3"></div>
+                      ></i>
+                    </button>
+                  )}
                   {id == this.userId && (
-                    <div className="col-3 text-right">
-                      <label htmlFor="banner">
-                        <img className="iconsSize" src={upload} alt="" />
-                        {/* TODO -fix tooltip desing */}
-                      </label>
-                      <input
-                        onChange={this.uploadBanner}
-                        type="file"
-                        id="banner"
-                        style={{ display: "none" }}
-                        ref={this.fileInputRef2}
-                      />
-                    </div>
+                    <button className="btn btn-sm" style={{ height: "0px" }}>
+                      <i
+                        className="fas fa-user-cog iconsSize"
+                        data-toggle="tooltip"
+                        data-placement="top"
+                        title="Update your details"
+                        onClick={() => this.setState({ toggleContent: "edit" })}
+                      ></i>
+                    </button>
                   )}
                 </div>
-              </div>
+              )}
             </div>
           </div>
-          {/* Upload avatar */}
-          <div className="row sharedBorder mt-3">
-            <div className="col-2">
-              {!avatar ? (
-                <img
-                  className="avatarProfile mb-1"
-                  src={API_URL_IMAGES + "avatar.png"}
-                  alt=""
-                />
-              ) : (
-                <img
-                  className="avatarProfile mb-1"
-                  src={API_URL_IMAGES + avatar}
-                  alt=""
-                />
-              )}
-              <br />
-              {id == this.userId && (
-                <div>
-                  <label htmlFor="avatar">
-                    <i className="fas fa-plus-circle uploadAvatar iconsSize"></i>
-                  </label>
-                  <input
-                    id="avatar"
-                    style={{ display: "none" }}
-                    type="file"
-                    ref={this.fileInputRef}
-                    onChange={this.uploadAvatar}
-                  />
-                </div>
-              )}
+
+          {/* Show CARDS or BECOME CREATOR */}
+          <div className="container-fluid">
+            <div className="row">
+              <div className="col-12">
+                {toggleContent === "multimedia" &&
+                  (account.isCreator ? (
+                    <div className="container">
+                      <div className="row">
+                        {files.order.map(id => (
+                          <div key={id} className="col-sm-6 col-md-4 col-12 ">
+                            <MultimediaView
+                              file={files.byId[+id]}
+                            ></MultimediaView>
+                            <br />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ) : (
+                    <div
+                      className=" text-center mt-3 createYourContentDiv  "
+                      style={{ height: "35vh", color: "#e51428" }}
+                    >
+                      <h1 className="animated rotateInDownLeft">
+                        Why not create your own content?{" "}
+                      </h1>
+                      <br />
+                      <h1 className="animated rotateInDownRight">
+                        {" "}
+                        Apply to become a Kaner
+                      </h1>
+                      <button
+                        data-toggle="modal"
+                        data-target="#becomeCreator"
+                        className="btn btn-block mt-1 mb-2 buttonColor mt-3 animated bounceInUp"
+                        style={{ width: "30%" }}
+                      >
+                        Yes, please!
+                      </button>
+                    </div>
+                  ))}
+
+                <BecomeCreator id={id}></BecomeCreator>
+
+                {toggleContent === "edit" && (
+                  <UpdateProfileForm></UpdateProfileForm>
+                )}
+                {/* {toggleContent === "purchases" && <UserPurchases></UserPurchases>} */}
+              </div>
             </div>
-            {/* Show content */}
-            <div className="row ">
-              <div className="col-12 d-flex justify-content-center mt-4"></div>
-            </div>
-            {toggleContent === "multimedia" &&
-              (account.isCreator ? (
-                <SettingUserFiles></SettingUserFiles>
-              ) : (
-                <div
-                  className=" text-center mt-3 createYourContentDiv  "
-                  style={{ height: "35vh", color: "#e51428"}}
-                >
-                  <h1 className="animated rotateInDownLeft">
-                    Why not create your own content?{" "}
-                  </h1>
-                  <br />
-                  <h1 className="animated rotateInDownRight">
-                    {" "}
-                    Apply to become a Kaner
-                  </h1>
-                  <button
-                    data-toggle="modal"
-                    data-target="#becomeCreator"
-                    className="btn btn-block mt-1 mb-2 buttonColor mt-3 animated bounceInUp"
-                    style={{ width: "30%" }}
-                  >
-                    Yes, please!
-                  </button>
-
-                </div>
-              ))}
-
-            <BecomeCreator id={id}></BecomeCreator>
-
-            {toggleContent === "edit" && (
-              <UpdateProfileForm></UpdateProfileForm>
-            )}
-            {toggleContent === "purchases" && (
-              <UserPurchases></UserPurchases>
-            )}
           </div>
         </div>
       </>

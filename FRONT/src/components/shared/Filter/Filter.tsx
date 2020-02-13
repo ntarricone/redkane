@@ -91,7 +91,7 @@ class Filter extends React.PureComponent<TProps, IState> {
     const { key } = this.state;
     return (
       <>
-              <div className=" search">
+              <div className="search">
                 <input
                   type="text"
                   id="myInput"

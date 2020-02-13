@@ -36,7 +36,6 @@ class UploadArticle extends React.PureComponent {
   componentDidMount() {
     console.log(this.id_multimedia);
     if (this.id_multimedia !== "0") {
-      console.log("jsanfkjndfkj");
       this.setFile();
     } else {
       console.log("No entro");
@@ -238,8 +237,8 @@ class UploadArticle extends React.PureComponent {
             <div className="col-1"></div>
             <div className="col-10 marginTopUploader">
               <div>
-                <label>Title:</label>
                 <input
+                placeholder="Title"
                   type="text"
                   className="form-control"
                   value={title}

@@ -249,7 +249,9 @@ multimediaController.getMultimediaByUserAndType = (request, response) => {
   console.log("entraaaa")
   const { authorization } = request.headers;
   const { id } = request.params;
-  const {type} = request.params;
+  let {type} = request.body;
+  console.log(type)
+  type = type === ""? type : `type = '${type}' AND`
   console.log(type)
   
   console.log("id" + id);
@@ -260,7 +262,7 @@ multimediaController.getMultimediaByUserAndType = (request, response) => {
       `
     SELECT *
     FROM multimedia
-    WHERE type = '${type}' AND id = ${id}
+    WHERE ${type} id = ${id}
     `,
       (error, results) => {
         if (error) {

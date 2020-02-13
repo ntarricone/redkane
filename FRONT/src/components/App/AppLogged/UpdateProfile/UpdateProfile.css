@@ -1,20 +1,18 @@
-
-
 .avatarProfile {
-  width: 10vw;
+  width: 11vw;
   height: 20vh;
   border-radius: 50%;
   box-shadow: 3px 1px 4px 0px;
   position: absolute;
-  top: -134px;
+  top: -103px;
   left: 26px;
   border: 4px solid white;
 }
 
 .uploadAvatar {
   position: absolute;
-  top: -14px;
-  right: 25px;
+  top: -6px;
+  right: -6px;
 }
 
 .toggleIcons {
@@ -27,6 +25,13 @@
   font-size: 1.7rem;
 }
 
+.iconsSize:hover {
+  color: #bd2323;
+}
+.btn:focus{
+  box-shadow: unset !important;
+
+}
 .passButton {
   width: 94% !important;
   margin-left: 3% !important;
@@ -34,19 +39,23 @@
 
 .profileBackground {
   background-color: #fafafa;
-  width: 72vw !important;
+  /* width: 72vw !important; */
 }
 
 /* .sharedBorder {
   border: 1px solid lightgrey;
 } */
-.banner{
+.banner {
   background-position: center;
+  background-repeat: no-repeat;
   background-size: 100%;
   height: 35vh;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
 }
 
-.createYourContentDiv{
+.createYourContentDiv {
   height: 35vh;
   display: flex;
   flex-direction: column;

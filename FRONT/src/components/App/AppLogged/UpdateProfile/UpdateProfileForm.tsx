@@ -161,7 +161,11 @@ class UpdateProfileForm extends React.Component<TProps, IState> {
     return (
       <>
         {/* the form starts here */}
-        <div className="col-8 mt-4 ml-1 animated zoomInUp ">
+        <div className="container">
+          <div className="row">
+            <div className="col-2"></div>
+          
+        <div className="col-8 ml-1 animated zoomInUp ">
           <div className="container">
             <div className="row centered-form">
               <div className="panel panel-default">
@@ -310,6 +314,9 @@ class UpdateProfileForm extends React.Component<TProps, IState> {
               </div>
             </div>
           </div>
+        </div>
+        <div className="col-2"></div>
+        </div>
         </div>
 
       </>

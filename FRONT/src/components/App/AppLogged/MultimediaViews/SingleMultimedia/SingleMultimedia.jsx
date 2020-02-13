@@ -1,7 +1,11 @@
 import React from "react";
 import { connect } from "react-redux";
 import { myFetch, getYoutubeId } from "../../../../../utils";
-import { API_URL_MULTIMEDIA, API_URL_IMAGES } from "../../../../../constants";
+import {
+  API_URL_MULTIMEDIA,
+  API_URL_IMAGES,
+  PAYPAL_CLIENT_ID
+} from "../../../../../constants";
 import "./SingleMultimedia.css";
 import ReactHtmlParser from "react-html-parser";
 import {
@@ -228,8 +232,7 @@ class SingleMultimedia extends React.PureComponent {
       id: idCreator,
       type,
       loggedId,
-      isPurchased,
-      loading
+      isPurchased
     } = this.state;
     let { avatar, path, title, price, isVideoTimeUp } = this.state;
     title = title ? title : "Title missing :(";
@@ -251,15 +254,16 @@ class SingleMultimedia extends React.PureComponent {
             <div className="col-10" style={{ marginTop: "8%" }}>
               <div className="row ml-1">
                 <div>
-                  <h1>{title}</h1> 
-                  {price !== 0 && idCreator !== loggedId && <h3>{`($${price})`}</h3>}
+                  <h1>{title}</h1>
+                  {price !== 0 && idCreator !== loggedId && type !== "article" && (
+                    <h3>{`($${price})`}</h3>
+                  )}
                 </div>
               </div>
             </div>
             <div className="col-1"></div>
           </div>
         </div>
-        {/* PAYPAL  */}
 
         {/* USER */}
         <div className="container mt-2">
@@ -327,36 +331,30 @@ class SingleMultimedia extends React.PureComponent {
                   <div className="animated fadeInDown slower text-center">
                     <h3 className="">Do you like what you are seeing?</h3>
                     <img src={logoKane} alt="" className="watermark" />
-                    <div className="mt-2"
-                    style={{width: "30%", marginLeft: "35%"}}>
-                    <PayPalButton
-                    style={{ layout: "horizontal", color: "black" }}
-                    clientId={
-                      "ATc97fL9cAzQaJ5ylAR6lMNSlNlMAW5cIj7-zMWORzBXamFmgwo6IIFufCGgHBskwFmmfvitrCkDsSOl"
-                    }
-                    amount={`${price}`}
-                    // shippingPreference="NO_SHIPPING" // default is "GET_FROM_FILE"
-                    onSuccess={(details, data) => {
-                      console.log(details);
-                      console.log(data);
-                      swal({
-                        title: "Success!",
-                        text: "Thanks for your purchase!",
-                        icon: "success",
-                        timer: 4000
-                      });
-                      const { orderID } = data;
-                      // OPTIONAL: Call your server to save the transaction
-                      this.savePurchaseInDDBB(orderID);
-                    }}
-                  />
-                  </div>
-                    {/* <button
-                      className="btn btn-block mb-2 mt-3 buttonColor animated bounceInUp"
+                    <div
+                      className="mt-2"
                       style={{ width: "30%", marginLeft: "35%" }}
                     >
-                      Buy the full video!
-                    </button> */}
+                      <PayPalButton
+                        style={{ layout: "horizontal", color: "black" }}
+                        clientId={PAYPAL_CLIENT_ID}
+                        amount={`${price}`}
+                        // shippingPreference="NO_SHIPPING" // default is "GET_FROM_FILE"
+                        onSuccess={(details, data) => {
+                          console.log(details);
+                          console.log(data);
+                          swal({
+                            title: "Success!",
+                            text: "Thanks for your purchase!",
+                            icon: "success",
+                            timer: 4000
+                          });
+                          const { orderID } = data;
+                          // OPTIONAL: Call your server to save the transaction
+                          this.savePurchaseInDDBB(orderID);
+                        }}
+                      />
+                    </div>
                     <span className="text-center">
                       Take me back to the{" "}
                       <a
@@ -380,26 +378,75 @@ class SingleMultimedia extends React.PureComponent {
                 <div
                   className="multimediaImage"
                   style={{
-                    backgroundImage: `url(${API_URL_MULTIMEDIA + path})`
+                    backgroundImage: `url(${API_URL_MULTIMEDIA + path})`,
+                    backgroundRepeat: "no-repeat"
                   }}
                 >
                   {/* WATERMARK */}
-                  {price !== 0 && idCreator !== loggedId && !isPurchased && (
-                    <img src={logoKane} alt="" className="watermark" />
-                  )}
+                  {price !== 0 &&
+                    type === "image" &&
+                    idCreator !== loggedId &&
+                    !isPurchased && (
+                      <img src={logoKane} alt="" className="watermark" />
+                    )}
                 </div>
               </div>
               <div className="col-1"></div>
             </div>
           </div>
         )}
-        {/* DESCRIPTION  */}
+
+        {/* PAYPAL BUTTON */}
         <div className="container">
           <div className="row">
             <div className="col-1"></div>
-            <div className="col-7 mt-5">
+            <div className="col-7"></div>
+
+            <div className="col-3 mt-2">
+              {!path.includes("youtu") &&
+                type === "image" &&
+                price !== 0 &&
+                idCreator !== loggedId &&
+                !isPurchased && (
+                  <PayPalButton
+                    style={{ layout: "horizontal", color: "black" }}
+                    clientId={PAYPAL_CLIENT_ID}
+                    amount={`${price}`}
+                    onSuccess={(details, data) => {
+                      console.log(details);
+                      console.log(data);
+                      swal({
+                        title: "Success!",
+                        text: "Thanks for your purchase!",
+                        icon: "success",
+                        timer: 4000
+                      });
+                      const { orderID } = data;
+                      // Call server to save the transaction
+                      this.savePurchaseInDDBB(orderID);
+                    }}
+                  />
+                )}
+              {isPurchased && (
+                <span className="badge badge-success badgeMargin">
+                  purchased
+                </span>
+              )}
+              {price === 0 && (
+                <span className="badge badge-warning badgeMargin">free</span>
+              )}
+            </div>
+            <div className="col-1"></div>
+          </div>
+        </div>
+        {/* DESCRIPTION  */}
+
+        <div className="container">
+          <div className="row">
+            <div className="col-1"></div>
+            <div className="col-10">
               <div className="row">
-                <h3 className="ml-3">Summary  </h3>
+                <h3 className="ml-3">Summary </h3>
 
                 {idCreator === loggedId && (
                   <Link to={`/uploadArticle/${this.id_multimedia}`}>
@@ -412,64 +459,99 @@ class SingleMultimedia extends React.PureComponent {
               <hr />
               <p>{description}</p>
             </div>
-            {/* PAYPAL BUTTON */}
-            <div className="col-3 mt-2">
-              {!path.includes("youtu") &&
-                price !== 0 &&
-                idCreator !== loggedId &&
-                !isPurchased && (
-                  <PayPalButton
-                    style={{ layout: "horizontal", color: "black" }}
-                    clientId={
-                      "ATc97fL9cAzQaJ5ylAR6lMNSlNlMAW5cIj7-zMWORzBXamFmgwo6IIFufCGgHBskwFmmfvitrCkDsSOl"
-                    }
-                    amount={`${price}`}
-                    // shippingPreference="NO_SHIPPING" // default is "GET_FROM_FILE"
-                    onSuccess={(details, data) => {
-                      console.log(details);
-                      console.log(data);
-                      swal({
-                        title: "Success!",
-                        text: "Thanks for your purchase!",
-                        icon: "success",
-                        timer: 4000
-                      });
-                      const { orderID } = data;
-                      // OPTIONAL: Call your server to save the transaction
-                      this.savePurchaseInDDBB(orderID);
-                    }}
-                  />
-                )}
-              {isPurchased && (
-                <span className="badge badge-success badgeMargin">
-                  purchased
-                </span>
-              )}
-              {price === 0 && (
-                <span
-                  className="badge badge-warning badgeMargin"
-                >
-                  free
-                </span>
-              )}
-            </div>
+
             <div className="col-1"></div>
           </div>
         </div>
+
         {/* TEXT  */}
-        {type === "article" && price == 0 && (
-          <div className="container mt-5">
-            <div className="row">
-              <div className="col-1"></div>
+
+        <div className="container ">
+          <div className="row">
+            <div className="col-1"></div>
+
+            {type === "article" && (
               <div className="col-10">
                 <h3>Content</h3>
                 <hr />
-                <p>{ReactHtmlParser(`${textArea}`)}</p>
+                {(price === 0) | isPurchased | (idCreator === loggedId) ? (
+                  <p className="animated bounceInUp slower">{ReactHtmlParser(`${textArea}`)}</p>
+                ) : (
+                  <div>
+                    <div className="paypalButtonArticle">
+                      <h1 style={{marginLeft: "38%"}}>{`-$${price}-`}</h1>
+                      <PayPalButton
+                        style={{ layout: "horizontal", color: "black" }}
+                        clientId={PAYPAL_CLIENT_ID}
+                        amount={`${price}`}
+                        onSuccess={(details, data) => {
+                          console.log(details);
+                          console.log(data);
+                          swal({
+                            title: "Success!",
+                            text: "Thanks for your purchase!",
+                            icon: "success",
+                            timer: 4000
+                          });
+                          const { orderID } = data;
+                          // Call server to save the transaction
+                          this.savePurchaseInDDBB(orderID);
+                        }}
+                      />
+                    </div>
+                    <p className="blurredtext ">
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+                      sed do eiusmod tempor incididunt ut labore et dolore magna
+                      aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+                      ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                      Duis aute irure dolor in reprehenderit in voluptate velit
+                      esse cillum dolore eu fugiat nulla pariatur. Excepteur
+                      sint occaecat cupidatat non proident, sunt in culpa qui
+                      officia deserunt mollit anim id est laborum." Section
+                      1.10.32 of "de Finibus Bonorum et Malorum", written by
+                      Cicero in 45 BC "Sed ut perspiciatis unde omnis iste natus
+                      error sit voluptatem accusantium doloremque laudantium,
+                      totam rem aperiam, eaque ipsa quae ab illo inventore
+                      veritatis et quasi architecto beatae vitae dicta sunt
+                      explicabo. Nemo enim ipsam voluptatem quia voluptas sit
+                      aspernatur aut odit aut fugit, sed quia consequuntur magni
+                      dolores eos qui ratione voluptatem sequi nesciunt. Neque
+                      porro quisquam est, qui dolorem ipsum quia dolor sit amet,
+                      consectetur, adipisci velit, sed quia non numquam eius
+                      modi tempora incidunt ut labore et dolore magnam aliquam
+                      quaerat voluptatem. Ut enim ad minima veniam, quis nostrum
+                      exercitationem ullam corporis suscipit laboriosam, nisi ut
+                      aliquid ex ea commodi consequatur? Quis autem vel eum iure
+                      reprehenderit qui in ea voluptate velit esse quam nihil
+                      molestiae consequatur, vel illum qui dolorem eum fugiat
+                      quo voluptas nulla pariatur?" 1914 translation by H.
+                      Rackham "But I must explain to you how all this mistaken
+                      idea of denouncing pleasure and praising pain was born and
+                      I will give you a complete account of the system, and
+                      expound the actual teachings of the great explorer of the
+                      truth, the master-builder of human happiness. No one
+                      rejects, dislikes, or avoids pleasure itself, because it
+                      is pleasure, but because those who do not know how to
+                      pursue pleasure rationally encounter consequences that are
+                      extremely painful. Nor again is there anyone who loves or
+                      pursues or desires to obtain pain of itself, because it is
+                      pain, but because occasionally circumstances occur in
+                      which toil and pain can procure him some great pleasure.
+                      To take a trivial example, which of us ever undertakes
+                      laborious physical exercise, except to obtain some
+                      advantage from it? But who has any right to find fault
+                      with a man who chooses to enjoy a pleasure that has no
+                      annoying consequences, or one who avoids a pain that
+                      produces no resultant pleasure?"
+                    </p>
+                  </div>
+                )}
               </div>
-              <div className="col-1"></div>
-            </div>
+            )}
+
+            <div className="col-1"></div>
           </div>
-        )}
+        </div>
       </>
     );
   }
