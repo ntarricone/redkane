@@ -78,7 +78,7 @@ interface IGlobalStateProps {
   
     render() {
       const { files } = this.props;
-      const { category } = this.state;
+      const { category, type } = this.state;
       return (
         <>
           <div className="container">

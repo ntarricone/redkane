@@ -45,13 +45,13 @@ class Filter extends React.PureComponent<TProps, IState> {
     this.props.unsetFiles();
     const token: any = localStorage.getItem("token");
     const { key } = this.state;
-    const { setFiles, parent } = this.props;
+    const { setFiles, parent, type } = this.props;
     if (parent == "home") {
       myFetch({
         method: "POST",
         path: `/multimedia/searchByWord`,
         token,
-        json: { key }
+        json: { key, type }
       }).then(files => {
         if (files) {
           setFiles(files);
@@ -63,7 +63,7 @@ class Filter extends React.PureComponent<TProps, IState> {
         method: "POST",
         path: `/multimedia/searchByWordAndId/${this.userId}`,
         token,
-        json: { key }
+        json: { key, type }
       }).then(files => {
         if (files) {
           setFiles(files);

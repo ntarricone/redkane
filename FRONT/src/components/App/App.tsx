@@ -40,6 +40,7 @@ class App extends React.PureComponent<TProps> {
     this.restartAccount = this.restartAccount.bind(this);
   }
   componentDidMount() {
+    
     const token = localStorage.getItem("token");
     if (token) {
       const { id }: any = decode(token);

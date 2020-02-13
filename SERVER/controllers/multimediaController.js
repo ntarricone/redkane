@@ -480,7 +480,8 @@ multimediaController.getMultimediaByPrice = (request, response) => {
     connection.query(
       `
         SELECT *
-        FROM multimedia WHERE price = ${price}
+        FROM multimedia WHERE price = ${price} 
+        AND category != 'redkaneLive'
         ORDER BY time
         DESC
         `,
