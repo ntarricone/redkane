@@ -73,7 +73,7 @@ interface IGlobalStateProps {
   
     render() {
       const { files } = this.props;
-      const { category } = this.state;
+      const { category, type } = this.state;
       return (
         <>
           <div className="container">
@@ -112,7 +112,7 @@ interface IGlobalStateProps {
                     Videos <i className="fa fa-sort"></i>
                   </button>
                   <div className="col-4">
-                  <Filter parent = {"redkaneLive"}></Filter>
+                  <Filter parent = {"redkaneLive"} type={type}></Filter>
                   </div>
                 </div>
               </div>

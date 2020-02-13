@@ -186,7 +186,7 @@ class settingFiles extends React.PureComponent<TProps, IState> {
             </select>
                 {/* FILTER */}
                 <div className="col-5">
-                <Filter parent= {"user"} ></Filter>
+                <Filter parent= {"user"} type = {type}></Filter>
                 </div>
               </div>
             </div>

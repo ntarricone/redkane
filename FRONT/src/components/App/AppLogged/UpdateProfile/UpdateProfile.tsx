@@ -24,7 +24,7 @@ import user from "../../../../icons/user.png";
 import buy from "../../../../icons/buy.png";
 import { decode } from "jsonwebtoken";
 import BecomeCreator from "./BecomeCreator/BecomeCreator";
-import UserPurchases from "./UserPurchases/UserPurchases";
+
 
 interface IProps {
   match:any
@@ -287,9 +287,7 @@ class UpdateProfile extends React.Component<TProps, IState> {
             {toggleContent === "edit" && (
               <UpdateProfileForm></UpdateProfileForm>
             )}
-            {toggleContent === "purchases" && (
-              <UserPurchases></UserPurchases>
-            )}
+           
           </div>
         </div>
       </>

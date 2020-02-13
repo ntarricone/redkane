@@ -298,7 +298,7 @@ class Home extends React.PureComponent<TProps, IState> {
             </select>
             </div>
             <div className="col-sm-3 col-6 mt-3">
-              <Filter parent={"home"}></Filter>
+              <Filter parent={"home"} type={type}></Filter>
             </div>
             <div
               className="col-sm-3 col-12 mt-2"
