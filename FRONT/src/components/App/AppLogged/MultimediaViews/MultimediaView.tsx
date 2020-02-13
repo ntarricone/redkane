@@ -12,6 +12,7 @@ import "./MultimediaView.css";
 import { Link } from "react-router-dom";
 import { SetChosenFileAction } from "../../../../redux/actions";
 import paid from "../../../../icons/money.png";
+import free from "../../../../icons/free.png";
 import saved from "../../../../icons/save-button.png";
 import { decode } from "jsonwebtoken";
 
@@ -91,8 +92,8 @@ class MultimediaView extends React.PureComponent<TProps, IState> {
     avatar = avatar ? avatar : "avatar.png";
     title = title ? title : "TITLE";
     const token: any = localStorage.getItem("token");
-    const { id: loggedId }: any = decode(token)
-    
+    const { id: loggedId }: any = decode(token);
+
     return (
       <div
         className="card animated fadeIn delay-0.5s cardStyle"
@@ -107,7 +108,6 @@ class MultimediaView extends React.PureComponent<TProps, IState> {
             allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
           ></iframe>
         ) : (
-          
           <img
             className="card-img-top"
             style={{ height: "50%" }}
@@ -123,7 +123,7 @@ class MultimediaView extends React.PureComponent<TProps, IState> {
           >
             <h5 className="card-title text-dark webLinks">
               {type === "image" && <i className="fas fa-camera"></i>}
-              {/* {type === "video" && <i className="fab fa-youtube"></i>} */} 
+              {/* {type === "video" && <i className="fab fa-youtube"></i>} */}
               {type === "article" && <i className="far fa-newspaper"></i>}
               {" " + title}
             </h5>
@@ -154,15 +154,18 @@ class MultimediaView extends React.PureComponent<TProps, IState> {
               <div className="col-6"></div>
 
               <div className="col-2">
-                {price !== 0 && !isPurchased && loggedId !== userId && (
+
+              </div>
+              <div className="col-2">
+              {price !== 0 && !isPurchased && loggedId !== userId && (
                   <img className="iconsSize" src={paid} alt="" />
                 )}
                 {price !== 0 && isPurchased && (
                   <i className="far fa-check-circle text-success"></i>
                 )}
-              </div>
-              <div className="col-2">
-                <img className="iconsSize" src={saved} alt="" />
+                {price == 0 && (
+                  <img className="iconsSize" src={free} alt="" />
+                )}
               </div>
             </div>
           </div>

@@ -23,6 +23,8 @@ import editIcon from "../../../../../icons/edit.png";
 import swal from "sweetalert";
 import history from "../../../../../history";
 import logoKane from "../../../../../images/logoKane.png";
+import like from "../../../../../icons/like.png";
+import liked from "../../../../../icons/liked.png";
 import YouTube from "react-youtube";
 import { PayPalButton } from "react-paypal-button-v2";
 
@@ -51,7 +53,9 @@ class SingleMultimedia extends React.PureComponent {
       linkedin: "",
       isVideoTimeUp: false,
       loggedId: 0,
-      isPurchased: false
+      isPurchased: false,
+      isLiked: false,
+      likes: null
     };
     this.setFile = this.setFile.bind(this);
     this.setUser = this.setUser.bind(this);
@@ -59,12 +63,15 @@ class SingleMultimedia extends React.PureComponent {
     this.playVideo = this.playVideo.bind(this);
     this.setPurchaseStatus = this.setPurchaseStatus.bind(this);
     this.savePurchaseInDDBB = this.savePurchaseInDDBB.bind(this);
+    this.likeDislike = this.likeDislike.bind(this);
+    this.setLikedStatus = this.setLikedStatus.bind(this);
   }
 
   componentDidMount() {
     this.setFile();
     const token = localStorage.getItem("token");
     this.setPurchaseStatus(token);
+    this.setLikedStatus();
     const { id: loggedId } = decode(token);
     this.setState({ loggedId });
   }
@@ -220,6 +227,34 @@ class SingleMultimedia extends React.PureComponent {
     //WHAT ABOUT AN EMAIL TO THE BUYER?
   }
 
+  likeDislike() {
+    console.log("entramus");
+    const token = localStorage.getItem("token");
+    myFetch({
+      method: "POST",
+      path: `/users/likeDislike/${this.id_multimedia}`,
+      token
+    }).then(response => {
+      console.log(response);
+      let count = response ? 1 : -1;
+      this.setState({ isLiked: response, likes: this.state.likes + count });
+      console.log(this.state.isLiked);
+    });
+  }
+
+  setLikedStatus() {
+    console.log("entramus");
+    const token = localStorage.getItem("token");
+    myFetch({
+      path: `/users/likes/${this.id_multimedia}`,
+      token
+    }).then(response => {
+      console.log(response);
+      this.setState({ isLiked: response.isLiked, likes: response.likes });
+      console.log(this.state);
+    });
+  }
+
   render() {
     const {
       textArea,
@@ -232,7 +267,10 @@ class SingleMultimedia extends React.PureComponent {
       id: idCreator,
       type,
       loggedId,
-      isPurchased
+      isPurchased,
+      category,
+      isLiked,
+      likes
     } = this.state;
     let { avatar, path, title, price, isVideoTimeUp } = this.state;
     title = title ? title : "Title missing :(";
@@ -254,10 +292,8 @@ class SingleMultimedia extends React.PureComponent {
             <div className="col-10" style={{ marginTop: "8%" }}>
               <div className="row ml-1">
                 <div>
+                  <h5 className="subtitle">{category.toUpperCase()}</h5>
                   <h1>{title}</h1>
-                  {price !== 0 && idCreator !== loggedId && type !== "article" && (
-                    <h3>{`($${price})`}</h3>
-                  )}
                 </div>
               </div>
             </div>
@@ -268,16 +304,50 @@ class SingleMultimedia extends React.PureComponent {
         {/* USER */}
         <div className="container mt-2">
           <div className="row">
-            <div className="col-1"></div>
             <div className="col-1">
-              <img
-                className="multimediaAvatar"
-                src={API_URL_IMAGES + avatar}
-                alt=""
-              />
+              {/* LIKE BUTTON  */}
+              <label htmlFor="">
+                {/* add btn to hide */}
+              <button className="btn" style={{ position: "fixed", zIndex: "10" }}>
+                {isLiked ? (
+                  <img
+                    src={liked}
+                    alt=""
+                    style={{ position: "fixed" }}
+                    className="iconsSize"
+                    onClick={this.likeDislike}
+                  />
+                ) : (
+                  <img
+                    src={like}
+                    alt=""
+                    style={{ position: "fixed" }}
+                    className="iconsSize"
+                    onClick={this.likeDislike}
+                  />
+                )}
+
+                <small>
+                  <span style={{ position: "fixed" }} className="mt-3 ml-5">
+                    {likes}
+                  </span>
+                </small>
+              </button>
+              </label>
+            </div>
+            <div className="col-1">
+              <label htmlFor="">
+                <Link to={`/updateProfile/${idCreator}`}>
+                  <img
+                    className="multimediaAvatar"
+                    src={API_URL_IMAGES + avatar}
+                    alt=""
+                  />
+                </Link>
+              </label>
             </div>
             <div className="col-3 pl-0">
-              <span>
+              <span id="idUserCreator">
                 {name} {surname}
               </span>
               <br />
@@ -327,6 +397,21 @@ class SingleMultimedia extends React.PureComponent {
                     onPlay={this.playVideo}
                   />
                 )}
+                <div>
+                  <div
+                    className="container "
+                    style={{ display: "flex", placeContent: "flex-end" }}
+                  >
+                    <div className="row">
+                      {price !== 0 &&
+                        idCreator !== loggedId &&
+                        type !== "article" && (
+                          <h4 className="pr-3">{`($${price})`}</h4>
+                        )}
+                    </div>
+                  </div>
+                </div>
+
                 {isVideoTimeUp && (
                   <div className="animated fadeInDown slower text-center">
                     <h3 className="">Do you like what you are seeing?</h3>
@@ -400,7 +485,14 @@ class SingleMultimedia extends React.PureComponent {
         <div className="container">
           <div className="row">
             <div className="col-1"></div>
-            <div className="col-7"></div>
+            <div className="col-6"></div>
+            <div className="col-1">
+              {!path.includes("youtu") &&
+                type === "image" &&
+                price !== 0 &&
+                idCreator !== loggedId &&
+                !isPurchased && <h4 className="pl-3 mt-2">{`($${price})`}</h4>}
+            </div>
 
             <div className="col-3 mt-2">
               {!path.includes("youtu") &&
@@ -475,11 +567,13 @@ class SingleMultimedia extends React.PureComponent {
                 <h3>Content</h3>
                 <hr />
                 {(price === 0) | isPurchased | (idCreator === loggedId) ? (
-                  <p className="animated bounceInUp slower">{ReactHtmlParser(`${textArea}`)}</p>
+                  <p className="animated bounceInUp slower">
+                    {ReactHtmlParser(`${textArea}`)}
+                  </p>
                 ) : (
                   <div>
                     <div className="paypalButtonArticle">
-                      <h1 style={{marginLeft: "38%"}}>{`-$${price}-`}</h1>
+                      <h1 style={{ marginLeft: "38%" }}>{`-$${price}-`}</h1>
                       <PayPalButton
                         style={{ layout: "horizontal", color: "black" }}
                         clientId={PAYPAL_CLIENT_ID}
