@@ -43,6 +43,7 @@ interface IState {
   avatar: string;
   avatarChosen: string;
   toggleContent: "edit" | "multimedia";
+  isFound: boolean;
 }
 
 type TProps = IGlobalStateProps & IGlobalActionProps & IProps;
@@ -58,7 +59,8 @@ class UpdateProfile extends React.Component<TProps, IState> {
       banner: "",
       avatar: "",
       avatarChosen: "",
-      toggleContent: "multimedia"
+      toggleContent: "multimedia",
+      isFound: true
     };
 
     this.fileInputRef = React.createRef();
@@ -66,11 +68,22 @@ class UpdateProfile extends React.Component<TProps, IState> {
     this.uploadAvatar = this.uploadAvatar.bind(this);
     this.uploadBanner = this.uploadBanner.bind(this);
     this.setUserProfile = this.setUserProfile.bind(this);
+    this.changeIsFoundToFalse = this.changeIsFoundToFalse.bind(this);
+    this.changeIsFoundToTrue = this.changeIsFoundToTrue.bind(this);
   }
 
   componentDidMount() {
     this.setUserProfile();
   }
+
+  changeIsFoundToFalse() {
+    this.setState({ isFound: false });
+  }
+
+  changeIsFoundToTrue() {
+    this.setState({ isFound: true });
+  }
+
   //TODO. FIX LINK
   setUserProfile() {
     const token = localStorage.getItem("token");
@@ -135,7 +148,7 @@ class UpdateProfile extends React.Component<TProps, IState> {
 
   render() {
     const { account, files } = this.props;
-    const { toggleContent, banner, avatar } = this.state;
+    const { toggleContent, banner, avatar, isFound } = this.state;
     const token: any = localStorage.getItem("token");
     const { id }: any = decode(token);
 
@@ -155,23 +168,26 @@ class UpdateProfile extends React.Component<TProps, IState> {
                   }}
                 >
                   {" "}
-                  <button className="btn btn-sm" style={{ height: "2rem", width:"2.5rem" }}>
-                  <label htmlFor="myBanner">
-                    <i
-                      data-toggle="tooltip"
-                      data-placement="top"
-                      title="Update your banner"
-                      className="fas fa-images iconsSize"
-                      style={{ backgroundColor: "white", width: "1.9rem" }}
-                    ></i>
-                  </label>
-                  <input
-                    onChange={this.uploadBanner}
-                    type="file"
-                    id="myBanner"
-                    style={{ display: "none" }}
-                    ref={this.fileInputRef2}
-                  />
+                  <button
+                    className="btn btn-sm"
+                    style={{ height: "2rem", width: "2.5rem" }}
+                  >
+                    <label htmlFor="myBanner">
+                      <i
+                        data-toggle="tooltip"
+                        data-placement="top"
+                        title="Update your banner"
+                        className="fas fa-images iconsSize"
+                        style={{ backgroundColor: "white", width: "1.9rem" }}
+                      ></i>
+                    </label>
+                    <input
+                      onChange={this.uploadBanner}
+                      type="file"
+                      id="myBanner"
+                      style={{ display: "none" }}
+                      ref={this.fileInputRef2}
+                    />
                   </button>
                 </div>
               ) : (
@@ -179,23 +195,26 @@ class UpdateProfile extends React.Component<TProps, IState> {
                   className="banner mt-3"
                   style={{ backgroundImage: `url(${API_URL_IMAGES + banner})` }}
                 >
-                <button className="btn" style={{ height: "2rem", width:"2.5rem" }}>
-                  <label htmlFor="myBanner">
-                    <i
-                      data-toggle="tooltip"
-                      data-placement="top"
-                      title="Update your banner"
-                      className="fas fa-images iconsSize"
-                      style={{ backgroundColor: "white", width: "1.9rem" }}
-                    ></i>
-                  </label>
-                  <input
-                    onChange={this.uploadBanner}
-                    type="file"
-                    id="myBanner"
-                    style={{ display: "none" }}
-                    ref={this.fileInputRef2}
-                  />
+                  <button
+                    className="btn"
+                    style={{ height: "2rem", width: "2.5rem" }}
+                  >
+                    <label htmlFor="myBanner">
+                      <i
+                        data-toggle="tooltip"
+                        data-placement="top"
+                        title="Update your banner"
+                        className="fas fa-images iconsSize"
+                        style={{ backgroundColor: "white", width: "1.9rem" }}
+                      ></i>
+                    </label>
+                    <input
+                      onChange={this.uploadBanner}
+                      type="file"
+                      id="myBanner"
+                      style={{ display: "none" }}
+                      ref={this.fileInputRef2}
+                    />
                   </button>
                 </div>
               )}
@@ -235,7 +254,12 @@ class UpdateProfile extends React.Component<TProps, IState> {
                 )}
               </div>
               <div className="col-sm-7 col-12 ">
-               { toggleContent === "multimedia" && <SettingUserFiles></SettingUserFiles>}
+                {toggleContent === "multimedia" && (
+                  <SettingUserFiles
+                    changeIsFoundToFalse={this.changeIsFoundToFalse}
+                    changeIsFoundToTrue={this.changeIsFoundToTrue}
+                  ></SettingUserFiles>
+                )}
               </div>
               {/* Upload Banner */}
               {id == this.userId && (
@@ -280,7 +304,7 @@ class UpdateProfile extends React.Component<TProps, IState> {
             <div className="row">
               <div className="col-12">
                 {toggleContent === "multimedia" &&
-                  (account.isCreator  ? (
+                  (account.isCreator ? (
                     <div className="container">
                       <div className="row">
                         {files.order.map(id => (
@@ -321,6 +345,13 @@ class UpdateProfile extends React.Component<TProps, IState> {
 
                 {toggleContent === "edit" && (
                   <UpdateProfileForm></UpdateProfileForm>
+                )}
+                {!isFound && (
+                  <div>
+                    <h3 style={{ textAlign: "center" }}>
+                      <b>Yay! You have seen it all</b>
+                    </h3>
+                  </div>
                 )}
               </div>
             </div>

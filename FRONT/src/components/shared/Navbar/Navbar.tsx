@@ -107,6 +107,7 @@
                       )}
                       Update your profile
                     </Link>
+                    
                   </div>
                   <div>
                     {/* TODO - add red asterix if avatar doesn´t exist */}

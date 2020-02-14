@@ -12,6 +12,10 @@ import history from "../../../../../history";
 import MultimediaView from "../../MultimediaViews/MultimediaView";
 import { decode } from "jsonwebtoken";
 
+interface IProps{
+  changeIsFoundToFalse(): void;
+  changeIsFoundToTrue(): void;
+}
 interface IGlobalStateProps {
   account: IAccount;
   files: IFiles;
@@ -24,12 +28,12 @@ interface IGlobalActionProps {
 
 interface IState {
   type: "" | "article" | "image" | "video" | "purchases";
-  userFiles: IFile[];
   price: number;
   category: string;
+  
 }
 
-type TProps = IGlobalStateProps & IGlobalActionProps;
+type TProps = IGlobalStateProps & IGlobalActionProps & IProps;
 
 class settingFiles extends React.PureComponent<TProps, IState> {
   userId = history.location.pathname.split("/").slice(-1)[0];
@@ -38,15 +42,16 @@ class settingFiles extends React.PureComponent<TProps, IState> {
 
     this.state = {
       type: "",
-      userFiles: [],
       price: 0,
       category: ""
+      
     };
     this.settingFiles = this.settingFiles.bind(this);
     this.getFreeUserContent = this.getFreeUserContent.bind(this);
     this.settingCategoryByUser = this.settingCategoryByUser.bind(this);
     this.getPurchases = this.getPurchases.bind(this);
     this.changeTypeToDefault = this.changeTypeToDefault.bind(this);
+    
   }
 
   componentDidMount() {
@@ -58,6 +63,8 @@ class settingFiles extends React.PureComponent<TProps, IState> {
   changeTypeToDefault(){
     this.setState({type: "", category: "default"});
   }
+
+  
   settingFiles(type: any) {
     console.log(type);
     const token: any = localStorage.getItem("token");
@@ -76,6 +83,9 @@ class settingFiles extends React.PureComponent<TProps, IState> {
           if (files) {
             setFiles(files);
             console.log(files);
+            this.props.changeIsFoundToTrue()
+          }else{
+            this.props.changeIsFoundToFalse()
           }
         }),
       200
@@ -97,6 +107,9 @@ class settingFiles extends React.PureComponent<TProps, IState> {
           if (files) {
             setFiles(files);
             console.log(files);
+            this.props.changeIsFoundToTrue()
+          }else{
+            this.props.changeIsFoundToFalse()
           }
         }),
       200
@@ -119,6 +132,9 @@ class settingFiles extends React.PureComponent<TProps, IState> {
       if (files) {
         setFiles(files);
         this.setState(files);
+        this.props.changeIsFoundToTrue()
+      }else{
+        this.props.changeIsFoundToFalse()
       }
     });
   }
@@ -137,6 +153,9 @@ class settingFiles extends React.PureComponent<TProps, IState> {
           if (files) {
             setFiles(files);
             console.log(files);
+            this.props.changeIsFoundToTrue()
+          }else{
+            this.props.changeIsFoundToFalse()
           }
         }),
       200

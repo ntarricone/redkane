@@ -31,6 +31,7 @@ interface IState {
   avatar: string;
   userId: number | null;
   isPurchased: boolean;
+  isAdmin: boolean;
 }
 
 type TProps = IProps & IGlobalStateProps & IGlobalActionProps;
@@ -44,7 +45,8 @@ class MultimediaView extends React.PureComponent<TProps, IState> {
       surname: "",
       avatar: "",
       userId: null,
-      isPurchased: false
+      isPurchased: false,
+      isAdmin: false
     };
     this.settingFile = this.settingFile.bind(this);
   }
@@ -73,7 +75,8 @@ class MultimediaView extends React.PureComponent<TProps, IState> {
         name: user.name,
         surname: user.surname,
         avatar: user.avatar,
-        userId: user.id
+        userId: user.id,
+        isAdmin: user.isAdmin
       });
     });
   }
@@ -85,7 +88,7 @@ class MultimediaView extends React.PureComponent<TProps, IState> {
     const { file } = this.props;
     const { multimediaId, description, time, price, type } = file;
     let { path, title } = file;
-    const { name, surname, userId, isPurchased } = this.state;
+    const { name, surname, userId, isPurchased, isAdmin } = this.state;
     let { avatar } = this.state;
     path = path ? path : "defaultBanner.jpg";
     avatar = avatar ? avatar : "avatar.png";
@@ -137,7 +140,7 @@ class MultimediaView extends React.PureComponent<TProps, IState> {
           {/* AVATAR. LIINK TO USERS MULTIMEDIA */}
           <div className="container-fluid">
             <div className="row" style={{ fontSize: "1.5rem" }}>
-              <div className="col-2">
+              {!isAdmin && <div className="col-2">
                 <Link to={`/updateProfile/${userId}`}>
                   {
                     <img
@@ -149,7 +152,7 @@ class MultimediaView extends React.PureComponent<TProps, IState> {
                     />
                   }
                 </Link>
-              </div>
+              </div>}
 
               <div className="col-6"></div>
 

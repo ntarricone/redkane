@@ -56,9 +56,9 @@ class AppUnlogged extends React.PureComponent<TProps, IState>{
   <div className=" container-fuid appFooter static-bottom">
   <div className="row ">
           
-              <div className="container text-light footer-copyright">
+              <p className="container text-light footer-copyright">
                  Redkane © 2020 Copyright  
-              </div>
+              </p>
           </div>
       
   </div>
