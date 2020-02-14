@@ -27,6 +27,8 @@ import like from "../../../../../icons/like.png";
 import liked from "../../../../../icons/liked.png";
 import YouTube from "react-youtube";
 import { PayPalButton } from "react-paypal-button-v2";
+import ClapButton from "react-clap-button";
+
 
 class SingleMultimedia extends React.PureComponent {
   id_multimedia = this.props.match.params.id;
@@ -294,6 +296,8 @@ class SingleMultimedia extends React.PureComponent {
                 <div>
                   <h5 className="subtitle">{category.toUpperCase()}</h5>
                   <h1>{title}</h1>
+                  
+
                 </div>
               </div>
             </div>
@@ -306,33 +310,44 @@ class SingleMultimedia extends React.PureComponent {
           <div className="row">
             <div className="col-1">
               {/* LIKE BUTTON  */}
+              <ClapButton
+                    count={0}
+                    countTotal={0}
+                    maxCount={50}
+                    isClicked={false}
+                    // onCountChange={onCountChange}
+                  
+                  />
               <label htmlFor="">
                 {/* add btn to hide */}
-              <button className="btn" style={{ position: "fixed", zIndex: "10" }}>
-                {isLiked ? (
-                  <img
-                    src={liked}
-                    alt=""
-                    style={{ position: "fixed" }}
-                    className="iconsSize"
-                    onClick={this.likeDislike}
-                  />
-                ) : (
-                  <img
-                    src={like}
-                    alt=""
-                    style={{ position: "fixed" }}
-                    className="iconsSize"
-                    onClick={this.likeDislike}
-                  />
-                )}
+                <button
+                  className="btn"
+                  style={{ position: "fixed", zIndex: "10" }}
+                >
+                  {isLiked ? (
+                    <img
+                      src={liked}
+                      alt=""
+                      style={{ position: "fixed" }}
+                      className="iconsSize"
+                      onClick={this.likeDislike}
+                    />
+                  ) : (
+                    <img
+                      src={like}
+                      alt=""
+                      style={{ position: "fixed" }}
+                      className="iconsSize"
+                      onClick={this.likeDislike}
+                    />
+                  )}
 
-                <small>
-                  <span style={{ position: "fixed" }} className="mt-3 ml-5">
-                    {likes}
-                  </span>
-                </small>
-              </button>
+                  <small>
+                    <span style={{ position: "fixed" }} className="mt-3 ml-5">
+                      {likes}
+                    </span>
+                  </small>
+                </button>
               </label>
             </div>
             <div className="col-1">

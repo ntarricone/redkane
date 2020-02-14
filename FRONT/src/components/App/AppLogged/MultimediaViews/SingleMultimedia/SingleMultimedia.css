@@ -47,6 +47,10 @@
   user-select: none;
 }
 
+.dugtJJ:focus{
+  outline: 1px dotted;
+}
+
 .paypalButtonArticle {
   margin-top: -14%;
   width: 50%;
