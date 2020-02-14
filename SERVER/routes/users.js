@@ -19,6 +19,7 @@ const storage = multer.diskStorage({
 //GET
 router.get('/', users.getUsers);
 router.get('/:id', users.getUser);
+router.get('/likes/:multimediaId', users.getLikeStatus);
 
 //PUT
 router.put('/edit/:id', users.editUser);
@@ -27,7 +28,7 @@ router.put('/editPassword/:id', users.editPassword);
 //POST
 router.post('/register', users.createUser);
 router.post('/login', users.login);
-router.post('/saveUnsaveMultimedia', users.saveUnsaveMultimedia);
+router.post('/likeDislike/:multimediaId', users.likeDislike);
 router.post('/confirmCreator/:id', users.confirmCreator);
 router.post('/updateSocialMedia/:id', users.updateSocialMedia);
 

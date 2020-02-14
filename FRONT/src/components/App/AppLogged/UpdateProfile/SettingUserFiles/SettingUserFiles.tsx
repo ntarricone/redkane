@@ -170,7 +170,7 @@ class settingFiles extends React.PureComponent<TProps, IState> {
     return (
       <>
         <div className="container ">
-          <div className="row mb-5">
+          <div className="row  mb-5">
             <div className="col-sm-4 col-12">
               <div className="btn-group search-group">
               {type === "" && <i className="fas fa-search mt-2"></i>}

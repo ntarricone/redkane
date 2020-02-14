@@ -304,7 +304,8 @@ class UpdateProfile extends React.Component<TProps, IState> {
             <div className="row">
               <div className="col-12">
                 {toggleContent === "multimedia" &&
-                  (account.isCreator ? (
+                  ((account.isCreator && id == this.userId) ||
+                  id != this.userId ? (
                     <div className="container">
                       <div className="row">
                         {files.order.map(id => (

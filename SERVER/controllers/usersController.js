@@ -315,38 +315,51 @@ usersController.deleteUser = (request, response) => {
   }
 };
 
-//SAVE / UNSAVE MULTIMEDIA
-usersController.saveUnsaveMultimedia = (req, res) => {
+//LIKE / DISLIKE MULTIMEDIA
+usersController.likeDislike = (req, res) => {
   try {
-    const { multimediaId } = req.body;
+    console.log("entroooooooo");
+    const token = req.headers.authorization.replace("Bearer ", "");
+    console.log(token);
+    const { id } = jwt.verify(token, myPrivateKey);
+    const { multimediaId } = req.params;
+    console.log(multimediaId);
+    let likeStatus = true;
     connection.query(
-      `SELECT * FROM user_saved_multimedia
+      `SELECT * FROM user_liked_multimedia
       WHERE id = ${id}
       AND multimediaId = ${multimediaId} `,
       (_, results) => {
+        console.log(results);
         if (!results.length) {
+          console.log("no hay results" + results);
+
           connection.query(
             `
-            INSERT INTO user_saved_multimedia (id, multimediaId)
+            INSERT INTO user_liked_multimedia (id, multimediaId)
             VALUES('${id}','${multimediaId}')`,
             err => {
               if (err) {
+                console.log(err);
                 res.sendStatus(404);
               } else {
-                res.sendStatus(200);
+                res.send(likeStatus);
               }
             }
           );
         } else {
+          likeStatus = false;
           connection.query(
-            `DELETE FROM user_saves_multimedia
+            `DELETE FROM user_liked_multimedia
              WHERE  id = ${id} 
              AND multimediaId = ${multimediaId}`,
             (err, results) => {
               if (err) {
+                console.log(err);
+
                 res.sendStatus(404);
               } else {
-                res.sendStatus(200);
+                res.send(likeStatus);
               }
             }
           );
@@ -355,6 +368,43 @@ usersController.saveUnsaveMultimedia = (req, res) => {
     );
   } catch {
     res.sendStatus(404);
+  }
+};
+
+//GET LIKED STATUS - gets liked status +  amount of liked sent back in a json
+usersController.getLikeStatus = (request, response) => {
+  const { multimediaId } = request.params;
+  const { authorization } = request.headers;
+  if (authorization) {
+    const token = authorization.replace("Bearer ", "");
+    jwt.verify(token, myPrivateKey);
+    const { id } = jwt.verify(token, myPrivateKey);
+    connection.query(
+      `SELECT * FROM user_liked_multimedia
+      WHERE id = ${id}
+      AND multimediaId = ${multimediaId} `,
+      (error, liked) => {
+        connection.query(
+          `SELECT COUNT(*)
+          FROM user_liked_multimedia
+          WHERE multimediaId = ${multimediaId}`,
+          (error, results) => {
+            if (error) {
+              console.log(error);
+            } else {
+              console.log("nostraentramus");
+              console.log(liked.length);
+              console.log(Boolean(liked.length));
+              console.log(results[0]["COUNT(*)"]);
+              response.send({
+                isLiked: Boolean(liked.length),
+                likes: results[0]["COUNT(*)"]
+              });
+            }
+          }
+        );
+      }
+    );
   }
 };
 
@@ -425,16 +475,16 @@ usersController.confirmCreator = (request, response) => {
     `UPDATE users
        SET isCreator = 1
        WHERE id = ${id}`,
-       (err, results) => {
-        let aux = false;
-        if (err) {
-          console.log(err);
-          response.send(aux);
-        } else {
-          aux = true;
-          response.send(aux);
-        }
+    (err, results) => {
+      let aux = false;
+      if (err) {
+        console.log(err);
+        response.send(aux);
+      } else {
+        aux = true;
+        response.send(aux);
       }
+    }
   );
 };
 
