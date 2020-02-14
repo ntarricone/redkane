@@ -394,9 +394,10 @@ multimediaController.searchMultimediaByWord = (request, response) => {
     connection.query(
       `
       SELECT *
-      FROM multimedia
-      WHERE title LIKE "%${key}%" OR textArea LIKE "%${key}%" 
-      ORDER BY time DESC
+      FROM multimedia, users
+      WHERE (multimedia.id = users.id) AND ( 
+       (title LIKE "%${key}%" OR textArea LIKE "%${key}%" OR name LIKE "%${key}%") AND category != 'redkaneLive')
+      ORDER BY time DESC;
         `,
       (error, results) => {
         if (results && results.length > 0) {
@@ -626,6 +627,15 @@ multimediaController.getMultimediaCategoriesAndUser = (request, response) => {
 //GET ALL REDKANELIVE MULTIMEDIA CONTENT
 multimediaController.getRedkaneLiveMultimedia = (request, response) => {
   const { authorization } = request.headers;
+  let {type} = request.body;
+  console.log(type)
+ if(type === ""){
+    type = ""
+  }
+  else if (type === "article" || "image" || "video"){
+    type = `AND type = '${type}'`
+    console.log(type)
+  } 
   if (authorization) {
     const token = authorization.replace("Bearer ", "");
     jwt.verify(token, myPrivateKey);
@@ -633,6 +643,7 @@ multimediaController.getRedkaneLiveMultimedia = (request, response) => {
       `
       SELECT *
       FROM multimedia WHERE category = 'redkaneLive'
+      ${type}
       ORDER BY time
       DESC
         `,
