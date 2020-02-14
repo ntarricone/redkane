@@ -59,9 +59,11 @@ class Home extends React.PureComponent<TProps, IState> {
   }
   
   changeTypeToDefault(){
-    this.setState({type: "", category: "default"});
+    this.setState({type: "", category: "default", hasMore: false});
 
   }
+
+  
 
   settingFiles(type: any) {
     console.log("Ooooooooooooooooooooooo");

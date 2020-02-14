@@ -28,7 +28,7 @@ router.get("/byPrice/:price", multimedia.getMultimediaByPrice);
 router.get("/byPriceAndUser/:id/:price", multimedia.getMultimediaByPriceAndUser);
 
 
-router.get("/redkaneLive", multimedia.getRedkaneLiveMultimedia);
+router.post("/redkaneLive", multimedia.getRedkaneLiveMultimedia);
 router.get("/redkaneLive/:type", multimedia.getRedkaneLiveMultimediaByType);
 router.get("/isPurchased/:multimediaId", multimedia.isPurchased);
 router.get("/userPurchases/:id", multimedia.getUserPurchases);

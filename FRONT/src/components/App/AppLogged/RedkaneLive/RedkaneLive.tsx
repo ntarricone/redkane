@@ -37,7 +37,7 @@ interface IGlobalStateProps {
       super(props);
   
       this.state = {
-        type: "article",
+        type: "",
         price: 0,
         category: ""
       };
@@ -55,26 +55,32 @@ interface IGlobalStateProps {
     changeTypeToDefault(){
       this.setState({type: "", category: "default"});
     }
-  
+
     settingFiles(type: any) {
       console.log(type);
-  
-      this.setState({ type: type });
+      const token: any = localStorage.getItem("token");
+      this.setState({ type: type, category: "" });
+      console.log(type);
       setTimeout(
-        ({ token } = this.props.account, { setFiles } = this.props) =>
-          myFetch({ path: `/multimedia/redkaneLive/${type}`, token }).then(files => {
+        ({ setFiles } = this.props) =>
+          myFetch({
+            method: "POST",
+            path: `/multimedia/redkaneLive`,
+            json: { type },
+            token
+          }).then(files => {
             console.log("entri");
             console.log(files);
             if (files) {
               setFiles(files);
+              console.log(files);
             }
           }),
         200
       );
-      
     }
   
-    
+ 
   
     render() {
       const { files } = this.props;
@@ -82,47 +88,51 @@ interface IGlobalStateProps {
       return (
         <>
           <div className="container">
-            <div className="row">
-              <div className="col-12 col-sm d-flex justify-content-center marginTopUploader">
-               {/* {this.props.account.isCreator? <ContentUploader></ContentUploader>: ""} */}
+          <div className="row">
+            <div className="col-12 col-sm d-flex justify-content-center marginTopUploader"></div>
+          </div>
+        </div>
+        <div className="container ">
+          <div className="row mt-4 mb-5">
+            <div className="col-sm-3  col-12 mt-3">
+              <div className="btn-group search-group">
+              {type === "" && <i className="fas fa-search mt-2"></i>}
+                <button
+                  className={type === ''?'btn btn-sm selectedFilter': "btn btn-sm"}
+                  onClick={() => this.settingFiles("")}
+                >
+                  All
+                </button>
+                {type === "article" && <i className="fas fa-search mt-2"></i>}
+                <button
+                  className={type === 'article'?'btn btn-sm selectedFilter': "btn btn-sm"}
+                  onClick={() => this.settingFiles("article")}
+                >
+                  Articles 
+                </button>
+                {type === "image" && <i className="fas fa-search mt-2"></i>}
+                <button
+                  className={type === 'image'?'btn btn-sm selectedFilter': "btn btn-sm"}
+                  onClick={() => this.settingFiles("image")}
+                >
+                  Images 
+                </button>
+                {type === "video" && <i className="fas fa-search mt-2"></i>}
+                <button
+                  className={type === 'video'?'btn btn-sm selectedFilter': "btn btn-sm"}
+                  onClick={() => this.settingFiles("video")}
+                >
+                  Videos 
+                </button>
+               
               </div>
             </div>
-            
-  
-            <div className="row mb-2 mt-2">
-              <div className="col-8 ">
-                <div className="btn-group search-group">
-                  <button
-                    className="btn btn-sm btn-default btn-sorteable"
-                    onClick={() => this.settingFiles("")}
-                  >
-                    All <i className="fa fa-sort"></i>
-                  </button>
-                  <button
-                    className="btn btn-sm btn-default btn-sorteable"
-                    onClick={() => this.settingFiles("article")}
-                  >
-                    Articles <i className="fa fa-sort"></i>
-                  </button>
-                  <button
-                    className="btn btn-sm btn-default btn-sorteable"
-                    onClick={() => this.settingFiles("image")}
-                  >
-                    Images <i className="fa fa-sort"></i>
-                  </button>
-                  <button
-                    className="btn btn-sm  btn-sorteable"
-                    onClick={() => this.settingFiles("video")}
-                  >
-                    Videos <i className="fa fa-sort"></i>
-                  </button>
-                  <div className="col-4">
-                  <Filter parent = {"redkaneLive"}  changeTypeToDefault={this.changeTypeToDefault}></Filter>
-                  </div>
-                </div>
-              </div>
+           
+            <div className="col-sm-3 col-6 mt-3">
+            <Filter parent = {"redkaneLive"}  changeTypeToDefault={this.changeTypeToDefault}></Filter>
             </div>
           </div>
+        </div>
           <div className="container">
             <div className="row">
               {files.order.map(id => (
@@ -133,6 +143,7 @@ interface IGlobalStateProps {
               ))}
             </div>
           </div>
+      
         </>
       );
     }

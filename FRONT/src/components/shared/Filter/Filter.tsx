@@ -45,7 +45,7 @@ class Filter extends React.PureComponent<TProps, IState> {
     this.props.unsetFiles();
     const token: any = localStorage.getItem("token");
     const { key } = this.state;
-    const { setFiles, parent } = this.props;
+    const { setFiles, parent} = this.props;
     if (parent == "home") {
       myFetch({
         method: "POST",
