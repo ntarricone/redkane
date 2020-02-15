@@ -310,14 +310,14 @@ class SingleMultimedia extends React.PureComponent {
           <div className="row">
             <div className="col-1">
               {/* LIKE BUTTON  */}
-              <ClapButton
+              {/* <ClapButton
                     count={0}
                     countTotal={0}
                     maxCount={50}
                     isClicked={false}
                     // onCountChange={onCountChange}
                   
-                  />
+                  /> */}
               <label htmlFor="">
                 {/* add btn to hide */}
                 <button

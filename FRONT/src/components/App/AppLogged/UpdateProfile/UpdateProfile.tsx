@@ -1,6 +1,5 @@
 import React from "react";
 import "./UpdateProfile.css";
-
 import { connect } from "react-redux";
 import { IStore } from "../../../../interfaces/IStore";
 import { IAccount } from "../../../../interfaces/IAccount";
@@ -254,11 +253,14 @@ class UpdateProfile extends React.Component<TProps, IState> {
                 )}
               </div>
               <div className="col-sm-7 col-12 ">
-                {toggleContent === "multimedia" && (
+                {toggleContent === "multimedia" &&
+                (id != this.userId || account.isCreator) ? (
                   <SettingUserFiles
-                    changeIsFoundToFalse={this.changeIsFoundToFalse}
+                  changeIsFoundToFalse={this.changeIsFoundToFalse}
                     changeIsFoundToTrue={this.changeIsFoundToTrue}
                   ></SettingUserFiles>
+                ) : (
+                  ""
                 )}
               </div>
               {/* Upload Banner */}
