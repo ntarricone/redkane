@@ -66,7 +66,6 @@ class Home extends React.PureComponent<TProps, IState> {
   
 
   settingFiles(type: any) {
-    console.log("Ooooooooooooooooooooooo");
     this.setState({ counter: 9, hasMore: true, type: type, category: "" });
     setTimeout(
       ({ token } = this.props.account, { setFiles } = this.props) =>
@@ -74,8 +73,7 @@ class Home extends React.PureComponent<TProps, IState> {
           path: `/multimedia/${type}`,
           token
         }).then(files => {
-          console.log("entri");
-          console.log(files);
+
           if (files) {
             setFiles(files);
           }

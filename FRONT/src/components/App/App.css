@@ -3,13 +3,12 @@
 }
 
 .form-control:focus{
-  border-color: #9c182b !important;
-  box-shadow: 1px 0px 8px 0rem black !important;
+  border-color: #cc2727 !important;
+  box-shadow: 1px 0px 8px 0rem #cc2727!important;
 }
 
 a:hover {
-  color: #f00 !important;
-  text-decoration: underline !important;
+  text-decoration: none !important;
 }
 
 

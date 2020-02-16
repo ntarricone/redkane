@@ -7,6 +7,7 @@ import { IStore } from "../../../interfaces/IStore";
 import { SetAccountAction } from "../../../redux/actions";
 import logoKane from "../AppUnlogged/logoKane.png";
 import swal from "sweetalert";
+import emailjs from "emailjs-com";
 
 interface IProps {
   match: any;
@@ -26,6 +27,7 @@ interface IState {
   surname: string;
   avatar: string;
   banner: string;
+  email: string;
 }
 class ConfirmCreator extends React.Component<TProps, IState> {
   userId = this.props.match.params.id;
@@ -36,7 +38,8 @@ class ConfirmCreator extends React.Component<TProps, IState> {
       name: "",
       surname: "",
       banner: "",
-      avatar: ""
+      avatar: "",
+      email: ""
     };
     this.confirmCreator = this.confirmCreator.bind(this);
   }
@@ -54,8 +57,11 @@ class ConfirmCreator extends React.Component<TProps, IState> {
     })();
   }
 
-  confirmCreator(){
-    myFetch({ method: "POST", path: `/users/confirmCreator/${this.userId}` }).then(response => {
+  confirmCreator() {
+    myFetch({
+      method: "POST",
+      path: `/users/confirmCreator/${this.userId}`
+    }).then(response => {
       if (response) {
         swal({
           title: "Success!",
@@ -63,11 +69,20 @@ class ConfirmCreator extends React.Component<TProps, IState> {
           icon: "success",
           timer: 10000
         });
-      }
-      else{
-        swal(
-          {title: 'Sorry there has been an error upgrading this user',
-          text: 'Please contact your support team',
+        let params = {
+          to_email: this.state.email,
+          to_name: this.state.name
+        };
+        emailjs.send(
+          "gmail",
+          "confirming_creator",
+          params,
+          "user_awOkEod8V5OPyDAHyaGPf"
+        );
+      } else {
+        swal({
+          title: "Sorry there has been an error upgrading this user",
+          text: "Please contact your support team",
           icon: "error",
           timer: 4000
         });
@@ -83,7 +98,11 @@ class ConfirmCreator extends React.Component<TProps, IState> {
             <div className="col-3"></div>
             <div className="col-8 mt-5 ">
               {" "}
-              <img  className="animated zoomIn slower"src={logoKane} alt="" />{" "}
+              <img
+                className="animated zoomIn slower"
+                src={logoKane}
+                alt=""
+              />{" "}
             </div>
             <div className="col-1"></div>
           </div>
@@ -99,23 +118,26 @@ class ConfirmCreator extends React.Component<TProps, IState> {
                 </strong>{" "}
                 to become a creator?
               </h3>
-               </div>
+            </div>
             <div className="col-1"></div>
           </div>
         </div>
         <div className="container">
           <div className="row">
             <div className="col-1"></div>
-            <div className="col-10 mt-2 text-center" style={{display: "flex", justifyContent: "center"}}>
-             <button
-                    data-toggle="modal"
-                    data-target="#becomeCreator"
-                    className="btn btn-block mt-1 mb-2 buttonColor mt-3 animated  pulse  infinite"
-                    style={{ width: "30%" }}
-                    onClick={this.confirmCreator}
-                  >
-                    Yes Sir!
-                  </button>
+            <div
+              className="col-10 mt-2 text-center"
+              style={{ display: "flex", justifyContent: "center" }}
+            >
+              <button
+                data-toggle="modal"
+                data-target="#becomeCreator"
+                className="btn btn-block mt-1 mb-2 buttonColor mt-3 animated  pulse  infinite"
+                style={{ width: "30%" }}
+                onClick={this.confirmCreator}
+              >
+                Yes Sir!
+              </button>
             </div>
             <div className="col-1"></div>
           </div>

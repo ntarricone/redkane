@@ -26,8 +26,8 @@ import swal from "sweetalert";
 import history from "../../../../../history";
 import logoKane from "../../../../../images/logoKane.png";
 import like from "../../../../../icons/like.png";
-import whiteLike from "../../../../../icons/whiteLike.png";
-import whiteLiked from "../../../../../icons/whiteLiked.png";
+import redLiked from "../../../../../icons/likedRed.png";
+import redLike from "../../../../../icons/likeRed.png";
 import liked from "../../../../../icons/liked.png";
 import YouTube from "react-youtube";
 import { PayPalButton } from "react-paypal-button-v2";
@@ -303,9 +303,15 @@ class SingleMultimedia extends React.PureComponent {
               <div className="col-1"></div>
               <div className="col-10" style={{ marginTop: "8%" }}>
                 <div className="row ml-1">
-                  <div>
+                  <div className="subtitleResponsive">
                     <h5>
-                      <i>{category.toUpperCase()}</i>
+                      <i
+                        style={{
+                          color: category == "redkaneLive" ? "#d42727" : ""
+                        }}
+                      >
+                        {category.toUpperCase()}
+                      </i>
                     </h5>
                     <h1>
                       <strong>{title}</strong>
@@ -334,16 +340,16 @@ class SingleMultimedia extends React.PureComponent {
                         src={liked}
                         alt=""
                         style={{ position: "fixed" }}
-                        className="iconsSize"
+                        className="iconsSize likeResponsive"
                         onClick={this.likeDislike}
                       />
                     )}
                     {isLiked && category == "redkaneLive" && (
                       <img
-                        src={whiteLiked}
+                        src={redLiked}
                         alt=""
                         style={{ position: "fixed" }}
-                        className="iconsSize"
+                        className="iconsSize likeResponsive"
                         onClick={this.likeDislike}
                       />
                     )}
@@ -352,22 +358,29 @@ class SingleMultimedia extends React.PureComponent {
                         src={like}
                         alt=""
                         style={{ position: "fixed" }}
-                        className="iconsSize"
+                        className="iconsSize likeResponsive"
                         onClick={this.likeDislike}
                       />
                     )}
                     {!isLiked && category == "redkaneLive" && (
                       <img
-                        src={whiteLike}
+                        src={redLike}
                         alt=""
                         style={{ position: "fixed" }}
-                        className="iconsSize"
+                        className="iconsSize likeResponsive"
                         onClick={this.likeDislike}
                       />
                     )}
 
                     <small>
-                      <span style={{ position: "fixed" }} className="mt-3 ml-5 text-white">
+                      <span
+                        style={{ position: "fixed" }}
+                        className={
+                          category !== "redkaneLive"
+                            ? "likesCount mt-3 ml-5"
+                            : " likesCount mt-3 ml-5 text-white"
+                        }
+                      >
                         {likes}
                       </span>
                     </small>
@@ -534,18 +547,21 @@ class SingleMultimedia extends React.PureComponent {
           <div className="container">
             <div className="row">
               <div className="col-1"></div>
-              <div className="col-6"></div>
-              <div className="col-1">
+              <div className="col-sm-6 col-3"></div>
+              <div className="col-sm-1 col-4">
                 {!path.includes("youtu") &&
                   type === "image" &&
                   price !== 0 &&
                   idCreator !== loggedId &&
                   !isPurchased && (
-                    <h4 className="pl-3 mt-2">{`($${price})`}</h4>
+                    <h4
+                      style={{ fontSize: "1.2rem !important" }}
+                      className="pl-3 mt-2"
+                    >{`($${price})`}</h4>
                   )}
               </div>
 
-              <div className="col-3 mt-2">
+              <div className="col-sm-3 col-12 mt-2">
                 {!path.includes("youtu") &&
                   type === "image" &&
                   price !== 0 &&
@@ -570,7 +586,18 @@ class SingleMultimedia extends React.PureComponent {
                       }}
                     />
                   )}
-                {isPurchased && (
+                {isPurchased && !path.includes("youtu") && (
+                  <a
+                    href={`http://localhost:3000/multimedia/${path}`}
+                    className="badge badge-success badgeMargin"
+                    data-toggle="tooltip"
+                    data-placement="top"
+                    title="Download"
+                  >
+                    purchased
+                  </a>
+                )}
+                {isPurchased && path.includes("youtu") && (
                   <span className="badge badge-success badgeMargin">
                     purchased
                   </span>
@@ -578,8 +605,21 @@ class SingleMultimedia extends React.PureComponent {
                 {idCreator === loggedId && (
                   <span className="badge badge-success badgeMargin">owner</span>
                 )}
-                {price === 0 && (
-                  <span className="badge badge-warning badgeMargin">free</span>
+                {price === 0 && !path.includes("youtu") && (
+                  <a
+                    href={`http://localhost:3000/multimedia/${path}`}
+                    className="badge badge-warning badgeMargin"
+                    data-toggle="tooltip"
+                    data-placement="top"
+                    title="Download"
+                  >
+                    free
+                  </a>
+                )}
+                {price === 0 && path.includes("youtu") && (
+                  <span className="badge badge-warning badgeMargin">
+                    free
+                  </span>
                 )}
               </div>
               <div className="col-1"></div>

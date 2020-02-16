@@ -41,7 +41,7 @@
   user-select: none;
 }
 
-.dugtJJ:focus{
+.dugtJJ:focus {
   outline: 1px dotted;
 }
 
@@ -51,4 +51,41 @@
   position: relative;
   left: 25%;
   top: 35vh;
+}
+
+@media screen and (max-width: 992px) {
+  .subtitleResponsive {
+    margin-top: 40px;
+  }
+  .multimediaImage {
+    background-position: center;
+    background-size: 100%;
+    height: 50vh;
+    margin-top: -100px;
+    margin-bottom: -80px;
+  }
+
+  .iconsSize {
+    margin-left: 7px;
+  }
+  .likeResponsive {
+    margin-left: -35px;
+  }
+
+  .watermark{
+    height: 34%;
+
+  }
+
+  .likesCount{
+    left: 1px;
+  }
+
+  .paypalButtonArticle {
+    left: 11%;
+}
+.paypalButtonArticle.h1{
+  margin-left: 19%;
+
+}
 }

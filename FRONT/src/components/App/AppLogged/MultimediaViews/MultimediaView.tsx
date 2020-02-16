@@ -16,7 +16,7 @@ import free from "../../../../icons/free.png";
 import saved from "../../../../icons/save-button.png";
 import { decode } from "jsonwebtoken";
 import history from "../../../../history";
-
+import logoSolo from "../../../../images/logoSolo.png"
 
 interface IGlobalStateProps {}
 
@@ -39,7 +39,7 @@ interface IState {
 
 type TProps = IProps & IGlobalStateProps & IGlobalActionProps;
 
-class MultimediaView extends React.PureComponent<TProps, IState> {
+class MultimediaView extends React.Component<TProps, IState> {
   isRedkaneLive = history.location.pathname.split("/")[1] == "redkaneLive";
 
   constructor(props: TProps) {
@@ -102,13 +102,18 @@ class MultimediaView extends React.PureComponent<TProps, IState> {
     title = title ? title : "TITLE";
     const token: any = localStorage.getItem("token");
     const { id: loggedId }: any = decode(token);
-    
 
     return (
       <div
-        className={!this.isRedkaneLive? "card animated fadeIn delay-0.5s cardStyle":
-      "card animated fadeIn delay-0.5s cardStyleDark"}
-        style={{ height: "62vh", backgroundColor: this.isRedkaneLive? "#00000000": "" }}
+        className={
+          !this.isRedkaneLive
+            ? "card animated fadeIn delay-0.5s cardStyle"
+            : "card animated fadeIn delay-0.5s cardStyleDark"
+        }
+        style={{
+          height: "62vh",
+          backgroundColor: this.isRedkaneLive ? "#00000000" : ""
+        }}
       >
         {path?.includes("youtube") ? (
           <iframe
@@ -127,56 +132,83 @@ class MultimediaView extends React.PureComponent<TProps, IState> {
           />
         )}
         {/* Title */}
-        <div className="card-body text-light" style={{ backgroundColor: !this.isRedkaneLive?"#fafafa": "#101010" }}>
-          <Link
+
+        <div
+          className="card-body text-light"
+          style={{
+            backgroundColor: !this.isRedkaneLive ? "#fafafa" : "#101010"
+          }}
+        >
+                  <Link
             to={`/singleMultimedia/${multimediaId}`}
             onClick={() => this.settingFile(file)}
           >
-            <h5 className={!this.isRedkaneLive? "card-text text-dark webLinks" : "card-text text-light webLinks"}
-            style={{color: this.isRedkaneLive? "white": ""}}>
+
+            <h5
+              className={
+                !this.isRedkaneLive
+                  ? "card-text text-dark webLinks"
+                  : "card-text text-light webLinks"
+              }
+              style={{ color: this.isRedkaneLive ? "white" : "" }}
+            >
               {type === "image" && <i className="fas fa-camera"></i>}
               {type === "article" && <i className="far fa-newspaper"></i>}
               {" " + title}
             </h5>
-          </Link>
 
-          <p className={!this.isRedkaneLive? "card-text text-dark" : "card-text text-light"} style={{ minHeight: "8vh" }}>
+          <p
+            className={
+              !this.isRedkaneLive
+                ? "card-text text-dark"
+                : "card-text text-light"
+            }
+            style={{ minHeight: "8vh" }}
+          >
             {" "}
             {description?.substring(0, 100) + "..."}
           </p>
-
+          </Link>
           {/* AVATAR. LIINK TO USERS MULTIMEDIA */}
           <div className="container-fluid">
             <div className="row" style={{ fontSize: "1.5rem" }}>
-              {!isAdmin && <div className="col-2">
-                <Link to={`/updateProfile/${userId}`}>
-                  {
-                    <img
-                      data-toggle="tooltip"
-                      data-placement="top"
-                      title={`${name} ${surname}`}
-                      className="cardAvatar"
-                      src={`${API_URL_IMAGES}${avatar}`}
-                    />
-                  }
-                </Link>
-              </div>}
+              {!this.isRedkaneLive ? (
+                <div className="col-2">
+                  <Link to={`/updateProfile/${userId}`}>
+                    {
+                      <img
+                        data-toggle="tooltip"
+                        data-placement="top"
+                        title={`${name} ${surname}`}
+                        className="cardAvatar"
+                        src={`${API_URL_IMAGES}${avatar}`}
+                      />
+                    }
+                  </Link>
+                </div>
+              ) : (
+                <div className="col-2">
+                <img
+                  data-toggle="tooltip"
+                  data-placement="top"
+                  title={`${name} ${surname}`}
+                  className="cardAvatarRK"
+                  src={logoSolo}
+                />
+                </div>
+              )}
 
               <div className="col-6"></div>
 
+              <div className="col-2"></div>
               <div className="col-2">
-
-              </div>
-              <div className="col-2">
-              {price !== 0 && !isPurchased && (
+                {price !== 0 && !isPurchased && (
                   <img className="iconsSize" src={paid} alt="" />
                 )}
                 {price !== 0 && isPurchased && (
                   <i className="far fa-check-circle text-success"></i>
                 )}
-                {price == 0 && (
-                  <img className="iconsSize" src={free} alt="" />
-                )}
+                {price == 0 && !this.isRedkaneLive && <img className="iconsSize" src={free} alt="" />}
               </div>
             </div>
           </div>
@@ -187,7 +219,10 @@ class MultimediaView extends React.PureComponent<TProps, IState> {
             </small>
           </p>
         </div>
+
+
       </div>
+      
     );
   }
 }

@@ -136,7 +136,7 @@ class RedkaneLive extends React.PureComponent<TProps, IState> {
                 </div>
               </div>
 
-              <div className="col-sm-3 col-6 mt-3">
+              <div className="col-sm-3 col-9 mt-3">
                 <Filter
                   parent={"redkaneLive"}
                   changeTypeToDefault={this.changeTypeToDefault}

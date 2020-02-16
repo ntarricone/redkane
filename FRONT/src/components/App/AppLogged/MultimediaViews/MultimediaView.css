@@ -5,6 +5,12 @@
     margin-left: -14px;
 }
 
+.cardAvatarRK{
+    width: 40px;
+    height: 40px;
+    margin-left: -14px;
+}
+
 .cardStyle:hover{
     transform: scale(1.020);
     box-shadow: 2px 3px 6px -4px;
