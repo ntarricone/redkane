@@ -16,7 +16,7 @@
 }
 
 .loginContainer {
-    padding-top: 55px;
+    margin-top: 55px;
     display: flex; 
     justify-content: center;
     align-items: center;
@@ -31,8 +31,8 @@
 
 .appFooter {
     background-color:  #212121;
-    width: 99%;
-    height: 30px;
+    width: 100%;
+    height: 5vh;
   
   } 
   
@@ -41,5 +41,6 @@
     text-align: center;
     justify-content: center;
     font-size: small;
-    margin-top: 5px;
+    margin-top: 10px;
   }
+

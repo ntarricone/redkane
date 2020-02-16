@@ -57,7 +57,7 @@ class AploadMultimedia extends React.PureComponent<TProps, IState> {
     const { title, price, description } = this.state;
     let { path, category } = this.state;
     const token: any = localStorage.getItem("token");
-
+    category = category? category : "other";
     if (this.fileInputRef.current?.files?.length && account) {
       const path = this.fileInputRef.current.files[0];
       const formData = new FormData();
@@ -88,8 +88,8 @@ class AploadMultimedia extends React.PureComponent<TProps, IState> {
 
       this.setState(initialState);
       this.fileInputRef.current.value = "";
-    } else {
-      category = category? category : "other";
+    } else if(path != ""){
+
       myFetch({
         path: "/multimedia/createVideo",
         method: "POST",
@@ -106,6 +106,9 @@ class AploadMultimedia extends React.PureComponent<TProps, IState> {
           this.props.addFile(json);
         }
       });
+    }
+    else{
+      window.alert("Please add your multimedia")
     }
   }
 

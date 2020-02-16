@@ -79,6 +79,7 @@ usersController.createUser = (req, res) => {
                   isCreator: Boolean(isCreator)
                 });
               } else {
+                console.log("ooooooooooo")
                 res.sendStatus(400);
               }
             }
@@ -87,6 +88,7 @@ usersController.createUser = (req, res) => {
       }
     );
   } else {
+
     res.sendStatus(404);
   }
 };

@@ -15,6 +15,8 @@ import paid from "../../../../icons/money.png";
 import free from "../../../../icons/free.png";
 import saved from "../../../../icons/save-button.png";
 import { decode } from "jsonwebtoken";
+import history from "../../../../history";
+
 
 interface IGlobalStateProps {}
 
@@ -38,6 +40,8 @@ interface IState {
 type TProps = IProps & IGlobalStateProps & IGlobalActionProps;
 
 class MultimediaView extends React.PureComponent<TProps, IState> {
+  isRedkaneLive = history.location.pathname.split("/")[1] == "redkaneLive";
+
   constructor(props: TProps) {
     super(props);
 
@@ -57,6 +61,7 @@ class MultimediaView extends React.PureComponent<TProps, IState> {
     const { id, multimediaId } = file;
     const token: any = localStorage.getItem("token");
     console.log(id);
+    console.log(this.isRedkaneLive);
     this.getUser(id, token);
     this.setPurchaseStatus(multimediaId, token);
   }
@@ -87,8 +92,9 @@ class MultimediaView extends React.PureComponent<TProps, IState> {
   }
   render() {
     const { file } = this.props;
-    const { multimediaId, description, time, price, type } = file;
-    let { path, title } = file;
+    const { multimediaId, time, price, type } = file;
+    let { path, title, description } = file;
+    description = description?.replace(/1!1/g, "'");
     const { name, surname, userId, isPurchased, isAdmin } = this.state;
     let { avatar } = this.state;
     path = path ? path : "defaultBanner.jpg";
@@ -96,18 +102,20 @@ class MultimediaView extends React.PureComponent<TProps, IState> {
     title = title ? title : "TITLE";
     const token: any = localStorage.getItem("token");
     const { id: loggedId }: any = decode(token);
+    
 
     return (
       <div
-        className="card animated fadeIn delay-0.5s cardStyle"
-        style={{ height: "62vh" }}
+        className={!this.isRedkaneLive? "card animated fadeIn delay-0.5s cardStyle":
+      "card animated fadeIn delay-0.5s cardStyleDark"}
+        style={{ height: "62vh", backgroundColor: this.isRedkaneLive? "#00000000": "" }}
       >
         {path?.includes("youtube") ? (
           <iframe
-            style={{ height: "59%" }}
+            style={{ height: "59%", border: "none" }}
             src={`https://www.youtube.com/embed/${getYoutubeId(
               path
-            )}?start=0&end=5`}
+            )}?start=0&end=7`}
             allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
           ></iframe>
         ) : (
@@ -119,20 +127,20 @@ class MultimediaView extends React.PureComponent<TProps, IState> {
           />
         )}
         {/* Title */}
-        <div className="card-body" style={{ backgroundColor: "#fafafa" }}>
+        <div className="card-body text-light" style={{ backgroundColor: !this.isRedkaneLive?"#fafafa": "#101010" }}>
           <Link
             to={`/singleMultimedia/${multimediaId}`}
             onClick={() => this.settingFile(file)}
           >
-            <h5 className="card-title text-dark webLinks">
+            <h5 className={!this.isRedkaneLive? "card-text text-dark webLinks" : "card-text text-light webLinks"}
+            style={{color: this.isRedkaneLive? "white": ""}}>
               {type === "image" && <i className="fas fa-camera"></i>}
-              {/* {type === "video" && <i className="fab fa-youtube"></i>} */}
               {type === "article" && <i className="far fa-newspaper"></i>}
               {" " + title}
             </h5>
           </Link>
 
-          <p className="card-text text-dark" style={{ minHeight: "8vh" }}>
+          <p className={!this.isRedkaneLive? "card-text text-dark" : "card-text text-light"} style={{ minHeight: "8vh" }}>
             {" "}
             {description?.substring(0, 100) + "..."}
           </p>
@@ -160,7 +168,7 @@ class MultimediaView extends React.PureComponent<TProps, IState> {
 
               </div>
               <div className="col-2">
-              {price !== 0 && !isPurchased && loggedId !== userId && (
+              {price !== 0 && !isPurchased && (
                   <img className="iconsSize" src={paid} alt="" />
                 )}
                 {price !== 0 && isPurchased && (

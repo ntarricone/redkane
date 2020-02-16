@@ -7,7 +7,7 @@ import "./Register.css";
 import swal from "sweetalert";
 
 interface IProps {
-  notRegistered():void
+  notRegistered(): void;
 }
 
 interface IGlobalActionProps {
@@ -72,13 +72,12 @@ class Register extends React.PureComponent<TProps, IState> {
   }
 
   register() {
-    const { name, surname, email, password } = this.state;
+    const { name, surname, email, password, passwordControl } = this.state;
     myFetch({
       path: "/users/register",
       method: "POST",
       json: { name, surname, email, password }
     }).then(json => {
-      console.log(json)
       if (json) {
         const {
           token,
@@ -111,12 +110,19 @@ class Register extends React.PureComponent<TProps, IState> {
         });
         swal({
           title: "Success!",
-          text: "You've successfully logged in!",
+          text: "You've successfully registered!",
           icon: "success",
           timer: 2000
         });
       } else {
-        this.setState({ error: "User already registered" });
+        this.setState({
+          name: "",
+          surname: "",
+          password: "",
+          passwordControl: "",
+          error: "Incorrect email format"
+        });
+        setTimeout(() => this.setState({ error: "", email: "" }), 6000);
       }
     });
   }
@@ -134,91 +140,97 @@ class Register extends React.PureComponent<TProps, IState> {
     const { name, surname, email, password, passwordControl } = this.state;
     const { notRegistered } = this.props;
     return (
-          <div className="card registerCard  animated bounceInLeft delay-0.5s slow">
-            <div className="card-body">
-              <h3>Register</h3>
-              <div className="row">
-                <div className="col-xs-6 col-sm-6 col-md-6">
-                  <div className="form-group">
-                    <input
-                      type="text"
-                      className="form-control input-sm"
-                      placeholder="First Name"
-                      value={name}
-                      onChange={this.onNameChange}
-                    />
-                  </div>
-                </div>
-                <div className="col-xs-6 col-sm-6 col-md-6">
-                  <div className="form-group">
-                    <input
-                      type="text"
-                      className="form-control input-sm"
-                      placeholder="Last Name"
-                      value={surname}
-                      onChange={this.onSurnameChange}
-                    />
-                  </div>
-                </div>
-              </div>
-
+      <div className="card registerCard  animated bounceInLeft delay-0.5s slow">
+        <div className="card-body">
+          <h3>Register</h3>
+          <div className="row">
+            <div className="col-xs-6 col-sm-6 col-md-6">
               <div className="form-group">
                 <input
-                  type="email"
+                  type="text"
                   className="form-control input-sm"
-                  placeholder="Email Address"
-                  value={email}
-                  onChange={this.onEmailChange}
+                  placeholder="First Name"
+                  value={name}
+                  onChange={this.onNameChange}
                 />
               </div>
-
-              <div className="row">
-                <div className="col-xs-6 col-sm-6 col-md-6">
-                  <div className="form-group">
-                    <input
-                      type="password"
-                      className="form-control input-sm"
-                      placeholder="Password"
-                      value={password}
-                      onChange={this.onPasswordChange}
-                    />
-                  </div>
-                </div>
-                <div className="col-xs-6 col-sm-6 col-md-6">
-                  <div className="form-group">
-                    <input
-                      type="password"
-                      className="form-control input-sm"
-                      placeholder="Confirm Password"
-                      value={passwordControl}
-                      onChange={this.onPasswordControlChange}
-                    />
-                  </div>
-                </div>
+            </div>
+            <div className="col-xs-6 col-sm-6 col-md-6">
+              <div className="form-group">
+                <input
+                  type="text"
+                  className="form-control input-sm"
+                  placeholder="Last Name"
+                  value={surname}
+                  onChange={this.onSurnameChange}
+                />
               </div>
-              {password !== passwordControl && (
-                <span style={{ color: "red" }}>Passwords don´t match</span>
-              )}
-
-              <button
-                disabled={
-                  name.length === 0 ||
-                  surname.length === 0 ||
-                  email.length === 0 ||
-                  password === "" ||
-                  passwordControl === "" ||
-                  password != passwordControl
-                }
-                onClick={this.register}
-                className="btn text-light registerButton btn-block my-2 my-sm-0"
-              >
-                Register
-              </button>
-              <p className="forgot-password text-right">
-                Already have an account? <a href="#" onClick={() =>notRegistered()}>Login!</a>
-              </p>
             </div>
           </div>
+
+          <div className="form-group">
+            <input
+              type="email"
+              className="form-control input-sm"
+              placeholder="Email Address"
+              value={email}
+              onChange={this.onEmailChange}
+            />
+            
+              <span className="text-danger">{this.state.error}</span>
+            
+          </div>
+
+          <div className="row">
+            <div className="col-xs-6 col-sm-6 col-md-6">
+              <div className="form-group">
+                <input
+                  type="password"
+                  className="form-control input-sm"
+                  placeholder="Password"
+                  value={password}
+                  onChange={this.onPasswordChange}
+                />
+              </div>
+            </div>
+            <div className="col-xs-6 col-sm-6 col-md-6">
+              <div className="form-group">
+                <input
+                  type="password"
+                  className="form-control input-sm"
+                  placeholder="Confirm Password"
+                  value={passwordControl}
+                  onChange={this.onPasswordControlChange}
+                />
+              </div>
+            </div>
+          </div>
+          {password !== passwordControl && (
+            <span style={{ color: "red" }}>Passwords don´t match</span>
+          )}
+
+          <button
+            disabled={
+              name.length === 0 ||
+              surname.length === 0 ||
+              email.length === 0 ||
+              password === "" ||
+              passwordControl === "" ||
+              password != passwordControl
+            }
+            onClick={this.register}
+            className="btn text-light registerButton btn-block my-2 my-sm-0"
+          >
+            Register
+          </button>
+          <p className="forgot-password text-right">
+            Already have an account?{" "}
+            <a href="#" onClick={() => notRegistered()}>
+              Login!
+            </a>
+          </p>
+        </div>
+      </div>
     );
   }
 }

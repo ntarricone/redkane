@@ -21,11 +21,12 @@ multimediaController.createArticle = (request, response) => {
 
   if (token) {
     const path = request.file.filename;
-    const { title, category, type, textArea, description } = request.body;
+    const { title, category, type, textArea } = request.body;
     const price = request.body.price ? request.body.price : 0;
-    // console.log(price)
 
     const [language] = lngDetector.detect(description);
+    let description = request.body.description.replace("'", " //");
+
     const sql = `
     INSERT
     INTO multimedia (path, title, type, category, price, textArea, description, language, id)
@@ -68,10 +69,14 @@ multimediaController.createImage = (request, response) => {
 
   if (token) {
     const path = request.file.filename;
-    const { title, type, description } = request.body;
+    const { title, type } = request.body;
     const price = request.body.price ? request.body.price : 0;
     // console.log(price)
     const category = request.body.category? request.body.category : "other";
+    let description = request.body.description.replace(/'/g, "1!1");
+    
+    console.log(description)
+
     const [language] = lngDetector.detect(description);
     const sql = `
     INSERT
@@ -801,7 +806,7 @@ multimediaController.getUserPurchases = (request, response) => {
       `
       SELECT title, description, time, path, type, price, category, textArea, multimedia.multimediaId, id, paypalId
       FROM multimedia 
-      LEFT JOIN purchases on multimedia.multimediaId = purchases.multimediaId 
+      LEFT JOIN purchases ON multimedia.multimediaId = purchases.multimediaId 
       WHERE purchases.idBuyer = ${id} ORDER BY TIME DESC;
         `,
       (error, results) => {

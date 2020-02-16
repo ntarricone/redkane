@@ -19,16 +19,19 @@ import { Link } from "react-router-dom";
 import linkedinIcon from "../../../../../icons/linkedin2.png";
 import youtubeIcon from "../../../../../icons/youtube2.png";
 import deleteIcon from "../../../../../icons/trash.png";
+import deleteIconWhite from "../../../../../icons/whiteTrash.png";
 import editIcon from "../../../../../icons/edit.png";
+import editIconWhite from "../../../../../icons/whiteEdit.png";
 import swal from "sweetalert";
 import history from "../../../../../history";
 import logoKane from "../../../../../images/logoKane.png";
 import like from "../../../../../icons/like.png";
+import whiteLike from "../../../../../icons/whiteLike.png";
+import whiteLiked from "../../../../../icons/whiteLiked.png";
 import liked from "../../../../../icons/liked.png";
 import YouTube from "react-youtube";
 import { PayPalButton } from "react-paypal-button-v2";
 import ClapButton from "react-clap-button";
-
 
 class SingleMultimedia extends React.PureComponent {
   id_multimedia = this.props.match.params.id;
@@ -213,7 +216,7 @@ class SingleMultimedia extends React.PureComponent {
         event.target.stopVideo();
         this.setState({ isVideoTimeUp: true });
         console.log(this.state.isVideoTimeUp);
-      }, 1000);
+      }, 15000);
     }
   }
 
@@ -288,377 +291,423 @@ class SingleMultimedia extends React.PureComponent {
     return (
       <>
         {/* TITLE */}
-        <div className="container">
-          <div className="row">
-            <div className="col-1"></div>
-            <div className="col-10" style={{ marginTop: "8%" }}>
-              <div className="row ml-1">
-                <div>
-                  <h5 className="subtitle">{category.toUpperCase()}</h5>
-                  <h1>{title}</h1>
-                  
-
+        <div
+          className="container-fluid"
+          style={{
+            color: category == "redkaneLive" ? "white" : "",
+            backgroundColor: category == "redkaneLive" ? "black" : ""
+          }}
+        >
+          <div className="container">
+            <div className="row">
+              <div className="col-1"></div>
+              <div className="col-10" style={{ marginTop: "8%" }}>
+                <div className="row ml-1">
+                  <div>
+                    <h5>
+                      <i>{category.toUpperCase()}</i>
+                    </h5>
+                    <h1>
+                      <strong>{title}</strong>
+                    </h1>
+                  </div>
                 </div>
               </div>
+              <div className="col-1"></div>
             </div>
-            <div className="col-1"></div>
           </div>
-        </div>
 
-        {/* USER */}
-        <div className="container mt-2">
-          <div className="row">
-            <div className="col-1">
-              {/* LIKE BUTTON  */}
-              {/* <ClapButton
-                    count={0}
-                    countTotal={0}
-                    maxCount={50}
-                    isClicked={false}
-                    // onCountChange={onCountChange}
-                  
-                  /> */}
-              <label htmlFor="">
-                {/* add btn to hide */}
-                <button
-                  className="btn"
-                  style={{ position: "fixed", zIndex: "10" }}
-                >
-                  {isLiked ? (
-                    <img
-                      src={liked}
-                      alt=""
-                      style={{ position: "fixed" }}
-                      className="iconsSize"
-                      onClick={this.likeDislike}
-                    />
-                  ) : (
-                    <img
-                      src={like}
-                      alt=""
-                      style={{ position: "fixed" }}
-                      className="iconsSize"
-                      onClick={this.likeDislike}
-                    />
-                  )}
+          {/* USER */}
+          <div className="container mt-2">
+            <div className="row">
+              <div className="col-1">
+                {/* LIKE BUTTON  */}
 
-                  <small>
-                    <span style={{ position: "fixed" }} className="mt-3 ml-5">
-                      {likes}
-                    </span>
-                  </small>
-                </button>
-              </label>
-            </div>
-            <div className="col-1">
-              <label htmlFor="">
-                <Link to={`/updateProfile/${idCreator}`}>
+                <label htmlFor="">
+                  {/* add btn to hide */}
+                  <button
+                    className="btn"
+                    style={{ position: "fixed", zIndex: "10" }}
+                  >
+                    {isLiked && category != "redkaneLive" && (
+                      <img
+                        src={liked}
+                        alt=""
+                        style={{ position: "fixed" }}
+                        className="iconsSize"
+                        onClick={this.likeDislike}
+                      />
+                    )}
+                    {isLiked && category == "redkaneLive" && (
+                      <img
+                        src={whiteLiked}
+                        alt=""
+                        style={{ position: "fixed" }}
+                        className="iconsSize"
+                        onClick={this.likeDislike}
+                      />
+                    )}
+                    {!isLiked && category != "redkaneLive" && (
+                      <img
+                        src={like}
+                        alt=""
+                        style={{ position: "fixed" }}
+                        className="iconsSize"
+                        onClick={this.likeDislike}
+                      />
+                    )}
+                    {!isLiked && category == "redkaneLive" && (
+                      <img
+                        src={whiteLike}
+                        alt=""
+                        style={{ position: "fixed" }}
+                        className="iconsSize"
+                        onClick={this.likeDislike}
+                      />
+                    )}
+
+                    <small>
+                      <span style={{ position: "fixed" }} className="mt-3 ml-5 text-white">
+                        {likes}
+                      </span>
+                    </small>
+                  </button>
+                </label>
+              </div>
+              <div className="col-1">
+                <label htmlFor="">
+                  <Link to={`/updateProfile/${idCreator}`}>
+                    <img
+                      className="multimediaAvatar"
+                      src={API_URL_IMAGES + avatar}
+                      alt=""
+                    />
+                  </Link>
+                </label>
+              </div>
+              <div className="col-3 pl-0">
+                <span id="idUserCreator">
+                  {name} {surname}
+                </span>
+                <br />
+
+                <small className="text-muted">
+                  {new Date(time).toLocaleDateString()}
+                </small>
+              </div>
+
+              <div className="col-4"></div>
+
+              <div className="col-2 iconsDisplay">
+                {idCreator === loggedId && (
                   <img
-                    className="multimediaAvatar"
-                    src={API_URL_IMAGES + avatar}
+                    onClick={() => this.deleteMultimedia(this.id_multimedia)}
+                    className="iconsSize"
+                    src={deleteIcon}
                     alt=""
                   />
-                </Link>
-              </label>
-            </div>
-            <div className="col-3 pl-0">
-              <span id="idUserCreator">
-                {name} {surname}
-              </span>
-              <br />
-
-              <small className="text-muted">
-                {new Date(time).toLocaleDateString()}
-              </small>
-            </div>
-
-            <div className="col-4"></div>
-
-            <div className="col-2 iconsDisplay">
-              {idCreator === loggedId && (
-                <img
-                  onClick={() => this.deleteMultimedia(this.id_multimedia)}
-                  className="iconsSize"
-                  src={deleteIcon}
-                  alt=""
-                />
-              )}
-              {linkedin && (
-                <a href={linkedin}>
-                  <img className="iconsSize" src={linkedinIcon} alt="" />{" "}
-                </a>
-              )}
-              {youtube && (
-                <a href={youtube}>
-                  <img className="iconsSize" src={youtubeIcon} alt="" />{" "}
-                </a>
-              )}
-            </div>
-          </div>
-
-          <div className="col-1"></div>
-        </div>
-        {/* multimedia */}
-        {path.includes("youtu") ? (
-          <div className="container mt-5">
-            <div className="row">
-              <div className="col-1"></div>
-              <div className="col-10">
-                {!isVideoTimeUp && (
-                  <YouTube
-                    opts={opts}
-                    videoId={getYoutubeId(path)}
-                    // onReady={this._onReady}
-                    onPlay={this.playVideo}
+                )}
+                {idCreator === loggedId && category == "redkaneLive" && (
+                  <img
+                    onClick={() => this.deleteMultimedia(this.id_multimedia)}
+                    className="iconsSize"
+                    src={deleteIconWhite}
+                    alt=""
                   />
                 )}
-                <div>
-                  <div
-                    className="container "
-                    style={{ display: "flex", placeContent: "flex-end" }}
-                  >
-                    <div className="row">
-                      {price !== 0 &&
-                        idCreator !== loggedId &&
-                        type !== "article" && (
-                          <h4 className="pr-3">{`($${price})`}</h4>
-                        )}
-                    </div>
-                  </div>
-                </div>
-
-                {isVideoTimeUp && (
-                  <div className="animated fadeInDown slower text-center">
-                    <h3 className="">Do you like what you are seeing?</h3>
-                    <img src={logoKane} alt="" className="watermark" />
-                    <div
-                      className="mt-2"
-                      style={{ width: "30%", marginLeft: "35%" }}
-                    >
-                      <PayPalButton
-                        style={{ layout: "horizontal", color: "black" }}
-                        clientId={PAYPAL_CLIENT_ID}
-                        amount={`${price}`}
-                        // shippingPreference="NO_SHIPPING" // default is "GET_FROM_FILE"
-                        onSuccess={(details, data) => {
-                          console.log(details);
-                          console.log(data);
-                          swal({
-                            title: "Success!",
-                            text: "Thanks for your purchase!",
-                            icon: "success",
-                            timer: 4000
-                          });
-                          const { orderID } = data;
-                          // OPTIONAL: Call your server to save the transaction
-                          this.savePurchaseInDDBB(orderID);
-                        }}
-                      />
-                    </div>
-                    <span className="text-center">
-                      Take me back to the{" "}
-                      <a
-                        onClick={() => this.setState({ isVideoTimeUp: false })}
-                        href="#"
-                      >
-                        preview
-                      </a>
-                    </span>
-                  </div>
+                {linkedin && (
+                  <a href={linkedin}>
+                    <img className="iconsSize" src={linkedinIcon} alt="" />{" "}
+                  </a>
+                )}
+                {youtube && (
+                  <a href={youtube}>
+                    <img className="iconsSize" src={youtubeIcon} alt="" />{" "}
+                  </a>
                 )}
               </div>
-              <div className="col-1"></div>
-            </div>
-          </div>
-        ) : (
-          <div className="container mt-5">
-            <div className="row">
-              <div className="col-1"></div>
-              <div className="col-10">
-                <div
-                  className="multimediaImage"
-                  style={{
-                    backgroundImage: `url(${API_URL_MULTIMEDIA + path})`,
-                    backgroundRepeat: "no-repeat"
-                  }}
-                >
-                  {/* WATERMARK */}
-                  {price !== 0 &&
-                    type === "image" &&
-                    idCreator !== loggedId &&
-                    !isPurchased && (
-                      <img src={logoKane} alt="" className="watermark" />
-                    )}
-                </div>
-              </div>
-              <div className="col-1"></div>
-            </div>
-          </div>
-        )}
-
-        {/* PAYPAL BUTTON */}
-        <div className="container">
-          <div className="row">
-            <div className="col-1"></div>
-            <div className="col-6"></div>
-            <div className="col-1">
-              {!path.includes("youtu") &&
-                type === "image" &&
-                price !== 0 &&
-                idCreator !== loggedId &&
-                !isPurchased && <h4 className="pl-3 mt-2">{`($${price})`}</h4>}
             </div>
 
-            <div className="col-3 mt-2">
-              {!path.includes("youtu") &&
-                type === "image" &&
-                price !== 0 &&
-                idCreator !== loggedId &&
-                !isPurchased && (
-                  <PayPalButton
-                    style={{ layout: "horizontal", color: "black" }}
-                    clientId={PAYPAL_CLIENT_ID}
-                    amount={`${price}`}
-                    onSuccess={(details, data) => {
-                      console.log(details);
-                      console.log(data);
-                      swal({
-                        title: "Success!",
-                        text: "Thanks for your purchase!",
-                        icon: "success",
-                        timer: 4000
-                      });
-                      const { orderID } = data;
-                      // Call server to save the transaction
-                      this.savePurchaseInDDBB(orderID);
-                    }}
-                  />
-                )}
-              {isPurchased && (
-                <span className="badge badge-success badgeMargin">
-                  purchased
-                </span>
-              )}
-              {price === 0 && (
-                <span className="badge badge-warning badgeMargin">free</span>
-              )}
-            </div>
             <div className="col-1"></div>
           </div>
-        </div>
-        {/* DESCRIPTION  */}
-
-        <div className="container">
-          <div className="row">
-            <div className="col-1"></div>
-            <div className="col-10">
+          {/* multimedia */}
+          {path.includes("youtu") ? (
+            <div className="container mt-2">
               <div className="row">
-                <h3 className="ml-3">Summary </h3>
-
-                {idCreator === loggedId && (
-                  <Link to={`/uploadArticle/${this.id_multimedia}`}>
-                    <small>
-                      <img className="iconsSize" src={editIcon} alt="" />
-                    </small>
-                  </Link>
-                )}
-              </div>
-              <hr />
-              <p>{description}</p>
-            </div>
-
-            <div className="col-1"></div>
-          </div>
-        </div>
-
-        {/* TEXT  */}
-
-        <div className="container ">
-          <div className="row">
-            <div className="col-1"></div>
-
-            {type === "article" && (
-              <div className="col-10">
-                <h3>Content</h3>
-                <hr />
-                {(price === 0) | isPurchased | (idCreator === loggedId) ? (
-                  <p className="animated bounceInUp slower">
-                    {ReactHtmlParser(`${textArea}`)}
-                  </p>
-                ) : (
+                <div className="col-1"></div>
+                <div className="col-10">
+                  {!isVideoTimeUp && (
+                    <YouTube
+                      opts={opts}
+                      videoId={getYoutubeId(path)}
+                      // onReady={this._onReady}
+                      onPlay={this.playVideo}
+                    />
+                  )}
                   <div>
-                    <div className="paypalButtonArticle">
-                      <h1 style={{ marginLeft: "38%" }}>{`-$${price}-`}</h1>
-                      <PayPalButton
-                        style={{ layout: "horizontal", color: "black" }}
-                        clientId={PAYPAL_CLIENT_ID}
-                        amount={`${price}`}
-                        onSuccess={(details, data) => {
-                          console.log(details);
-                          console.log(data);
-                          swal({
-                            title: "Success!",
-                            text: "Thanks for your purchase!",
-                            icon: "success",
-                            timer: 4000
-                          });
-                          const { orderID } = data;
-                          // Call server to save the transaction
-                          this.savePurchaseInDDBB(orderID);
-                        }}
-                      />
+                    <div
+                      className="container "
+                      style={{ display: "flex", placeContent: "flex-end" }}
+                    >
+                      <div className="row">
+                        {price !== 0 &&
+                          idCreator !== loggedId &&
+                          type !== "article" && (
+                            <h4 className="pr-3">{`($${price})`}</h4>
+                          )}
+                      </div>
                     </div>
-                    <p className="blurredtext ">
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                      sed do eiusmod tempor incididunt ut labore et dolore magna
-                      aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                      ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                      Duis aute irure dolor in reprehenderit in voluptate velit
-                      esse cillum dolore eu fugiat nulla pariatur. Excepteur
-                      sint occaecat cupidatat non proident, sunt in culpa qui
-                      officia deserunt mollit anim id est laborum." Section
-                      1.10.32 of "de Finibus Bonorum et Malorum", written by
-                      Cicero in 45 BC "Sed ut perspiciatis unde omnis iste natus
-                      error sit voluptatem accusantium doloremque laudantium,
-                      totam rem aperiam, eaque ipsa quae ab illo inventore
-                      veritatis et quasi architecto beatae vitae dicta sunt
-                      explicabo. Nemo enim ipsam voluptatem quia voluptas sit
-                      aspernatur aut odit aut fugit, sed quia consequuntur magni
-                      dolores eos qui ratione voluptatem sequi nesciunt. Neque
-                      porro quisquam est, qui dolorem ipsum quia dolor sit amet,
-                      consectetur, adipisci velit, sed quia non numquam eius
-                      modi tempora incidunt ut labore et dolore magnam aliquam
-                      quaerat voluptatem. Ut enim ad minima veniam, quis nostrum
-                      exercitationem ullam corporis suscipit laboriosam, nisi ut
-                      aliquid ex ea commodi consequatur? Quis autem vel eum iure
-                      reprehenderit qui in ea voluptate velit esse quam nihil
-                      molestiae consequatur, vel illum qui dolorem eum fugiat
-                      quo voluptas nulla pariatur?" 1914 translation by H.
-                      Rackham "But I must explain to you how all this mistaken
-                      idea of denouncing pleasure and praising pain was born and
-                      I will give you a complete account of the system, and
-                      expound the actual teachings of the great explorer of the
-                      truth, the master-builder of human happiness. No one
-                      rejects, dislikes, or avoids pleasure itself, because it
-                      is pleasure, but because those who do not know how to
-                      pursue pleasure rationally encounter consequences that are
-                      extremely painful. Nor again is there anyone who loves or
-                      pursues or desires to obtain pain of itself, because it is
-                      pain, but because occasionally circumstances occur in
-                      which toil and pain can procure him some great pleasure.
-                      To take a trivial example, which of us ever undertakes
-                      laborious physical exercise, except to obtain some
-                      advantage from it? But who has any right to find fault
-                      with a man who chooses to enjoy a pleasure that has no
-                      annoying consequences, or one who avoids a pain that
-                      produces no resultant pleasure?"
-                    </p>
                   </div>
+
+                  {isVideoTimeUp && (
+                    <div className="animated fadeInDown slower text-center">
+                      <h3 className="">Do you like what you are seeing?</h3>
+                      <img src={logoKane} alt="" className="watermark" />
+                      <div
+                        className="mt-2"
+                        style={{ width: "30%", marginLeft: "35%" }}
+                      >
+                        <PayPalButton
+                          style={{ layout: "horizontal", color: "black" }}
+                          clientId={PAYPAL_CLIENT_ID}
+                          amount={`${price}`}
+                          // shippingPreference="NO_SHIPPING" // default is "GET_FROM_FILE"
+                          onSuccess={(details, data) => {
+                            console.log(details);
+                            console.log(data);
+                            swal({
+                              title: "Success!",
+                              text: "Thanks for your purchase!",
+                              icon: "success",
+                              timer: 4000
+                            });
+                            const { orderID } = data;
+                            // OPTIONAL: Call your server to save the transaction
+                            this.savePurchaseInDDBB(orderID);
+                          }}
+                        />
+                      </div>
+                      <span className="text-center">
+                        Take me back to the{" "}
+                        <a
+                          onClick={() =>
+                            this.setState({ isVideoTimeUp: false })
+                          }
+                          href="#"
+                        >
+                          preview
+                        </a>
+                      </span>
+                    </div>
+                  )}
+                </div>
+                <div className="col-1"></div>
+              </div>
+            </div>
+          ) : (
+            <div className="container mt-5">
+              <div className="row">
+                <div className="col-1"></div>
+                <div className="col-10">
+                  <div
+                    className="multimediaImage"
+                    style={{
+                      backgroundImage: `url(${API_URL_MULTIMEDIA + path})`,
+                      backgroundRepeat: "no-repeat"
+                    }}
+                  >
+                    {/* WATERMARK */}
+                    {price !== 0 &&
+                      type === "image" &&
+                      idCreator !== loggedId &&
+                      !isPurchased && (
+                        <img src={logoKane} alt="" className="watermark" />
+                      )}
+                  </div>
+                </div>
+                <div className="col-1"></div>
+              </div>
+            </div>
+          )}
+
+          {/* PAYPAL BUTTON */}
+          <div className="container">
+            <div className="row">
+              <div className="col-1"></div>
+              <div className="col-6"></div>
+              <div className="col-1">
+                {!path.includes("youtu") &&
+                  type === "image" &&
+                  price !== 0 &&
+                  idCreator !== loggedId &&
+                  !isPurchased && (
+                    <h4 className="pl-3 mt-2">{`($${price})`}</h4>
+                  )}
+              </div>
+
+              <div className="col-3 mt-2">
+                {!path.includes("youtu") &&
+                  type === "image" &&
+                  price !== 0 &&
+                  idCreator !== loggedId &&
+                  !isPurchased && (
+                    <PayPalButton
+                      style={{ layout: "horizontal", color: "black" }}
+                      clientId={PAYPAL_CLIENT_ID}
+                      amount={`${price}`}
+                      onSuccess={(details, data) => {
+                        console.log(details);
+                        console.log(data);
+                        swal({
+                          title: "Success!",
+                          text: "Thanks for your purchase!",
+                          icon: "success",
+                          timer: 4000
+                        });
+                        const { orderID } = data;
+                        // Call server to save the transaction
+                        this.savePurchaseInDDBB(orderID);
+                      }}
+                    />
+                  )}
+                {isPurchased && (
+                  <span className="badge badge-success badgeMargin">
+                    purchased
+                  </span>
+                )}
+                {idCreator === loggedId && (
+                  <span className="badge badge-success badgeMargin">owner</span>
+                )}
+                {price === 0 && (
+                  <span className="badge badge-warning badgeMargin">free</span>
                 )}
               </div>
-            )}
+              <div className="col-1"></div>
+            </div>
+          </div>
+          {/* DESCRIPTION  */}
 
-            <div className="col-1"></div>
+          <div className="container">
+            <div className="row">
+              <div className="col-1"></div>
+              <div className="col-10">
+                <div className="row">
+                  <h3 className="ml-3">Summary </h3>
+
+                  {idCreator === loggedId && (
+                    <Link to={`/uploadArticle/${this.id_multimedia}`}>
+                      <small>
+                        <img className="iconsSize" src={editIcon} alt="" />
+                      </small>
+                    </Link>
+                  )}
+                  {idCreator === loggedId && category == "redkaneLive" && (
+                    <Link to={`/uploadArticle/${this.id_multimedia}`}>
+                      <small>
+                        <img className="iconsSize" src={editIconWhite} alt="" />
+                      </small>
+                    </Link>
+                  )}
+                </div>
+                <hr />
+                <p>{description}</p>
+              </div>
+
+              <div className="col-1"></div>
+            </div>
+          </div>
+
+          {/* TEXT  */}
+
+          <div className="container ">
+            <div className="row">
+              <div className="col-1"></div>
+
+              {type === "article" && (
+                <div className="col-10">
+                  <h3>Content</h3>
+                  <hr />
+                  {(price === 0) | isPurchased | (idCreator === loggedId) ? (
+                    <p className="animated bounceInUp slower">
+                      {ReactHtmlParser(`${textArea}`)}
+                    </p>
+                  ) : (
+                    <div>
+                      <div className="paypalButtonArticle">
+                        <h1 style={{ marginLeft: "38%" }}>{`-$${price}-`}</h1>
+                        <PayPalButton
+                          style={{ layout: "horizontal", color: "black" }}
+                          clientId={PAYPAL_CLIENT_ID}
+                          amount={`${price}`}
+                          onSuccess={(details, data) => {
+                            console.log(details);
+                            console.log(data);
+                            swal({
+                              title: "Success!",
+                              text: "Thanks for your purchase!",
+                              icon: "success",
+                              timer: 4000
+                            });
+                            const { orderID } = data;
+                            // Call server to save the transaction
+                            this.savePurchaseInDDBB(orderID);
+                          }}
+                        />
+                      </div>
+                      <p className="blurredtext ">
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+                        sed do eiusmod tempor incididunt ut labore et dolore
+                        magna aliqua. Ut enim ad minim veniam, quis nostrud
+                        exercitation ullamco laboris nisi ut aliquip ex ea
+                        commodo consequat. Duis aute irure dolor in
+                        reprehenderit in voluptate velit esse cillum dolore eu
+                        fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+                        non proident, sunt in culpa qui officia deserunt mollit
+                        anim id est laborum." Section 1.10.32 of "de Finibus
+                        Bonorum et Malorum", written by Cicero in 45 BC "Sed ut
+                        perspiciatis unde omnis iste natus error sit voluptatem
+                        accusantium doloremque laudantium, totam rem aperiam,
+                        eaque ipsa quae ab illo inventore veritatis et quasi
+                        architecto beatae vitae dicta sunt explicabo. Nemo enim
+                        ipsam voluptatem quia voluptas sit aspernatur aut odit
+                        aut fugit, sed quia consequuntur magni dolores eos qui
+                        ratione voluptatem sequi nesciunt. Neque porro quisquam
+                        est, qui dolorem ipsum quia dolor sit amet, consectetur,
+                        adipisci velit, sed quia non numquam eius modi tempora
+                        incidunt ut labore et dolore magnam aliquam quaerat
+                        voluptatem. Ut enim ad minima veniam, quis nostrum
+                        exercitationem ullam corporis suscipit laboriosam, nisi
+                        ut aliquid ex ea commodi consequatur? Quis autem vel eum
+                        iure reprehenderit qui in ea voluptate velit esse quam
+                        nihil molestiae consequatur, vel illum qui dolorem eum
+                        fugiat quo voluptas nulla pariatur?" 1914 translation by
+                        H. Rackham "But I must explain to you how all this
+                        mistaken idea of denouncing pleasure and praising pain
+                        was born and I will give you a complete account of the
+                        system, and expound the actual teachings of the great
+                        explorer of the truth, the master-builder of human
+                        happiness. No one rejects, dislikes, or avoids pleasure
+                        itself, because it is pleasure, but because those who do
+                        not know how to pursue pleasure rationally encounter
+                        consequences that are extremely painful. Nor again is
+                        there anyone who loves or pursues or desires to obtain
+                        pain of itself, because it is pain, but because
+                        occasionally circumstances occur in which toil and pain
+                        can procure him some great pleasure. To take a trivial
+                        example, which of us ever undertakes laborious physical
+                        exercise, except to obtain some advantage from it? But
+                        who has any right to find fault with a man who chooses
+                        to enjoy a pleasure that has no annoying consequences,
+                        or one who avoids a pain that produces no resultant
+                        pleasure?"
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              <div className="col-1"></div>
+            </div>
           </div>
         </div>
       </>

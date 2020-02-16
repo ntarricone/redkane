@@ -11,7 +11,7 @@
   import ContentUploader from "../ContentUploader/ContentUploader";
   import { decode }from 'jsonwebtoken';
   import redkaneNav from "../../../images/redkaneNav.png"
-  import redkaneLive from "../../../images/redkaneLive.png"
+  import redkaneLive from "../../../images/kanelive.png"
 
   interface IProps {}
   interface IGlobalStateProps {
@@ -72,7 +72,7 @@
               <ul className="navbar-nav mr-auto"></ul>
               <Link to={`/redkaneLive/${account?.id}`} className="navbar-brand" href="#">
               <img
-                style={{ height: "4.5vh" }}
+                style={{ height: "4vh" }}
                 src={redkaneLive}
                 alt=""
               />
@@ -83,7 +83,7 @@
 
               {!account?.avatar ? (
                 <img
-                  style={{ height: "6vh", width: "3vw", borderRadius: "50%" }}
+                  style={{ height: "40px", width: "40px", borderRadius: "50%" }}
                   data-toggle="dropdown"
                   aria-haspopup="true"
                   aria-expanded="false"
@@ -91,7 +91,7 @@
                 />
               ) : (
                 <img
-                  style={{ height: "6vh", width: "3vw", borderRadius: "50%" }}
+                  style={{ height: "40px", width: "40px", borderRadius: "50%" }}
                   data-toggle="dropdown"
                   aria-haspopup="true"
                   aria-expanded="false"

@@ -4,12 +4,6 @@
   border-radius: 50%;
 }
 
-.subtitle {
-  background-color: #2d2d2d;
-  color: white;
-  display: -webkit-inline-box;
-}
-
 .iconsDisplay {
   display: flex;
   flex-direction: row-reverse;

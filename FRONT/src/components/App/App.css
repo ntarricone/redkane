@@ -2,6 +2,16 @@
   text-align: center;
 }
 
+.form-control:focus{
+  border-color: #9c182b !important;
+  box-shadow: 1px 0px 8px 0rem black !important;
+}
+
+a:hover {
+  color: #f00 !important;
+  text-decoration: underline !important;
+}
+
 
 .marginTopUploader{
   margin-top: 10vh !important;

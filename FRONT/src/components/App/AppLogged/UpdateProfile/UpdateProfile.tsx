@@ -25,6 +25,7 @@ import { decode } from "jsonwebtoken";
 import BecomeCreator from "./BecomeCreator/BecomeCreator";
 import MultimediaView from "../MultimediaViews/MultimediaView";
 
+
 interface IProps {}
 interface IGlobalStateProps {
   account: IAccount;
@@ -38,6 +39,8 @@ interface IGlobalActionProps {
 }
 
 interface IState {
+  name: string;
+  surname: string;
   banner: string;
   avatar: string;
   avatarChosen: string;
@@ -47,7 +50,7 @@ interface IState {
 
 type TProps = IGlobalStateProps & IGlobalActionProps & IProps;
 
-class UpdateProfile extends React.Component<TProps, IState> {
+class UpdateProfile extends React.PureComponent<TProps, IState> {
   userId = history.location.pathname.split("/").slice(-1)[0];
   fileInputRef: React.RefObject<HTMLInputElement>;
   fileInputRef2: React.RefObject<HTMLInputElement>;
@@ -55,6 +58,8 @@ class UpdateProfile extends React.Component<TProps, IState> {
     super(props);
 
     this.state = {
+      name: "",
+      surname: "",
       banner: "",
       avatar: "",
       avatarChosen: "",
@@ -72,6 +77,7 @@ class UpdateProfile extends React.Component<TProps, IState> {
   }
 
   componentDidMount() {
+
     this.setUserProfile();
   }
 
@@ -256,7 +262,7 @@ class UpdateProfile extends React.Component<TProps, IState> {
                 {toggleContent === "multimedia" &&
                 (id != this.userId || account.isCreator) ? (
                   <SettingUserFiles
-                  changeIsFoundToFalse={this.changeIsFoundToFalse}
+                    changeIsFoundToFalse={this.changeIsFoundToFalse}
                     changeIsFoundToTrue={this.changeIsFoundToTrue}
                   ></SettingUserFiles>
                 ) : (
@@ -309,6 +315,9 @@ class UpdateProfile extends React.Component<TProps, IState> {
                   ((account.isCreator && id == this.userId) ||
                   id != this.userId ? (
                     <div className="container">
+                      <h2 className="text-center mb-4 pt-1"
+                        style={{ marginTop: "-40px" }}
+                      ><u>{`${this.state.name} ${this.state.surname}`}</u></h2>
                       <div className="row">
                         {files.order.map(id => (
                           <div key={id} className="col-sm-6 col-md-4 col-12 ">

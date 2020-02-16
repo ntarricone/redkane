@@ -2,6 +2,8 @@ import { API_URL } from "./constants";
 import { IAccount } from "./interfaces/IAccount";
 import { decode } from "jsonwebtoken";
 
+
+//function to fetch information, similar to axios
 export const myFetch = async ({
   method = "GET",
   path,
