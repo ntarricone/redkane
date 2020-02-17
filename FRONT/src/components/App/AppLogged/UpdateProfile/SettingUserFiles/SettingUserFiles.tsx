@@ -1,5 +1,4 @@
 import React from "react";
-import ContentUploader from "../../../../shared/ContentUploader/ContentUploader";
 import Filter from "../../../../shared/Filter/Filter";
 import { IAccount } from "../../../../../interfaces/IAccount";
 import { connect } from "react-redux";
@@ -55,7 +54,6 @@ class settingFiles extends React.PureComponent<TProps, IState> {
 
   componentDidMount() {
     this.props.unsetFiles();
-    const token = localStorage.getItem("token");
     this.settingFiles(this.state.type);
   }
 
@@ -68,7 +66,6 @@ class settingFiles extends React.PureComponent<TProps, IState> {
     this.props.unsetFiles();
     const token: any = localStorage.getItem("token");
     this.setState({ type: type, category: "" });
-    console.log(type);
     setTimeout(
       ({ setFiles } = this.props) =>
         myFetch({
@@ -77,8 +74,6 @@ class settingFiles extends React.PureComponent<TProps, IState> {
           json: { type },
           token
         }).then(files => {
-          console.log("entri");
-          console.log(files);
           if (files) {
             setFiles(files);
             console.log(files);
@@ -95,8 +90,6 @@ class settingFiles extends React.PureComponent<TProps, IState> {
   settingCategoryByUser() {
     this.props.unsetFiles();
     const { category, type } = this.state;
-    console.log(category);
-    // this.setState({ hasMore: false });
     const token: any = localStorage.getItem("token");
     const { setFiles } = this.props;
     if (this.state.type !== "purchases"){
@@ -141,11 +134,8 @@ class settingFiles extends React.PureComponent<TProps, IState> {
           path: `/multimedia/userPurchases/${this.userId}`,
           token
         }).then(files => {
-          console.log("entri");
-          console.log(files);
           if (files) {
             setFiles(files);
-            console.log(files);
             this.props.changeIsFoundToTrue()
           }else{
             this.props.changeIsFoundToFalse()
@@ -155,7 +145,6 @@ class settingFiles extends React.PureComponent<TProps, IState> {
     );
   }
   render() {
-    const { files } = this.props;
     const { type } = this.state;
     const token: any = localStorage.getItem("token");
     const { id: loggedId }: any = decode(token);
@@ -236,7 +225,7 @@ class settingFiles extends React.PureComponent<TProps, IState> {
                     }, 40);
                   }}
                 >
-                  <option selected>Category...</option>
+                  <option value="default">Category...</option>
                   <option value="environmet">environmet</option>
                   <option value="politics">politics</option>
                   <option value="sports">sports</option>

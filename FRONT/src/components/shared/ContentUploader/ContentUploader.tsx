@@ -1,7 +1,6 @@
 import React from "react";
 import "./ContentUploader.css";
 import UploadMultimedia from "../../App/AppLogged/UploadMultimedia";
-import UploadArticle from "../../App/AppLogged/UploadArticle";
 import { Link } from "react-router-dom";
 
 interface IGlobalStateProps {}

@@ -1,38 +1,20 @@
-.centerForm{
-    height: 30rem;
-    /* align-items: center; */
-}
-
 .AppUnloggedBackground{
     width: 100%;
     height: 100vh;
-    /* background-color: rgba(211, 211, 211, 0.22); */
-    /* background-image: url("../../../journalism.jpg") ; */
     background-size: cover;
 }
 
-.logo {
-    margin-top: 45px;
-}
-
 .loginContainer {
-    padding-top: 55px;
+    margin-top: 55px;
     display: flex; 
     justify-content: center;
     align-items: center;
 }
 
-.unloggedContainer {
-    height: 97vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
 .appFooter {
     background-color:  #212121;
-    width: 99%;
-    height: 30px;
+    width: 100%;
+    height: 5vh;
   
   } 
   
@@ -41,5 +23,24 @@
     text-align: center;
     justify-content: center;
     font-size: small;
-    margin-top: 5px;
+    margin-top: 10px;
   }
+
+  .footerSpacing{
+      height: 20vh;
+  }
+
+
+
+  @media screen and (max-width: 992px) {
+    .responsive{
+        margin-top: -90px;
+        width: 100%;
+        height: auto;
+      }
+
+      .footerSpacing{
+        height: 5vh;
+    }
+  }
+

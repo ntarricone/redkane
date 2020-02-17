@@ -2,6 +2,8 @@ import { API_URL } from "./constants";
 import { IAccount } from "./interfaces/IAccount";
 import { decode } from "jsonwebtoken";
 
+
+//function to fetch information, similar to axios
 export const myFetch = async ({
   method = "GET",
   path,
@@ -21,26 +23,21 @@ export const myFetch = async ({
   if (json) {
     headers.set("Content-Type", "application/json");
     body = JSON.stringify(json);
-    console.log(body)
   } else if (formData) {
     body = formData;
   }
   if (token) {
-    console.log(token)
     headers.set("Authorization", `Bearer ${token}`);
   }
-  console.log("response")
   const response = await fetch(API_URL + path, {
     method,
     headers,
     body
   });
   try {
-    console.log("esta bienn")
     const json = await response.json();
     return json;
   } catch {
-    console.log("eroooooooooorrrr")
     return null;
   }
 };

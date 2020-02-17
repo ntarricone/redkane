@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import { IStore } from "../../../../interfaces/IStore";
 import { IFile } from "../../../../interfaces/IFile";
 import {
-  API_URL,
   API_URL_MULTIMEDIA,
   API_URL_IMAGES
 } from "../../../../constants";
@@ -13,8 +12,8 @@ import { Link } from "react-router-dom";
 import { SetChosenFileAction } from "../../../../redux/actions";
 import paid from "../../../../icons/money.png";
 import free from "../../../../icons/free.png";
-import saved from "../../../../icons/save-button.png";
-import { decode } from "jsonwebtoken";
+import history from "../../../../history";
+import logoSolo from "../../../../images/logoSolo.png"
 
 interface IGlobalStateProps {}
 
@@ -37,7 +36,9 @@ interface IState {
 
 type TProps = IProps & IGlobalStateProps & IGlobalActionProps;
 
-class MultimediaView extends React.PureComponent<TProps, IState> {
+class MultimediaView extends React.Component<TProps, IState> {
+  isRedkaneLive = history.location.pathname.split("/")[1] === "redkaneLive";
+
   constructor(props: TProps) {
     super(props);
 
@@ -56,7 +57,6 @@ class MultimediaView extends React.PureComponent<TProps, IState> {
     const { file } = this.props;
     const { id, multimediaId } = file;
     const token: any = localStorage.getItem("token");
-    console.log(id);
     this.getUser(id, token);
     this.setPurchaseStatus(multimediaId, token);
   }
@@ -71,7 +71,6 @@ class MultimediaView extends React.PureComponent<TProps, IState> {
 
   getUser(id: number, token: any) {
     myFetch({ path: `/users/${id}`, token }).then(user => {
-      console.log(user);
       this.setState({
         name: user.name,
         surname: user.surname,
@@ -87,27 +86,35 @@ class MultimediaView extends React.PureComponent<TProps, IState> {
   }
   render() {
     const { file } = this.props;
-    const { multimediaId, description, time, price, type } = file;
-    let { path, title } = file;
-    const { name, surname, userId, isPurchased, isAdmin } = this.state;
+    const { multimediaId, price, type } = file;
+    let { path, title, description } = file;
+    description = description?.replace(/1!1/g, "'");
+    const { name, surname, userId, isPurchased } = this.state;
     let { avatar } = this.state;
     path = path ? path : "defaultBanner.jpg";
     avatar = avatar ? avatar : "avatar.png";
     title = title ? title : "TITLE";
-    const token: any = localStorage.getItem("token");
-    const { id: loggedId }: any = decode(token);
+
 
     return (
       <div
-        className="card animated fadeIn delay-0.5s cardStyle"
-        style={{ height: "62vh" }}
+        className={
+          !this.isRedkaneLive
+            ? "card animated fadeIn delay-0.5s cardStyle"
+            : "card animated fadeIn delay-0.5s cardStyleDark"
+        }
+        style={{
+          height: "62vh",
+          backgroundColor: this.isRedkaneLive ? "#00000000" : ""
+        }}
       >
         {path?.includes("youtube") ? (
           <iframe
-            style={{ height: "59%" }}
+          title={this.state.name}
+            style={{ height: "59%", border: "none" }}
             src={`https://www.youtube.com/embed/${getYoutubeId(
               path
-            )}?start=0&end=5`}
+            )}?start=0&end=7`}
             allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
           ></iframe>
         ) : (
@@ -115,70 +122,89 @@ class MultimediaView extends React.PureComponent<TProps, IState> {
             className="card-img-top"
             style={{ height: "50%" }}
             src={`${API_URL_MULTIMEDIA}${path}`}
-            alt="Card image cap"
+            alt="Not found"
           />
         )}
         {/* Title */}
-        <div className="card-body" style={{ backgroundColor: "#fafafa" }}>
-          <Link
+
+        <div
+          className="card-body text-light"
+          style={{
+            backgroundColor: !this.isRedkaneLive ? "#fafafa" : "#101010"
+          }}
+        >
+                  <Link
             to={`/singleMultimedia/${multimediaId}`}
             onClick={() => this.settingFile(file)}
           >
-            <h5 className="card-title text-dark webLinks">
+
+            <h5
+              className={
+                !this.isRedkaneLive
+                  ? "card-text text-dark webLinks"
+                  : "card-text text-light webLinks"
+              }
+              style={{ color: this.isRedkaneLive ? "white" : "" }}
+            >
               {type === "image" && <i className="fas fa-camera"></i>}
-              {/* {type === "video" && <i className="fab fa-youtube"></i>} */}
               {type === "article" && <i className="far fa-newspaper"></i>}
               {" " + title}
             </h5>
-          </Link>
 
-          <p className="card-text text-dark" style={{ minHeight: "8vh" }}>
+          <p
+            className={
+              !this.isRedkaneLive
+                ? "card-text text-dark"
+                : "card-text text-light"
+            }
+            style={{ minHeight: "8vh" }}
+          >
             {" "}
             {description?.substring(0, 100) + "..."}
           </p>
-
-          {/* AVATAR. LIINK TO USER PROFILE */}
+          </Link>
+          {/* AVATAR. LIINK TO USERS MULTIMEDIA */}
           <div className="container-fluid">
             <div className="row" style={{ fontSize: "1.5rem" }}>
-              {!isAdmin ? <div className="col-2">
-                <Link to={`/updateProfile/${userId}`}>
-                  {
-                    <img
-                      data-toggle="tooltip"
-                      data-placement="top"
-                      title={`${name} ${surname}`}
-                      className="cardAvatar"
-                      src={`${API_URL_IMAGES}${avatar}`}
-                    />
-                  }
-                </Link>
-              </div> :
-              <div className="col-2">
-              <img
-              data-toggle="tooltip"
-              data-placement="top"
-              title={`${name} ${surname}`}
-              className="cardAvatar"
-              src={`${API_URL_IMAGES}${avatar}`}
-            />
-            </div>
-              }
+              {!this.isRedkaneLive ? (
+                <div className="col-2">
+                  <Link to={`/updateProfile/${userId}`}>
+                    {
+                      <img
+                        data-toggle="tooltip"
+                        data-placement="top"
+                        title={`${name} ${surname}`}
+                        className="cardAvatar"
+                        src={`${API_URL_IMAGES}${avatar}`}
+                        alt="not found"
+                      />
+                    }
+                  </Link>
+                </div>
+              ) : (
+                <div className="col-2">
+                <img
+                  data-toggle="tooltip"
+                  data-placement="top"
+                  title={`${name} ${surname}`}
+                  className="cardAvatarRK"
+                  src={logoSolo}
+                  alt="not found"
+                />
+                </div>
+              )}
 
               <div className="col-6"></div>
 
+              <div className="col-2"></div>
               <div className="col-2">
-
-              </div>
-              <div className="col-2">
-              {price !== 0 && !isPurchased && loggedId !== userId && (
+                {price !== 0 && !isPurchased && (
                   <img className="iconsSize" src={paid} alt="" />
                 )}
                 {price !== 0 && isPurchased && (
                   <i className="far fa-check-circle text-success"></i>
                 )}
-                {price == 0 && (
-                  <img className="iconsSize" src={free} alt="" />
-                )}
+                {price === 0 && !this.isRedkaneLive && <img className="iconsSize" src={free} alt="" />}
               </div>
             </div>
           </div>
@@ -189,7 +215,10 @@ class MultimediaView extends React.PureComponent<TProps, IState> {
             </small>
           </p>
         </div>
+
+
       </div>
+      
     );
   }
 }

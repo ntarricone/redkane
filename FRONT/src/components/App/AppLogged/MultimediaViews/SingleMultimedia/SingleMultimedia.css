@@ -4,12 +4,6 @@
   border-radius: 50%;
 }
 
-.subtitle {
-  background-color: #2d2d2d;
-  color: white;
-  display: -webkit-inline-box;
-}
-
 .iconsDisplay {
   display: flex;
   flex-direction: row-reverse;
@@ -18,6 +12,7 @@
 
 .multimediaImage {
   background-position: center;
+  background-repeat: no-repeat;
   background-size: 100%;
   height: 50vh;
   display: flex;
@@ -28,7 +23,7 @@
 .watermark {
   height: 70%;
   width: 50%;
-  filter: grayscale(84%);
+  filter: grayscale(21%);
 }
 
 .badgeMargin {
@@ -47,10 +42,59 @@
   user-select: none;
 }
 
+.dugtJJ:focus {
+  outline: 1px dotted;
+}
+
 .paypalButtonArticle {
   margin-top: -14%;
   width: 50%;
   position: relative;
   left: 25%;
   top: 35vh;
+}
+
+@media screen and (max-width: 992px) {
+  .subtitleResponsive {
+    margin-top: 40px;
+  }
+  .multimediaImage {
+    background-position: center;
+    background-size: 100%;
+    height: 50vh;
+    margin-top: -100px;
+    margin-bottom: -80px;
+  }
+
+  .iconsSize {
+    margin-left: 7px;
+  }
+  .likeResponsive {
+    margin-left: -35px;
+  }
+
+  .watermark{
+    height: 34%;
+
+  }
+
+  .likesCount{
+    left: 1px;
+  }
+
+  .paypalButtonArticle {
+    left: 11%;
+}
+.paypalButtonArticle.h1{
+  margin-left: 19%;
+
+}
+.articleTextResponsive{
+  margin-top: -70px;
+}
+
+.badgeMargin {
+  margin-left: 39%;
+  margin-bottom: 16px;
+}
 }

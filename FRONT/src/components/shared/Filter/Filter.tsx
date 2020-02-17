@@ -46,7 +46,7 @@ class Filter extends React.PureComponent<TProps, IState> {
     const token: any = localStorage.getItem("token");
     const { key } = this.state;
     const { setFiles, parent} = this.props;
-    if (parent == "home") {
+    if (parent === "home") {
       myFetch({
         method: "POST",
         path: `/multimedia/searchByWord`,
@@ -58,7 +58,7 @@ class Filter extends React.PureComponent<TProps, IState> {
           this.setState(files);
         }
       });
-    } else if (parent == "user") {
+    } else if (parent === "user") {
       myFetch({
         method: "POST",
         path: `/multimedia/searchByWordAndId/${this.userId}`,
@@ -70,7 +70,7 @@ class Filter extends React.PureComponent<TProps, IState> {
           this.setState(files);
         }
       });
-    }  else if (parent == "redkaneLive") {
+    }  else if (parent === "redkaneLive") {
       myFetch({
         method: "POST",
         path: `/multimedia/searchRedkaneLive`,
@@ -88,8 +88,6 @@ class Filter extends React.PureComponent<TProps, IState> {
   }
 
   render() {
-    const { files } = this.props;
-    const { key } = this.state;
     return (
       <>
               <div className="search">

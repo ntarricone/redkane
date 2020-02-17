@@ -1,6 +1,5 @@
 import React from "react";
 import "./UpdateProfile.css";
-
 import { connect } from "react-redux";
 import { IStore } from "../../../../interfaces/IStore";
 import { IAccount } from "../../../../interfaces/IAccount";
@@ -12,20 +11,15 @@ import {
 } from "../../../../redux/actions";
 import { API_URL_IMAGES } from "../../../../constants";
 import UpdateProfileForm from "./UpdateProfileForm";
-import UserArticles from "./UserArticles";
 import { IFiles } from "../../../../interfaces/IFiles";
 import { IFile } from "../../../../interfaces/IFile";
-import Filter from "../../../shared/Filter/Filter";
 import SettingUserFiles from "./SettingUserFiles/SettingUserFiles";
 import history from "../../../../history";
-import upload from "../../../../icons/upload.png";
-import video from "../../../../icons/video.png";
-import user from "../../../../icons/user.png";
-import buy from "../../../../icons/buy.png";
 import { decode } from "jsonwebtoken";
 import BecomeCreator from "./BecomeCreator/BecomeCreator";
 import MultimediaView from "../MultimediaViews/MultimediaView";
 import UserPurchases from "./UserPurchases";
+
 
 interface IProps {}
 interface IGlobalStateProps {
@@ -40,6 +34,8 @@ interface IGlobalActionProps {
 }
 
 interface IState {
+  name: string;
+  surname: string;
   banner: string;
   avatar: string;
   avatarChosen: string;
@@ -49,7 +45,7 @@ interface IState {
 
 type TProps = IGlobalStateProps & IGlobalActionProps & IProps;
 
-class UpdateProfile extends React.Component<TProps, IState> {
+class UpdateProfile extends React.PureComponent<TProps, IState> {
   userId = history.location.pathname.split("/").slice(-1)[0];
   fileInputRef: React.RefObject<HTMLInputElement>;
   fileInputRef2: React.RefObject<HTMLInputElement>;
@@ -57,6 +53,8 @@ class UpdateProfile extends React.Component<TProps, IState> {
     super(props);
 
     this.state = {
+      name: "",
+      surname: "",
       banner: "",
       avatar: "",
       avatarChosen: "",
@@ -74,6 +72,7 @@ class UpdateProfile extends React.Component<TProps, IState> {
   }
 
   componentDidMount() {
+
     this.setUserProfile();
   }
 
@@ -91,7 +90,6 @@ class UpdateProfile extends React.Component<TProps, IState> {
       (async () => {
         myFetch({ path: `/users/${this.userId}`, token }).then(response => {
           if (response) {
-            console.log(response);
             this.setState(response);
           }
         });
@@ -101,8 +99,6 @@ class UpdateProfile extends React.Component<TProps, IState> {
 
   uploadBanner() {
     const { account, setBanner } = this.props;
-    console.log(this.fileInputRef2.current);
-    console.log(account);
     if (this.fileInputRef2.current?.files?.length && account) {
       const { token } = account;
       const formData = new FormData();
@@ -124,8 +120,6 @@ class UpdateProfile extends React.Component<TProps, IState> {
 
   uploadAvatar() {
     const { account, setAvatar } = this.props;
-    // console.log("entro");
-    console.log(account);
     if (this.fileInputRef.current?.files?.length && account) {
       const { token } = account;
       const formData = new FormData();
@@ -138,7 +132,6 @@ class UpdateProfile extends React.Component<TProps, IState> {
       }).then(({ avatar }) => {
         if (avatar) {
           this.setState({ avatar: avatar });
-          console.log(avatar);
           setAvatar(avatar);
         }
       });
@@ -341,6 +334,9 @@ class UpdateProfile extends React.Component<TProps, IState> {
                   ((account.isCreator && id == this.userId) ||
                   id != this.userId ? (
                     <div className="container">
+                      <h2 className="text-center mb-4 pt-1"
+                        style={{ marginTop: "-40px" }}
+                      ><u>{`${this.state.name} ${this.state.surname}`}</u></h2>
                       <div className="row">
                         {files.order.map(id => (
                           <div key={id} className="col-sm-6 col-md-4 col-12 ">

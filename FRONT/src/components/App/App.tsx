@@ -11,7 +11,6 @@ import UpdateProfile from "./AppLogged/UpdateProfile/UpdateProfile";
 import { decode } from "jsonwebtoken";
 import { Switch, Route, Router } from "react-router-dom";
 import UploadArticle from "./AppLogged/UploadArticle";
-import Home from "./AppLogged/Home";
 import Navbar from "../shared/Navbar/Navbar";
 import history from "../../history"
 import SingleMultimedia from "./AppLogged/MultimediaViews/SingleMultimedia/SingleMultimedia";

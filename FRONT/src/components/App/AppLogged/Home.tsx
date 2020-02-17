@@ -47,15 +47,11 @@ class Home extends React.PureComponent<TProps, IState> {
     this.getFreeContent = this.getFreeContent.bind(this);
     this.settingCategory = this.settingCategory.bind(this);
     this.settingMoreFiles = this.settingMoreFiles.bind(this);
-    this.cookies = this.cookies.bind(this);
     this.changeTypeToDefault = this.changeTypeToDefault.bind(this);
   }
 
   componentDidMount() {
-    // this.props.unsetFiles();
-    const token = localStorage.getItem("token");
     this.settingFiles("");
-    this.cookies();
   }
   
   changeTypeToDefault(){
@@ -66,7 +62,6 @@ class Home extends React.PureComponent<TProps, IState> {
   
 
   settingFiles(type: any) {
-    console.log("Ooooooooooooooooooooooo");
     this.setState({ counter: 9, hasMore: true, type: type, category: "" });
     setTimeout(
       ({ token } = this.props.account, { setFiles } = this.props) =>
@@ -74,8 +69,7 @@ class Home extends React.PureComponent<TProps, IState> {
           path: `/multimedia/${type}`,
           token
         }).then(files => {
-          console.log("entri");
-          console.log(files);
+
           if (files) {
             setFiles(files);
           }
@@ -87,12 +81,10 @@ class Home extends React.PureComponent<TProps, IState> {
   getFreeContent() {
     this.setState({ counter: 9, hasMore: false, price: 0, type: "free", category: "default" });
     const { price } = this.state;
-    const token: any = localStorage.getItem("token");
     setTimeout(
       ({ token } = this.props.account, { setFiles } = this.props) =>
         myFetch({ path: `/multimedia/byPrice/${price}`, token }).then(files => {
-          console.log("entri");
-          console.log(files);
+
           if (files) {
             setFiles(files);
           }
@@ -105,7 +97,6 @@ class Home extends React.PureComponent<TProps, IState> {
   settingCategory(){
     this.props.unsetFiles();
     const { category, type } = this.state;
-    console.log(category)
     this.setState({ hasMore: false });
     const token: any = localStorage.getItem("token");
      const { setFiles } = this.props
@@ -138,9 +129,7 @@ class Home extends React.PureComponent<TProps, IState> {
 
   //GET MORE FILES
   settingMoreFiles() {
-    console.log("more fiiiilesss!!");
-    console.log("ordeeer" + this.props.files.order)
-    console.log("counter" + this.state.counter)
+
     //HERE WE CAN CHANGE TO THE AMOUNT OF FILES WE WANT!
     if (this.props.files.order.length >= 30) {
       this.setState({ hasMore: false });
@@ -148,7 +137,6 @@ class Home extends React.PureComponent<TProps, IState> {
     }
     let { counter } = this.state;
     this.setState({ counter: counter + 3 });
-    console.log(counter);
     const token: any = localStorage.getItem("token");
     const { type, price } = this.state;
     myFetch({
@@ -157,24 +145,16 @@ class Home extends React.PureComponent<TProps, IState> {
       token,
       json: { counter, type, price }
     }).then(files => {
-      console.log("entri");
-      console.log(files);
+
       if (files) {
         this.props.setFiles(files);
       }
     });
   }
 
-  //TODO - COOKIES FOR ARTICLLEEE
-
-  cookies() {
-    document.cookie = "juanitoooo";
-    console.log(document.cookie);
-  }
-
   render() {
     const { files } = this.props;
-    const { category, type } = this.state;
+    const { type } = this.state;
     return (
       <>
         <div className="container">

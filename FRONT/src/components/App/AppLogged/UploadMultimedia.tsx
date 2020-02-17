@@ -1,6 +1,6 @@
 import React from "react";
 import { IStore } from "../../../interfaces/IStore";
-import { myFetch, getYoutubeId } from "../../../utils";
+import { myFetch } from "../../../utils";
 import { connect } from "react-redux";
 import { IAccount } from "../../../interfaces/IAccount";
 import { AddFileAction } from "../../../redux/actions";
@@ -65,7 +65,7 @@ class AploadMultimedia extends React.PureComponent<TProps, IState> {
     const { title, price, description } = this.state;
     let { path, category } = this.state;
     const token: any = localStorage.getItem("token");
-
+    category = category? category : "other";
     if (this.fileInputRef.current?.files?.length && account) {
       const path = this.fileInputRef.current.files[0];
       const formData = new FormData();
@@ -75,14 +75,12 @@ class AploadMultimedia extends React.PureComponent<TProps, IState> {
       formData.append("price", price);
       formData.append("category", category);
       formData.append("description", description);
-      console.log(formData);
       myFetch({
         method: "POST",
         path: "/multimedia/createImage",
         token,
         formData
       }).then(json => {
-        console.log(json);
         if (json) {
           swal({
             title: "Success!",
@@ -96,8 +94,8 @@ class AploadMultimedia extends React.PureComponent<TProps, IState> {
 
       this.setState(initialState);
       this.fileInputRef.current.value = "";
-    } else {
-      category = category? category : "other";
+    } else if(path !== ""){
+
       myFetch({
         path: "/multimedia/createVideo",
         method: "POST",
@@ -114,6 +112,9 @@ class AploadMultimedia extends React.PureComponent<TProps, IState> {
           this.props.addFile(json);
         }
       });
+    }
+    else{
+      window.alert("Please add your multimedia")
     }
   }
 //Preview Image
@@ -176,14 +177,14 @@ class AploadMultimedia extends React.PureComponent<TProps, IState> {
         <div className="form-row">
           <div className="form-group col-md-6">
             <label>Category:</label>
-            {isAdmin == true ? <select
+            {isAdmin ? <select
             required
               className="form-control"
               data-spy="scroll"
               value={this.state.category}
               onChange={e => this.setState({ category: e.target.value })}
             >
-              <option selected>Choose...</option>
+              <option value = "default">Choose...</option>
               <option value="environmet">environmet</option>
               <option value="politics">politics</option>
               <option value="sports">sports</option>
@@ -203,7 +204,7 @@ class AploadMultimedia extends React.PureComponent<TProps, IState> {
               value={this.state.category}
               onChange={e => this.setState({ category: e.target.value })}
             >
-              <option selected>Choose...</option>
+              <option value = "default">Choose...</option>
               <option value="environmet">environmet</option>
               <option value="politics">politics</option>
               <option value="sports">sports</option>
