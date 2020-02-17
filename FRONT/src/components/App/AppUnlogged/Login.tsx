@@ -40,18 +40,15 @@ class Login extends React.PureComponent<TProps, IState> {
 
   onEmailChange(event: any) {
     const email = event.target.value;
-    console.log(email);
     this.setState({ email, error: "" });
   }
 
   onPasswordChange(event: any) {
     const password = event.target.value;
-    console.log(password);
     this.setState({ password, error: "" });
   }
 
   login() {
-    console.log("entro");
     const { setAccount } = this.props;
     const { email, password } = this.state;
     myFetch({
@@ -60,7 +57,6 @@ class Login extends React.PureComponent<TProps, IState> {
       json: { email, password }
     }).then(json => {
       if (json) {
-        console.log(json);
         const {
           token,
           avatar,
@@ -146,9 +142,10 @@ class Login extends React.PureComponent<TProps, IState> {
             </button>
             <p className="forgot-password text-right">
               Don't have an account?{" "}
-              <a href="#" onClick={() => notRegistered()}>
+              <button className="btn text-primary" onClick={() => notRegistered()}>
                 Register!
-              </a>
+              </button>
+
             </p>
           </div>
         </div>

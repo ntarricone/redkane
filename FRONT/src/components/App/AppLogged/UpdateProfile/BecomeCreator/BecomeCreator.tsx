@@ -8,8 +8,6 @@ import { IStore } from "../../../../../interfaces/IStore";
 import youtubeIcon from "../../../../../icons/youtube2.png";
 import linkedinIcon from "../../../../../icons/linkedin2.png";
 import emailjs from "emailjs-com";
-import { decode } from "jsonwebtoken";
-
 
 interface IGlobalStateProps {
   account: IAccount;
@@ -59,13 +57,11 @@ class BecomeCreator extends React.Component<TProps, IState> {
       linkedin: `${linkedin}`,
       confirmLink: `http://localhost:3001/adminConfirmCreator/${id}`
     };
-    console.log(params)
 
     emailjs
       .send("gmail", "template_378oGZQC", params, "user_awOkEod8V5OPyDAHyaGPf")
       .then(
         result => {
-          console.log(result.text);
             swal(
                 {title: 'You´ve successfully applied to be a creator!',
                 text: 'We´ll shortly confirm your account',
@@ -76,7 +72,6 @@ class BecomeCreator extends React.Component<TProps, IState> {
             });
         },
         error => {
-          console.log(error);
             swal(
                 {title: 'Sorry there has been an error',
                 text: 'Please try registering again',

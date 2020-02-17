@@ -1,7 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
 import { IAccount } from "../../../interfaces/IAccount";
-import { decode } from "jsonwebtoken";
 import { myFetch } from "../../../utils";
 import { IStore } from "../../../interfaces/IStore";
 import { SetAccountAction } from "../../../redux/actions";
@@ -45,13 +44,10 @@ class ConfirmCreator extends React.Component<TProps, IState> {
   }
 
   componentDidMount() {
-    const token = localStorage.getItem("token");
     (async () => {
       myFetch({ path: `/users/${this.userId}` }).then(response => {
         if (response) {
-          console.log(response);
           this.setState(response);
-          console.log(this.state);
         }
       });
     })();

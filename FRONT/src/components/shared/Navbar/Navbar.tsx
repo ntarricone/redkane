@@ -6,9 +6,7 @@ import "./Navbar.css";
 import { LogoutAction } from "../../../redux/actions";
 import { Link } from "react-router-dom";
 import { API_URL_IMAGES } from "../../../constants";
-import { Router } from "react-router-dom";
 import history from "../../../history";
-import ContentUploader from "../ContentUploader/ContentUploader";
 import { decode } from "jsonwebtoken";
 import redkaneNav from "../../../images/redkaneNav.png";
 import redkaneLive from "../../../images/kanelive.png";
@@ -81,6 +79,7 @@ class Navbar extends React.PureComponent<TProps> {
                   aria-haspopup="true"
                   aria-expanded="false"
                   src={API_URL_IMAGES + "avatar.png"}
+                  alt="default"
                 />
               ) : (
                 <img
@@ -89,7 +88,9 @@ class Navbar extends React.PureComponent<TProps> {
                   aria-haspopup="true"
                   aria-expanded="false"
                   src={API_URL_IMAGES + account?.avatar}
-                ></img>
+                  alt="default"
+
+                />
               )}
               <div className="dropdown" aria-labelledby="dropdownMenuButton">
                 <div className="dropdown-content">
@@ -105,7 +106,7 @@ class Navbar extends React.PureComponent<TProps> {
                     </Link>
                   </div>
                   <div>
-                    <a href="" style={{ color: "black" }} onClick={this.logout}>
+                    <a href="/" style={{ color: "black" }} onClick={this.logout}>
                       Logout
                     </a>
                   </div>

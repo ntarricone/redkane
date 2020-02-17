@@ -1,7 +1,6 @@
 import { IFiles } from "../../interfaces/IFiles";
 import { TAction } from "../types";
 import produce from "immer";
-import { IFile } from "../../interfaces/IFile";
 
 const initialState: IFiles = {
   byId: {},
@@ -28,7 +27,6 @@ export default (state = initialState, action: TAction) =>
     switch (action.type) {
       case "SET_FILES":
         const files = action.payload;
-        console.log(files);
         draftState.byId = {};
         draftState.order = [];
         files.forEach(file => {
@@ -49,9 +47,11 @@ export default (state = initialState, action: TAction) =>
       draftState.order.splice(pos, 1);
       break;
       case "ADD_FILE":
+        if (action.payload.category !== "redkaneLive"){
         const {multimediaId} = action.payload;
         draftState.byId[multimediaId] = action.payload;
         draftState.order.splice(0,0,multimediaId);
+      }
         break;
 
       //TODO ADD AN ADD MULTIMEDIA SO WHEN THINGS GET UPLOADED THEY REFLECT IMMEDIATELY IN REDUX

@@ -1,5 +1,5 @@
 import React from "react";
-import { myFetch, generateAccountFromToken } from "../../../utils";
+import { myFetch } from "../../../utils";
 import { connect } from "react-redux";
 import { SetAccountAction } from "../../../redux/actions";
 import { IAccount } from "../../../interfaces/IAccount";
@@ -72,7 +72,7 @@ class Register extends React.PureComponent<TProps, IState> {
   }
 
   register() {
-    const { name, surname, email, password, passwordControl } = this.state;
+    const { name, surname, email, password } = this.state;
     myFetch({
       path: "/users/register",
       method: "POST",
@@ -216,7 +216,7 @@ class Register extends React.PureComponent<TProps, IState> {
               email.length === 0 ||
               password === "" ||
               passwordControl === "" ||
-              password != passwordControl
+              password !== passwordControl
             }
             onClick={this.register}
             className="btn text-light registerButton btn-block my-2 my-sm-0"
@@ -225,9 +225,9 @@ class Register extends React.PureComponent<TProps, IState> {
           </button>
           <p className="forgot-password text-right">
             Already have an account?{" "}
-            <a href="#" onClick={() => notRegistered()}>
-              Login!
-            </a>
+            <button className="btn text-primary" onClick={() => notRegistered()}>
+                Login!
+              </button>
           </p>
         </div>
       </div>

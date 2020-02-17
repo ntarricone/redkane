@@ -1,6 +1,6 @@
 import React from "react";
 import { IStore } from "../../../interfaces/IStore";
-import { myFetch, getYoutubeId } from "../../../utils";
+import { myFetch } from "../../../utils";
 import { connect } from "react-redux";
 import { IAccount } from "../../../interfaces/IAccount";
 import { AddFileAction } from "../../../redux/actions";
@@ -67,14 +67,12 @@ class AploadMultimedia extends React.PureComponent<TProps, IState> {
       formData.append("price", price);
       formData.append("category", category);
       formData.append("description", description);
-      console.log(formData);
       myFetch({
         method: "POST",
         path: "/multimedia/createImage",
         token,
         formData
       }).then(json => {
-        console.log(json);
         if (json) {
           swal({
             title: "Success!",
@@ -88,7 +86,7 @@ class AploadMultimedia extends React.PureComponent<TProps, IState> {
 
       this.setState(initialState);
       this.fileInputRef.current.value = "";
-    } else if(path != ""){
+    } else if(path !== ""){
 
       myFetch({
         path: "/multimedia/createVideo",
@@ -154,7 +152,7 @@ class AploadMultimedia extends React.PureComponent<TProps, IState> {
         <div className="form-row">
           <div className="form-group col-md-6">
             <label>Category:</label>
-            {isAdmin == true ? <select
+            {isAdmin ? <select
             required
               className="form-control"
               data-spy="scroll"

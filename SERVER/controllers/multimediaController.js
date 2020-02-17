@@ -24,8 +24,8 @@ multimediaController.createArticle = (request, response) => {
     const { title, category, type, textArea } = request.body;
     const price = request.body.price ? request.body.price : 0;
 
-    const [language] = lngDetector.detect(description);
     let description = request.body.description.replace("'", " //");
+    const [language] = lngDetector.detect(description);
 
     const sql = `
     INSERT

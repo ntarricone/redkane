@@ -42,7 +42,6 @@ class RedkaneLive extends React.PureComponent<TProps, IState> {
 
   componentDidMount() {
     this.props.unsetFiles();
-    const token = localStorage.getItem("token");
     this.settingFiles(this.state.type);
   }
 
@@ -51,10 +50,8 @@ class RedkaneLive extends React.PureComponent<TProps, IState> {
   }
 
   settingFiles(type: any) {
-    console.log(type);
     const token: any = localStorage.getItem("token");
     this.setState({ type: type, category: "" });
-    console.log(type);
     setTimeout(
       ({ setFiles } = this.props) =>
         myFetch({
@@ -63,11 +60,8 @@ class RedkaneLive extends React.PureComponent<TProps, IState> {
           json: { type },
           token
         }).then(files => {
-          console.log("entri");
-          console.log(files);
           if (files) {
             setFiles(files);
-            console.log(files);
           }
         }),
       200
@@ -76,7 +70,7 @@ class RedkaneLive extends React.PureComponent<TProps, IState> {
 
   render() {
     const { files } = this.props;
-    const { category, type } = this.state;
+    const { type } = this.state;
     return (
       <>
         <div className="container-fluid" style={{ backgroundColor: "black", minHeight: "100vh" }}>

@@ -13,7 +13,6 @@ import {
   DeleteFileAction,
   UnsetFilesAction
 } from "../../../../../redux/actions";
-import { IFile } from "../../../../../interfaces/IFile";
 import { decode } from "jsonwebtoken";
 import { Link } from "react-router-dom";
 import linkedinIcon from "../../../../../icons/linkedin2.png";
@@ -31,7 +30,6 @@ import redLike from "../../../../../icons/likeRed.png";
 import liked from "../../../../../icons/liked.png";
 import YouTube from "react-youtube";
 import { PayPalButton } from "react-paypal-button-v2";
-import ClapButton from "react-clap-button";
 
 class SingleMultimedia extends React.PureComponent {
   id_multimedia = this.props.match.params.id;
@@ -82,7 +80,6 @@ class SingleMultimedia extends React.PureComponent {
   }
 
   setFile() {
-    console.log(this.props.files.chosenFile);
     if (this.props.files.chosenFile.multimediaId !== 0) {
       const {
         title,
@@ -120,7 +117,6 @@ class SingleMultimedia extends React.PureComponent {
             path: `/multimedia/single/${this.id_multimedia}`,
             token
           }).then(file => {
-            console.log(file);
             if (file) {
               const {
                 title,
@@ -164,7 +160,6 @@ class SingleMultimedia extends React.PureComponent {
       path: `/multimedia/isPurchased/${this.id_multimedia}`,
       token
     }).then(response => {
-      console.log(response);
       if (response) this.setState({ isPurchased: response });
     });
   }
@@ -183,7 +178,6 @@ class SingleMultimedia extends React.PureComponent {
           method: "DELETE",
           token
         }).then(response => {
-          console.log(response);
           if (response) {
             this.props.unsetFiles();
             swal("Deleted!", "Your multimedia has been deleted!", "success");
@@ -197,7 +191,6 @@ class SingleMultimedia extends React.PureComponent {
   setUser(id) {
     myFetch({ path: `/users/${id}` }).then(user => {
       if (user) {
-        console.log(user);
         const { name, surname, email, avatar, youtube, linkedin } = user;
         this.setState({ name, surname, email, avatar, youtube, linkedin });
       }
@@ -210,12 +203,10 @@ class SingleMultimedia extends React.PureComponent {
   playVideo(event) {
     const { price, loggedId, id, isPurchased } = this.state;
     this.setState({ isVideoTimeUp: false });
-    console.log(this.state.isVideoTimeUp);
     if (price !== 0 && loggedId !== id && !isPurchased) {
       setTimeout(() => {
         event.target.stopVideo();
         this.setState({ isVideoTimeUp: true });
-        console.log(this.state.isVideoTimeUp);
       }, 15000);
     }
   }
@@ -229,34 +220,27 @@ class SingleMultimedia extends React.PureComponent {
       token
     }).then(this.setState({ isPurchased: true, isVideoTimeUp: false }));
     //TODO - SEND EMAIL TO CREATOR
-    //WHAT ABOUT AN EMAIL TO THE BUYER?
   }
 
   likeDislike() {
-    console.log("entramus");
     const token = localStorage.getItem("token");
     myFetch({
       method: "POST",
       path: `/users/likeDislike/${this.id_multimedia}`,
       token
     }).then(response => {
-      console.log(response);
       let count = response ? 1 : -1;
       this.setState({ isLiked: response, likes: this.state.likes + count });
-      console.log(this.state.isLiked);
     });
   }
 
   setLikedStatus() {
-    console.log("entramus");
     const token = localStorage.getItem("token");
     myFetch({
       path: `/users/likes/${this.id_multimedia}`,
       token
     }).then(response => {
-      console.log(response);
       this.setState({ isLiked: response.isLiked, likes: response.likes });
-      console.log(this.state);
     });
   }
 
@@ -285,7 +269,7 @@ class SingleMultimedia extends React.PureComponent {
     //youtube video configuration
     const opts = {
       height: "400",
-      width: "900"
+      width: "100%"
     };
 
     return (
@@ -294,8 +278,8 @@ class SingleMultimedia extends React.PureComponent {
         <div
           className="container-fluid"
           style={{
-            color: category == "redkaneLive" ? "white" : "",
-            backgroundColor: category == "redkaneLive" ? "black" : ""
+            color: category === "redkaneLive" ? "white" : "",
+            backgroundColor: category === "redkaneLive" ? "black" : ""
           }}
         >
           <div className="container">
@@ -307,7 +291,7 @@ class SingleMultimedia extends React.PureComponent {
                     <h5>
                       <i
                         style={{
-                          color: category == "redkaneLive" ? "#d42727" : ""
+                          color: category === "redkaneLive" ? "#d42727" : ""
                         }}
                       >
                         {category.toUpperCase()}
@@ -335,7 +319,7 @@ class SingleMultimedia extends React.PureComponent {
                     className="btn"
                     style={{ position: "fixed", zIndex: "10" }}
                   >
-                    {isLiked && category != "redkaneLive" && (
+                    {isLiked && category !== "redkaneLive" && (
                       <img
                         src={liked}
                         alt=""
@@ -344,7 +328,7 @@ class SingleMultimedia extends React.PureComponent {
                         onClick={this.likeDislike}
                       />
                     )}
-                    {isLiked && category == "redkaneLive" && (
+                    {isLiked && category === "redkaneLive" && (
                       <img
                         src={redLiked}
                         alt=""
@@ -353,7 +337,7 @@ class SingleMultimedia extends React.PureComponent {
                         onClick={this.likeDislike}
                       />
                     )}
-                    {!isLiked && category != "redkaneLive" && (
+                    {!isLiked && category !== "redkaneLive" && (
                       <img
                         src={like}
                         alt=""
@@ -362,7 +346,7 @@ class SingleMultimedia extends React.PureComponent {
                         onClick={this.likeDislike}
                       />
                     )}
-                    {!isLiked && category == "redkaneLive" && (
+                    {!isLiked && category === "redkaneLive" && (
                       <img
                         src={redLike}
                         alt=""
@@ -420,7 +404,7 @@ class SingleMultimedia extends React.PureComponent {
                     alt=""
                   />
                 )}
-                {idCreator === loggedId && category == "redkaneLive" && (
+                {idCreator === loggedId && category === "redkaneLive" && (
                   <img
                     onClick={() => this.deleteMultimedia(this.id_multimedia)}
                     className="iconsSize"
@@ -486,8 +470,6 @@ class SingleMultimedia extends React.PureComponent {
                           amount={`${price}`}
                           // shippingPreference="NO_SHIPPING" // default is "GET_FROM_FILE"
                           onSuccess={(details, data) => {
-                            console.log(details);
-                            console.log(data);
                             swal({
                               title: "Success!",
                               text: "Thanks for your purchase!",
@@ -501,15 +483,16 @@ class SingleMultimedia extends React.PureComponent {
                         />
                       </div>
                       <span className="text-center">
-                        Take me back to the{" "}
-                        <a
+                        Take me back to the
+                        <button
                           onClick={() =>
                             this.setState({ isVideoTimeUp: false })
                           }
-                          href="#"
+                          className="btn btn-small text-primary"
+                          style={{ marginLeft: "-8px", marginBottom: "6px" }}
                         >
                           preview
-                        </a>
+                        </button>
                       </span>
                     </div>
                   )}
@@ -556,7 +539,7 @@ class SingleMultimedia extends React.PureComponent {
                   !isPurchased && (
                     <h4
                       style={{ fontSize: "1.2rem !important" }}
-                      className="pl-3 mt-2"
+                      className="pl-3 mt-2 "
                     >{`($${price})`}</h4>
                   )}
               </div>
@@ -572,8 +555,6 @@ class SingleMultimedia extends React.PureComponent {
                       clientId={PAYPAL_CLIENT_ID}
                       amount={`${price}`}
                       onSuccess={(details, data) => {
-                        console.log(details);
-                        console.log(data);
                         swal({
                           title: "Success!",
                           text: "Thanks for your purchase!",
@@ -617,9 +598,7 @@ class SingleMultimedia extends React.PureComponent {
                   </a>
                 )}
                 {price === 0 && path.includes("youtu") && (
-                  <span className="badge badge-warning badgeMargin">
-                    free
-                  </span>
+                  <span className="badge badge-warning badgeMargin">free</span>
                 )}
               </div>
               <div className="col-1"></div>
@@ -641,7 +620,7 @@ class SingleMultimedia extends React.PureComponent {
                       </small>
                     </Link>
                   )}
-                  {idCreator === loggedId && category == "redkaneLive" && (
+                  {idCreator === loggedId && category === "redkaneLive" && (
                     <Link to={`/uploadArticle/${this.id_multimedia}`}>
                       <small>
                         <img className="iconsSize" src={editIconWhite} alt="" />
@@ -674,14 +653,12 @@ class SingleMultimedia extends React.PureComponent {
                   ) : (
                     <div>
                       <div className="paypalButtonArticle">
-                        <h1 style={{ marginLeft: "38%" }}>{`-$${price}-`}</h1>
+                        <h1 className="text-center">{`-$${price}-`}</h1>
                         <PayPalButton
                           style={{ layout: "horizontal", color: "black" }}
                           clientId={PAYPAL_CLIENT_ID}
                           amount={`${price}`}
                           onSuccess={(details, data) => {
-                            console.log(details);
-                            console.log(data);
                             swal({
                               title: "Success!",
                               text: "Thanks for your purchase!",
@@ -694,7 +671,7 @@ class SingleMultimedia extends React.PureComponent {
                           }}
                         />
                       </div>
-                      <p className="blurredtext ">
+                      <p className="blurredtext articleTextResponsive">
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit,
                         sed do eiusmod tempor incididunt ut labore et dolore
                         magna aliqua. Ut enim ad minim veniam, quis nostrud

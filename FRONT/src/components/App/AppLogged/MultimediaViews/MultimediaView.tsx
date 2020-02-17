@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import { IStore } from "../../../../interfaces/IStore";
 import { IFile } from "../../../../interfaces/IFile";
 import {
-  API_URL,
   API_URL_MULTIMEDIA,
   API_URL_IMAGES
 } from "../../../../constants";
@@ -13,8 +12,6 @@ import { Link } from "react-router-dom";
 import { SetChosenFileAction } from "../../../../redux/actions";
 import paid from "../../../../icons/money.png";
 import free from "../../../../icons/free.png";
-import saved from "../../../../icons/save-button.png";
-import { decode } from "jsonwebtoken";
 import history from "../../../../history";
 import logoSolo from "../../../../images/logoSolo.png"
 
@@ -40,7 +37,7 @@ interface IState {
 type TProps = IProps & IGlobalStateProps & IGlobalActionProps;
 
 class MultimediaView extends React.Component<TProps, IState> {
-  isRedkaneLive = history.location.pathname.split("/")[1] == "redkaneLive";
+  isRedkaneLive = history.location.pathname.split("/")[1] === "redkaneLive";
 
   constructor(props: TProps) {
     super(props);
@@ -60,8 +57,6 @@ class MultimediaView extends React.Component<TProps, IState> {
     const { file } = this.props;
     const { id, multimediaId } = file;
     const token: any = localStorage.getItem("token");
-    console.log(id);
-    console.log(this.isRedkaneLive);
     this.getUser(id, token);
     this.setPurchaseStatus(multimediaId, token);
   }
@@ -76,7 +71,6 @@ class MultimediaView extends React.Component<TProps, IState> {
 
   getUser(id: number, token: any) {
     myFetch({ path: `/users/${id}`, token }).then(user => {
-      console.log(user);
       this.setState({
         name: user.name,
         surname: user.surname,
@@ -92,16 +86,15 @@ class MultimediaView extends React.Component<TProps, IState> {
   }
   render() {
     const { file } = this.props;
-    const { multimediaId, time, price, type } = file;
+    const { multimediaId, price, type } = file;
     let { path, title, description } = file;
     description = description?.replace(/1!1/g, "'");
-    const { name, surname, userId, isPurchased, isAdmin } = this.state;
+    const { name, surname, userId, isPurchased } = this.state;
     let { avatar } = this.state;
     path = path ? path : "defaultBanner.jpg";
     avatar = avatar ? avatar : "avatar.png";
     title = title ? title : "TITLE";
-    const token: any = localStorage.getItem("token");
-    const { id: loggedId }: any = decode(token);
+
 
     return (
       <div
@@ -117,6 +110,7 @@ class MultimediaView extends React.Component<TProps, IState> {
       >
         {path?.includes("youtube") ? (
           <iframe
+          title={this.state.name}
             style={{ height: "59%", border: "none" }}
             src={`https://www.youtube.com/embed/${getYoutubeId(
               path
@@ -128,7 +122,7 @@ class MultimediaView extends React.Component<TProps, IState> {
             className="card-img-top"
             style={{ height: "50%" }}
             src={`${API_URL_MULTIMEDIA}${path}`}
-            alt="Card image cap"
+            alt="Not found"
           />
         )}
         {/* Title */}
@@ -182,6 +176,7 @@ class MultimediaView extends React.Component<TProps, IState> {
                         title={`${name} ${surname}`}
                         className="cardAvatar"
                         src={`${API_URL_IMAGES}${avatar}`}
+                        alt="not found"
                       />
                     }
                   </Link>
@@ -194,6 +189,7 @@ class MultimediaView extends React.Component<TProps, IState> {
                   title={`${name} ${surname}`}
                   className="cardAvatarRK"
                   src={logoSolo}
+                  alt="not found"
                 />
                 </div>
               )}
@@ -208,7 +204,7 @@ class MultimediaView extends React.Component<TProps, IState> {
                 {price !== 0 && isPurchased && (
                   <i className="far fa-check-circle text-success"></i>
                 )}
-                {price == 0 && !this.isRedkaneLive && <img className="iconsSize" src={free} alt="" />}
+                {price === 0 && !this.isRedkaneLive && <img className="iconsSize" src={free} alt="" />}
               </div>
             </div>
           </div>

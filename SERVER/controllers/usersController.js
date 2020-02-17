@@ -79,7 +79,7 @@ usersController.createUser = (req, res) => {
                   isCreator: Boolean(isCreator)
                 });
               } else {
-                console.log("ooooooooooo")
+                console.log("ooooooooooo");
                 res.sendStatus(400);
               }
             }
@@ -88,7 +88,6 @@ usersController.createUser = (req, res) => {
       }
     );
   } else {
-
     res.sendStatus(404);
   }
 };
@@ -176,65 +175,56 @@ usersController.getUser = (req, res) => {
   }
 };
 
+//CHECK OLD PASSWORD
+usersController.checkOldPassword = (req, res) => {
+  const token = req.headers.authorization.replace("Bearer ", "");
+  const { id } = jwt.verify(token, myPrivateKey);
+  const { oldPassword } = req.body;
+  let aux = false;
+  let sql = `SELECT * from users
+             WHERE id = ${id}
+             AND password = SHA1(${oldPassword})`;
+  connection.query(sql, (error, results) => {
+    if (error) {
+      res.send(aux);
+    } else if (results && results.length) {
+      aux = true;
+      res.send(aux);
+      console.log(results);
+    } else {
+      aux = false;
+      res.send(aux);
+    }
+  });
+};
+
 //EDIT PASSWORD // TODO -  NOT WORKING
 usersController.editPassword = (req, res) => {
-  const { id } = req.params;
-  const oldPassword = req.body.oldPassword;
-  const newPassword = req.body.newPassword;
-  console.log(newPassword);
-  console.log(oldPassword);
-  try {
-    if (oldPassword && newPassword) {
-      const token = req.headers.authorization.replace("Bearer ", "");
-      const { isAdmin } = jwt.verify(token, myPrivateKey);
-      let sql = `SELECT * FROM users 
-                 WHERE id = ${id} 
-                 AND password = SHA1('${oldPassword}')`;
-      let sql2 = `UPDATE users
-                SET password = SHA1('${newPassword}')
-                WHERE id = ${id}`;
-      if (isAdmin) {
-        connection.query(sql2, (error, results) => {
-          if (error) {
-            res.sendStatus(404);
-          } else {
-            console.log("actualizo como admin");
-            res.send(results);
-          }
-        });
-      } else {
-        connection.query(sql, (error, results) => {
-          console.log(results);
-          if (error) {
-            console.log("entro");
-            console.log(error);
-            res.sendStatus(404);
-          } else if (results && results.length) {
-            this.updatePassword(id);
-            console.log("entru");
-            connection.query(sql2, (error, results) => {
-              if (error) {
-                res.sendStatus(401);
-                console.log("eroooorcito");
-              } else {
-                res.send(results);
-                console.log("actualizo como user");
-              }
-            });
-          }
-        });
-      }
+  const token = req.headers.authorization.replace("Bearer ", "");
+  const { id } = jwt.verify(token, myPrivateKey);
+  const { newPassword } = req.body;
+  let aux = false;
+  let sql = `UPDATE users
+             SET password = SHA1(${newPassword})
+             WHERE id = ${id}`;
+  connection.query(sql, (error, results) => {
+    if (error) {
+      res.send(aux);
+    } else if (results) {
+      aux = true;
+      res.send(aux);
+      console.log(results);
+    } else {
+      aux = false;
+      console.log(results)
+      res.send(aux);
     }
-  } catch {
-    res.sendStatus(401);
-  }
+  });
 };
 
 //EDIT USER
-
 usersController.editUser = (request, response) => {
   const { id } = request.params;
-
   const {
     name,
     surname,
