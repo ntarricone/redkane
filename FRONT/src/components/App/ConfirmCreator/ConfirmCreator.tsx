@@ -95,7 +95,7 @@ class ConfirmCreator extends React.Component<TProps, IState> {
             <div className="col-8 mt-5 ">
               {" "}
               <img
-                className="animated zoomIn slower"
+                className="animated zoomIn slower mt-5"
                 src={logoKane}
                 alt=""
               />{" "}

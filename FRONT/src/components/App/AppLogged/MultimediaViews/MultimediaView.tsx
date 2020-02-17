@@ -92,7 +92,7 @@ class MultimediaView extends React.Component<TProps, IState> {
     const { name, surname, userId, isPurchased } = this.state;
     let { avatar } = this.state;
     path = path ? path : "defaultBanner.jpg";
-    avatar = avatar ? avatar : "avatar.png";
+    avatar = avatar ? avatar : "defaultAvatar.jpg";
     title = title ? title : "TITLE";
 
 

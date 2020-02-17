@@ -324,7 +324,7 @@ class UploadArticle extends React.PureComponent {
                 onChange={e => this.setState({ category: e.target.value })}
               >
                 <option defaultValue>Category...</option>
-                <option value="environmet">environmet</option>
+                <option value="environment">environment</option>
                 <option value="politics">politics</option>
                 <option value="sports">sports</option>
                 <option value="tech">tech</option>
@@ -343,7 +343,7 @@ class UploadArticle extends React.PureComponent {
               onChange={e => this.setState({ category: e.target.value })}
             >
               <option defaultValue>Category...</option>
-              <option value="environmet">environmet</option>
+              <option value="environment">environment</option>
               <option value="politics">politics</option>
               <option value="sports">sports</option>
               <option value="tech">tech</option>

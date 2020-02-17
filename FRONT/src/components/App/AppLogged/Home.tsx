@@ -220,7 +220,7 @@ class Home extends React.PureComponent<TProps, IState> {
               
             >
               <option value = "default">Category...</option>
-              <option value="environmet">environmet</option>
+              <option value="environment">environment</option>
               <option value="politics">politics</option>
               <option value="sports">sports</option>
               <option value="tech">tech</option>

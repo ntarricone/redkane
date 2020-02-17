@@ -19,6 +19,7 @@ import { decode } from "jsonwebtoken";
 import BecomeCreator from "./BecomeCreator/BecomeCreator";
 import MultimediaView from "../MultimediaViews/MultimediaView";
 import UserPurchases from "./UserPurchases";
+import defaultAvatar from "../../../../images/Foto-de-Perfil-en-WhatsApp.jpg"
 
 
 interface IProps {}
@@ -221,7 +222,7 @@ class UpdateProfile extends React.PureComponent<TProps, IState> {
                 {!avatar && !account.isAdmin ? (
                   <img
                     className="avatarProfile mb-1"
-                    src={API_URL_IMAGES + "avatar.png"}
+                    src={defaultAvatar}
                     alt=""
                   />
                 ) : (

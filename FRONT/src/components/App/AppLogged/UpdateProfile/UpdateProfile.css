@@ -1,11 +1,11 @@
 .avatarProfile {
-  width: 11vw;
-  height: 20vh;
+  width: 150px;
+  height: 150px;
   border-radius: 50%;
   box-shadow: 3px 1px 4px 0px;
   position: absolute;
   top: -103px;
-  left: 26px;
+  left: 28px;
   border: 4px solid white;
 }
 
