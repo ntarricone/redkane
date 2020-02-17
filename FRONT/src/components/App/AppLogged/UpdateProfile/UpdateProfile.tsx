@@ -25,6 +25,7 @@ import buy from "../../../../icons/buy.png";
 import { decode } from "jsonwebtoken";
 import BecomeCreator from "./BecomeCreator/BecomeCreator";
 import MultimediaView from "../MultimediaViews/MultimediaView";
+import UserPurchases from "./UserPurchases";
 
 interface IProps {}
 interface IGlobalStateProps {
@@ -42,7 +43,7 @@ interface IState {
   banner: string;
   avatar: string;
   avatarChosen: string;
-  toggleContent: "edit" | "multimedia";
+  toggleContent: "edit" | "multimedia" | "purchases";
   isFound: boolean;
 }
 
@@ -84,7 +85,6 @@ class UpdateProfile extends React.Component<TProps, IState> {
     this.setState({ isFound: true });
   }
 
-  //TODO. FIX LINK
   setUserProfile() {
     const token = localStorage.getItem("token");
     if (token) {
@@ -225,10 +225,23 @@ class UpdateProfile extends React.Component<TProps, IState> {
           <div className="container-fluid uploadBanner">
             <div className="row">
               <div className="col-2">
-                {!avatar ? (
+                {!avatar && !account.isAdmin ? (
                   <img
                     className="avatarProfile mb-1"
                     src={API_URL_IMAGES + "avatar.png"}
+                    alt=""
+                  />
+                ) : (
+                  <img
+                    className="avatarProfile mb-1"
+                    src={API_URL_IMAGES + avatar}
+                    alt=""
+                  />
+                )}
+                 {!avatar && account.isAdmin ? (
+                  <img
+                    className="avatarProfile mb-1"
+                    src={API_URL_IMAGES + "RKLcubo.png"}
                     alt=""
                   />
                 ) : (
@@ -254,11 +267,14 @@ class UpdateProfile extends React.Component<TProps, IState> {
                 )}
               </div>
               <div className="col-sm-7 col-12 ">
-                {toggleContent === "multimedia" && (
+                {toggleContent === "multimedia" &&
+                (id != this.userId || account.isCreator) ? (
                   <SettingUserFiles
                     changeIsFoundToFalse={this.changeIsFoundToFalse}
                     changeIsFoundToTrue={this.changeIsFoundToTrue}
                   ></SettingUserFiles>
+                ) : (
+                  ""
                 )}
               </div>
               {/* Upload Banner */}
@@ -277,8 +293,10 @@ class UpdateProfile extends React.Component<TProps, IState> {
                         data-toggle="tooltip"
                         data-placement="top"
                         title="See all multimedia"
-                        onClick={() =>
+                        onClick={() =>{
                           this.setState({ toggleContent: "multimedia" })
+                          this.setState({ isFound: true });
+                        }
                         }
                       ></i>
                     </button>
@@ -290,7 +308,23 @@ class UpdateProfile extends React.Component<TProps, IState> {
                         data-toggle="tooltip"
                         data-placement="top"
                         title="Update your details"
-                        onClick={() => this.setState({ toggleContent: "edit" })}
+                        onClick={() => {this.setState({ toggleContent: "edit" })
+                        this.setState({ isFound: true });
+                      }}
+                      ></i>
+                    </button>
+                  )}
+
+                  {id == this.userId && !account.isCreator && (
+                    <button className="btn btn-sm" style={{ height: "0px" }}>
+                      <i
+                        className="fas fa-shopping-bag iconsSize"
+                        data-toggle="tooltip"
+                        data-placement="top"
+                        title="See your purchases"
+                        onClick={() =>
+                          this.setState({ toggleContent: "purchases" })
+                        }
                       ></i>
                     </button>
                   )}
@@ -344,11 +378,20 @@ class UpdateProfile extends React.Component<TProps, IState> {
 
                 <BecomeCreator id={id}></BecomeCreator>
 
+                {/* Sow User Form */}
+
                 {toggleContent === "edit" && (
                   <UpdateProfileForm></UpdateProfileForm>
                 )}
+                {/* Shows User Purchases before becoming a Creator */}
+                {toggleContent === "purchases" && (
+                  <UserPurchases
+                    changeIsFoundToFalse={this.changeIsFoundToFalse}
+                    changeIsFoundToTrue={this.changeIsFoundToTrue}
+                  ></UserPurchases>
+                )}
                 {!isFound && (
-                  <div>
+                  <div className= "animated zoomIn">
                     <h3 style={{ textAlign: "center" }}>
                       <b>Yay! You have seen it all</b>
                     </h3>

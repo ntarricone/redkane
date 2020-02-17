@@ -191,6 +191,7 @@ class BecomeCreator extends React.Component<TProps, IState> {
                   className="btn btn-block buttonColor"
                   style={{ width: "20%" }}
                   onClick={this.sendEmail}
+                  data-dismiss="modal"
                 >
                   Send
                 </button>

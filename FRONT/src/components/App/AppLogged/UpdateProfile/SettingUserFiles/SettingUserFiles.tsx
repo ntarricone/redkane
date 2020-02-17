@@ -9,8 +9,8 @@ import { IFile } from "../../../../../interfaces/IFile";
 import { myFetch } from "../../../../../utils";
 import { IFiles } from "../../../../../interfaces/IFiles";
 import history from "../../../../../history";
-import MultimediaView from "../../MultimediaViews/MultimediaView";
 import { decode } from "jsonwebtoken";
+
 
 interface IProps{
   changeIsFoundToFalse(): void;
@@ -47,7 +47,6 @@ class settingFiles extends React.PureComponent<TProps, IState> {
       
     };
     this.settingFiles = this.settingFiles.bind(this);
-    this.getFreeUserContent = this.getFreeUserContent.bind(this);
     this.settingCategoryByUser = this.settingCategoryByUser.bind(this);
     this.getPurchases = this.getPurchases.bind(this);
     this.changeTypeToDefault = this.changeTypeToDefault.bind(this);
@@ -66,7 +65,7 @@ class settingFiles extends React.PureComponent<TProps, IState> {
 
   
   settingFiles(type: any) {
-    console.log(type);
+    this.props.unsetFiles();
     const token: any = localStorage.getItem("token");
     this.setState({ type: type, category: "" });
     console.log(type);
@@ -83,39 +82,16 @@ class settingFiles extends React.PureComponent<TProps, IState> {
           if (files) {
             setFiles(files);
             console.log(files);
-            this.props.changeIsFoundToTrue()
+            this.props.changeIsFoundToTrue();
           }else{
-            this.props.changeIsFoundToFalse()
+            this.props.changeIsFoundToFalse();            
           }
         }),
       200
     );
   }
 
-  getFreeUserContent() {
-    const { price } = this.state;
-    this.setState({ price: 0, category: "default" });
-    const token: any = localStorage.getItem("token");
-    setTimeout(
-      ({ setFiles } = this.props) =>
-        myFetch({
-          path: `/multimedia/byPriceAndUser/${this.userId}/${price}`,
-          token
-        }).then(files => {
-          console.log("entri");
-          console.log(files);
-          if (files) {
-            setFiles(files);
-            console.log(files);
-            this.props.changeIsFoundToTrue()
-          }else{
-            this.props.changeIsFoundToFalse()
-          }
-        }),
-      200
-    );
-  }
-
+ 
   settingCategoryByUser() {
     this.props.unsetFiles();
     const { category, type } = this.state;
@@ -123,6 +99,7 @@ class settingFiles extends React.PureComponent<TProps, IState> {
     // this.setState({ hasMore: false });
     const token: any = localStorage.getItem("token");
     const { setFiles } = this.props;
+    if (this.state.type !== "purchases"){
     myFetch({
       method: "POST",
       path: `/multimedia/byCategoryAndUser/${this.userId}/${category}`,
@@ -132,16 +109,32 @@ class settingFiles extends React.PureComponent<TProps, IState> {
       if (files) {
         setFiles(files);
         this.setState(files);
-        this.props.changeIsFoundToTrue()
+        this.props.changeIsFoundToTrue();
       }else{
-        this.props.changeIsFoundToFalse()
+        this.props.changeIsFoundToFalse();
       }
     });
+  }else{
+    myFetch({
+      method: "GET",
+      path: `/multimedia/byPurchasesAndCategory/${this.userId}/${category}`,
+      token
+    }).then(files => {
+      if (files) {
+        setFiles(files);
+        this.setState(files);
+        this.props.changeIsFoundToTrue() 
+      }else{
+        this.props.changeIsFoundToFalse();
+      } 
+    });
+  }
   }
 
   getPurchases(type: any) {
+    this.props.unsetFiles();
     const token: any = localStorage.getItem("token");
-    this.setState({ type: type });
+    this.setState({ type: type, category: "" });
     setTimeout(
       ({ setFiles } = this.props) =>
         myFetch({
@@ -171,7 +164,7 @@ class settingFiles extends React.PureComponent<TProps, IState> {
       <>
         <div className="container ">
           <div className="row  mb-5">
-            <div className="col-sm-4 col-12">
+            <div className="col-sm-4 col-1">
               <div className="btn-group search-group">
               {type === "" && <i className="fas fa-search mt-2"></i>}
                 <button

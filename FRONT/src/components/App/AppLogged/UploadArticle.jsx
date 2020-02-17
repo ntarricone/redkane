@@ -6,7 +6,8 @@ import history from "../../../history";
 import { connect } from "react-redux";
 import { SetChosenFileAction } from "../../../redux/actions";
 import { API_URL_MULTIMEDIA } from "../../../constants";
-import {decode} from 'jsonwebtoken';
+import { decode } from "jsonwebtoken";
+import photo from "../../../icons/photo.png";
 
 import YouTube from "react-youtube";
 
@@ -23,7 +24,7 @@ class UploadArticle extends React.PureComponent {
       category: "",
       path: "",
       type: "",
-      
+      file: null
     };
 
     this.fileInputRef = React.createRef();
@@ -31,6 +32,7 @@ class UploadArticle extends React.PureComponent {
     this.uploadFile = this.uploadFile.bind(this);
     this.updateFile = this.updateFile.bind(this);
     this.setFile = this.setFile.bind(this);
+    this.handleChange = this.handleChange.bind(this);
   }
 
   componentDidMount() {
@@ -99,7 +101,13 @@ class UploadArticle extends React.PureComponent {
   }
 
   uploadFile() {
-    const initialState = { title: "", price: "", category: "", data: "" };
+    const initialState = {
+      title: "",
+      price: "",
+      category: "",
+      data: "",
+      file: null
+    };
     const textArea = this.state.data;
     const { title, price, category, description } = this.state;
     const token = localStorage.getItem("token");
@@ -142,7 +150,12 @@ class UploadArticle extends React.PureComponent {
   }
 
   updateFile() {
-    const initialState = { title: "", price: "", category: "", data: "" };
+    const initialState = {
+      title: "",
+      price: "",
+      category: "",
+      data: ""
+    };
     const textArea = this.state.data;
     const { title, price, category, description, path } = this.state;
     const token = localStorage.getItem("token");
@@ -209,6 +222,13 @@ class UploadArticle extends React.PureComponent {
     });
   }
 
+  //Preview Image
+  handleChange(event) {
+    this.setState({
+      file: URL.createObjectURL(event.target.files[0])
+    });
+  }
+
   render() {
     const {
       title,
@@ -218,10 +238,11 @@ class UploadArticle extends React.PureComponent {
       data,
       path,
       type,
+      file
     } = this.state;
-    const token = localStorage.getItem("token")
-    const { isAdmin } = decode(token)
-    
+    const token = localStorage.getItem("token");
+    const { isAdmin } = decode(token);
+
     console.log(type);
 
     //youtube video configuration
@@ -238,7 +259,7 @@ class UploadArticle extends React.PureComponent {
             <div className="col-10 marginTopUploader">
               <div>
                 <input
-                placeholder="Title"
+                  placeholder="Title"
                   type="text"
                   className="form-control"
                   value={title}
@@ -254,7 +275,7 @@ class UploadArticle extends React.PureComponent {
           <div className="container">
             <div className="row">
               <div className="col-1"></div>
-              <div className="col-10 mt-2 ml-3 ">
+              <div className="col-10 mt-2 pl-3 ">
                 <div>
                   {type !== "video" && (
                     <div
@@ -279,7 +300,12 @@ class UploadArticle extends React.PureComponent {
             <div className="col-1"></div>
             <div className="col-5">
               {type !== "video" ? (
-                <input type="file" ref={this.fileInputRef} id="file-name" />
+                <input
+                  type="file"
+                  ref={this.fileInputRef}
+                  id="file-name"
+                  onChange={this.handleChange}
+                />
               ) : (
                 <input
                   placeholder="Youtube Link"
@@ -289,47 +315,62 @@ class UploadArticle extends React.PureComponent {
                   onChange={e => this.setState({ path: e.target.value })}
                 />
               )}
+              <div className="  mt-4 pl-1.8">
+              
+                {/* Show Preview Image */}
+                {file == null ? (
+                  ""
+                ) : (
+                 
+                  <img className="multimediaImage" src={this.state.file} style={{width: "400px", height: "30vh"}} />
+                  
+                )}
+              
+              </div>
 
               {/* Category */}
             </div>
             <div className="col-3">
-            {isAdmin == true ?  <select
-                className="form-control"
-                data-spy="scroll"
-                value={category}
-                onChange={e => this.setState({ category: e.target.value })}
-              >
-                <option defaultValue>Category...</option>
-                <option value="environmet">environmet</option>
-                <option value="politics">politics</option>
-                <option value="sports">sports</option>
-                <option value="tech">tech</option>
-                <option value="world_news">world news</option>
-                <option value="business">business</option>
-                <option value="culture">culture</option>
-                <option value="fashion">fashion</option>
-                <option value="travel">travel</option>
-                <option value="other">other</option>
-                <option value="redkaneLive">redkaneLive</option>
-              </select> :
-              <select
-              className="form-control"
-              data-spy="scroll"
-              value={category}
-              onChange={e => this.setState({ category: e.target.value })}
-            >
-              <option defaultValue>Category...</option>
-              <option value="environmet">environmet</option>
-              <option value="politics">politics</option>
-              <option value="sports">sports</option>
-              <option value="tech">tech</option>
-              <option value="world_news">world news</option>
-              <option value="business">business</option>
-              <option value="culture">culture</option>
-              <option value="fashion">fashion</option>
-              <option value="travel">travel</option>
-              <option value="other">other</option>
-            </select>}
+              {isAdmin == true ? (
+                <select
+                  className="form-control"
+                  data-spy="scroll"
+                  value={category}
+                  onChange={e => this.setState({ category: e.target.value })}
+                >
+                  <option defaultValue>Category...</option>
+                  <option value="environmet">environmet</option>
+                  <option value="politics">politics</option>
+                  <option value="sports">sports</option>
+                  <option value="tech">tech</option>
+                  <option value="world_news">world news</option>
+                  <option value="business">business</option>
+                  <option value="culture">culture</option>
+                  <option value="fashion">fashion</option>
+                  <option value="travel">travel</option>
+                  <option value="other">other</option>
+                  <option value="redkaneLive">redkaneLive</option>
+                </select>
+              ) : (
+                <select
+                  className="form-control"
+                  data-spy="scroll"
+                  value={category}
+                  onChange={e => this.setState({ category: e.target.value })}
+                >
+                  <option defaultValue>Category...</option>
+                  <option value="environmet">environmet</option>
+                  <option value="politics">politics</option>
+                  <option value="sports">sports</option>
+                  <option value="tech">tech</option>
+                  <option value="world_news">world news</option>
+                  <option value="business">business</option>
+                  <option value="culture">culture</option>
+                  <option value="fashion">fashion</option>
+                  <option value="travel">travel</option>
+                  <option value="other">other</option>
+                </select>
+              )}
             </div>
             {/* Price */}
             <div className="col-2">

@@ -137,10 +137,10 @@ class MultimediaView extends React.PureComponent<TProps, IState> {
             {description?.substring(0, 100) + "..."}
           </p>
 
-          {/* AVATAR. LIINK TO USERS MULTIMEDIA */}
+          {/* AVATAR. LIINK TO USER PROFILE */}
           <div className="container-fluid">
             <div className="row" style={{ fontSize: "1.5rem" }}>
-              {!isAdmin && <div className="col-2">
+              {!isAdmin ? <div className="col-2">
                 <Link to={`/updateProfile/${userId}`}>
                   {
                     <img
@@ -152,7 +152,17 @@ class MultimediaView extends React.PureComponent<TProps, IState> {
                     />
                   }
                 </Link>
-              </div>}
+              </div> :
+              <div className="col-2">
+              <img
+              data-toggle="tooltip"
+              data-placement="top"
+              title={`${name} ${surname}`}
+              className="cardAvatar"
+              src={`${API_URL_IMAGES}${avatar}`}
+            />
+            </div>
+              }
 
               <div className="col-6"></div>
 

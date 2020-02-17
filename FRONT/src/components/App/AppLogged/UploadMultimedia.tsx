@@ -7,6 +7,10 @@ import { AddFileAction } from "../../../redux/actions";
 import { IFile } from "../../../interfaces/IFile";
 import swal from "sweetalert";
 import {decode} from 'jsonwebtoken';
+import './UploadMultimedia.css';
+import preview from '../../../images/preview.png'
+import photo from '../../../icons/photo.png';
+
 
 interface IState {
   title: string;
@@ -14,6 +18,7 @@ interface IState {
   category: string;
   description: string;
   path: string;
+  file:any;
 }
 interface IProps {
   type: string;
@@ -38,11 +43,13 @@ class AploadMultimedia extends React.PureComponent<TProps, IState> {
       price: "",
       category: "",
       description: "",
-      path: ""
+      path: "",
+      file: null
     };
 
     this.fileInputRef = React.createRef();
     this.uploadFile = this.uploadFile.bind(this);
+    this.handleChange = this.handleChange.bind(this);
   }
 
 
@@ -51,7 +58,8 @@ class AploadMultimedia extends React.PureComponent<TProps, IState> {
       title: "",
       price: "",
       category: "",
-      description: ""
+      description: "",
+      file: null
     };
     const { account, type } = this.props;
     const { title, price, description } = this.state;
@@ -108,24 +116,41 @@ class AploadMultimedia extends React.PureComponent<TProps, IState> {
       });
     }
   }
+//Preview Image
+  handleChange(event: any) {
+    this.setState({
+      file: URL.createObjectURL(event.target.files[0])
+    })
+  }
 
 
   render() {
     const { type } = this.props;
     const token : any = localStorage.getItem("token")
     const { isAdmin }: any = decode(token)
+    const { file } = this.state;
     //TODO controlar el imput tipe price. Scroll en el select
     return (
       <>
         {/* Uploading image or adding youtube link */}
         <div>
           {type === "image" ? (
+            <div>
             <input
               required
               type="file"
               ref={this.fileInputRef}
               id="file-name"
+              onChange={this.handleChange}
             />
+           {/* Show Preview Image */}
+            {file ==null ? 
+              ("")
+            :
+            <img className="preview" src={this.state.file}/>
+            }
+            </div>
+            
           ) : (
             <input
               required
