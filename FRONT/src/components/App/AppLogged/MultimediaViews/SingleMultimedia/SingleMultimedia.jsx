@@ -247,7 +247,6 @@ class SingleMultimedia extends React.PureComponent {
   render() {
     const {
       textArea,
-      description,
       name,
       surname,
       youtube,
@@ -261,8 +260,9 @@ class SingleMultimedia extends React.PureComponent {
       isLiked,
       likes
     } = this.state;
-    let { avatar, path, title, price, isVideoTimeUp } = this.state;
-    title = title ? title : "Title missing :(";
+    let { avatar, description, path, title, price, isVideoTimeUp } = this.state;
+    description = description?.replace(/1!1/g, "'");
+    title = title?.replace(/1!1/g, "'");
     avatar = avatar ? avatar : "avatar.png";
     path = path ? path : "defaultBanner.jpg"; //setting default img if no img provided
 

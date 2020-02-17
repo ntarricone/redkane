@@ -19,8 +19,7 @@ import { decode } from "jsonwebtoken";
 import BecomeCreator from "./BecomeCreator/BecomeCreator";
 import MultimediaView from "../MultimediaViews/MultimediaView";
 import UserPurchases from "./UserPurchases";
-import defaultAvatar from "../../../../images/Foto-de-Perfil-en-WhatsApp.jpg"
-
+import defaultAvatar from "../../../../images/Foto-de-Perfil-en-WhatsApp.jpg";
 
 interface IProps {}
 interface IGlobalStateProps {
@@ -37,6 +36,7 @@ interface IGlobalActionProps {
 interface IState {
   name: string;
   surname: string;
+  profession: string;
   banner: string;
   avatar: string;
   avatarChosen: string;
@@ -56,6 +56,7 @@ class UpdateProfile extends React.PureComponent<TProps, IState> {
     this.state = {
       name: "",
       surname: "",
+      profession: "",
       banner: "",
       avatar: "",
       avatarChosen: "",
@@ -70,10 +71,10 @@ class UpdateProfile extends React.PureComponent<TProps, IState> {
     this.setUserProfile = this.setUserProfile.bind(this);
     this.changeIsFoundToFalse = this.changeIsFoundToFalse.bind(this);
     this.changeIsFoundToTrue = this.changeIsFoundToTrue.bind(this);
+    this.updateInFather = this.updateInFather.bind(this);
   }
 
   componentDidMount() {
-
     this.setUserProfile();
   }
 
@@ -140,6 +141,19 @@ class UpdateProfile extends React.PureComponent<TProps, IState> {
     }
   }
 
+  updateInFather({
+    name,
+    surname,
+    profession
+  }: {
+    name: string;
+    surname: string;
+    profession: string;
+  }) {
+    console.log("entramos");
+    this.setState({ name, surname, profession });
+  }
+
   render() {
     const { account, files } = this.props;
     const { toggleContent, banner, avatar, isFound } = this.state;
@@ -162,54 +176,59 @@ class UpdateProfile extends React.PureComponent<TProps, IState> {
                   }}
                 >
                   {" "}
-                  <button
-                    className="btn btn-sm"
-                    style={{ height: "2rem", width: "2.5rem" }}
-                  >
-                    <label htmlFor="myBanner">
-                      <i
-                        data-toggle="tooltip"
-                        data-placement="top"
-                        title="Update your banner"
-                        className="fas fa-images iconsSize"
-                        style={{ backgroundColor: "white", width: "1.9rem" }}
-                      ></i>
-                    </label>
-                    <input
-                      onChange={this.uploadBanner}
-                      type="file"
-                      id="myBanner"
-                      style={{ display: "none" }}
-                      ref={this.fileInputRef2}
-                    />
-                  </button>
+                  {id == this.userId && (
+                    <button
+                      className="btn btn-sm"
+                      style={{ height: "2rem", width: "2.5rem" }}
+                    >
+                      <label htmlFor="myBanner">
+                        <i
+                          data-toggle="tooltip"
+                          data-placement="top"
+                          title="Update your banner"
+                          className="fas fa-images iconsSize"
+                          style={{ backgroundColor: "white", width: "1.9rem" }}
+                        ></i>
+                      </label>
+                      <input
+                        onChange={this.uploadBanner}
+                        type="file"
+                        id="myBanner"
+                        style={{ display: "none" }}
+                        ref={this.fileInputRef2}
+                      />
+                    </button>
+                  )}
                 </div>
               ) : (
                 <div
                   className="banner mt-3"
                   style={{ backgroundImage: `url(${API_URL_IMAGES + banner})` }}
                 >
-                  <button
-                    className="btn"
-                    style={{ height: "2rem", width: "2.5rem" }}
-                  >
-                    <label htmlFor="myBanner">
-                      <i
-                        data-toggle="tooltip"
-                        data-placement="top"
-                        title="Update your banner"
-                        className="fas fa-images iconsSize"
-                        style={{ backgroundColor: "white", width: "1.9rem" }}
-                      ></i>
-                    </label>
-                    <input
-                      onChange={this.uploadBanner}
-                      type="file"
-                      id="myBanner"
-                      style={{ display: "none" }}
-                      ref={this.fileInputRef2}
-                    />
-                  </button>
+                  {" "}
+                  {id == this.userId && (
+                    <button
+                      className="btn"
+                      style={{ height: "2rem", width: "2.5rem" }}
+                    >
+                      <label htmlFor="myBanner">
+                        <i
+                          data-toggle="tooltip"
+                          data-placement="top"
+                          title="Update your banner"
+                          className="fas fa-images iconsSize"
+                          style={{ backgroundColor: "white", width: "1.9rem" }}
+                        ></i>
+                      </label>
+                      <input
+                        onChange={this.uploadBanner}
+                        type="file"
+                        id="myBanner"
+                        style={{ display: "none" }}
+                        ref={this.fileInputRef2}
+                      />
+                    </button>
+                  )}
                 </div>
               )}
               <br />
@@ -222,7 +241,7 @@ class UpdateProfile extends React.PureComponent<TProps, IState> {
                 {!avatar && !account.isAdmin ? (
                   <img
                     className="avatarProfile mb-1"
-                    src={defaultAvatar}
+                    src={API_URL_IMAGES + "avatar.png"}
                     alt=""
                   />
                 ) : (
@@ -232,7 +251,7 @@ class UpdateProfile extends React.PureComponent<TProps, IState> {
                     alt=""
                   />
                 )}
-                 {!avatar && account.isAdmin ? (
+                {!avatar && account.isAdmin ? (
                   <img
                     className="avatarProfile mb-1"
                     src={API_URL_IMAGES + "RKLcubo.png"}
@@ -248,7 +267,15 @@ class UpdateProfile extends React.PureComponent<TProps, IState> {
                 {id == this.userId && (
                   <div>
                     <label htmlFor="avatar">
-                      <i className="fas fa-plus-circle uploadAvatar iconsSize"></i>
+                      <i
+                        style={{
+                          backgroundColor: "white",
+                          width: "27px",
+                          height: "27px",
+                          borderRadius: "50%"
+                        }}
+                        className="fas fa-plus-circle uploadAvatar iconsSize"
+                      ></i>
                     </label>
                     <input
                       id="avatar"
@@ -260,21 +287,16 @@ class UpdateProfile extends React.PureComponent<TProps, IState> {
                   </div>
                 )}
               </div>
-              <div className="col-sm-7 col-12 ">
-                {toggleContent === "multimedia" &&
-                (id != this.userId || account.isCreator) ? (
-                  <SettingUserFiles
-                    changeIsFoundToFalse={this.changeIsFoundToFalse}
-                    changeIsFoundToTrue={this.changeIsFoundToTrue}
-                  ></SettingUserFiles>
-                ) : (
-                  ""
-                )}
+              <div className="col-sm-3 col-12 responsiveName">
+                <h4>{this.state.name + " " + this.state.surname}</h4>
+                <span>{this.state.profession}</span>
+                {/* add user details */}
               </div>
+              <div className="col-sm-4 col-12"></div>
               {/* Upload Banner */}
               {id == this.userId && (
                 <div
-                  className="col-3 mt-2"
+                  className="col-sm-3 col-12 mt-2"
                   style={{
                     display: "flex",
                     justifyContent: "space-evenly"
@@ -287,11 +309,10 @@ class UpdateProfile extends React.PureComponent<TProps, IState> {
                         data-toggle="tooltip"
                         data-placement="top"
                         title="See all multimedia"
-                        onClick={() =>{
-                          this.setState({ toggleContent: "multimedia" })
+                        onClick={() => {
+                          this.setState({ toggleContent: "multimedia" });
                           this.setState({ isFound: true });
-                        }
-                        }
+                        }}
                       ></i>
                     </button>
                   )}
@@ -302,9 +323,10 @@ class UpdateProfile extends React.PureComponent<TProps, IState> {
                         data-toggle="tooltip"
                         data-placement="top"
                         title="Update your details"
-                        onClick={() => {this.setState({ toggleContent: "edit" })
-                        this.setState({ isFound: true });
-                      }}
+                        onClick={() => {
+                          this.setState({ toggleContent: "edit" });
+                          this.setState({ isFound: true });
+                        }}
                       ></i>
                     </button>
                   )}
@@ -326,7 +348,21 @@ class UpdateProfile extends React.PureComponent<TProps, IState> {
               )}
             </div>
           </div>
-
+          <div className="container mt-5">
+            <div className="row">
+              <div className="col-12">
+                {toggleContent === "multimedia" &&
+                (id != this.userId || account.isCreator) ? (
+                  <SettingUserFiles
+                    changeIsFoundToFalse={this.changeIsFoundToFalse}
+                    changeIsFoundToTrue={this.changeIsFoundToTrue}
+                  ></SettingUserFiles>
+                ) : (
+                  ""
+                )}
+              </div>
+            </div>
+          </div>
           {/* Show CARDS or BECOME CREATOR */}
           <div className="container-fluid">
             <div className="row">
@@ -335,9 +371,6 @@ class UpdateProfile extends React.PureComponent<TProps, IState> {
                   ((account.isCreator && id == this.userId) ||
                   id != this.userId ? (
                     <div className="container">
-                      <h2 className="text-center mb-4 pt-1"
-                        style={{ marginTop: "-40px" }}
-                      ><u>{`${this.state.name} ${this.state.surname}`}</u></h2>
                       <div className="row">
                         {files.order.map(id => (
                           <div key={id} className="col-sm-6 col-md-4 col-12 ">
@@ -378,7 +411,9 @@ class UpdateProfile extends React.PureComponent<TProps, IState> {
                 {/* Sow User Form */}
 
                 {toggleContent === "edit" && (
-                  <UpdateProfileForm></UpdateProfileForm>
+                  <UpdateProfileForm
+                    updateInFather={this.updateInFather}
+                  ></UpdateProfileForm>
                 )}
                 {/* Shows User Purchases before becoming a Creator */}
                 {toggleContent === "purchases" && (
@@ -388,7 +423,7 @@ class UpdateProfile extends React.PureComponent<TProps, IState> {
                   ></UserPurchases>
                 )}
                 {!isFound && (
-                  <div className= "animated zoomIn">
+                  <div className="animated zoomIn">
                     <h3 style={{ textAlign: "center" }}>
                       <b>Yay! You have seen it all</b>
                     </h3>

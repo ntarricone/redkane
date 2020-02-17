@@ -84,7 +84,6 @@ class Filter extends React.PureComponent<TProps, IState> {
       });
     }
 
-    this.setState(initialState);
   }
 
   render() {
@@ -101,6 +100,7 @@ class Filter extends React.PureComponent<TProps, IState> {
                     this.setState({ key: event.target.value })
                     this.props.changeTypeToDefault();
                   }}
+                  onBlur={()=> this.setState({key: ""})}
                   onKeyPress={event => {
                     if (event.key === "Enter") {
                       this.search();

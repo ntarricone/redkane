@@ -21,10 +21,10 @@ multimediaController.createArticle = (request, response) => {
 
   if (token) {
     const path = request.file.filename;
-    const { title, category, type, textArea } = request.body;
+    const { category, type, textArea } = request.body;
     const price = request.body.price ? request.body.price : 0;
-
-    let description = request.body.description.replace("'", " //");
+    let title = request.body.title.replace(/'/g, "1!1");
+    let description = request.body.description.replace(/'/g, "1!1");
     const [language] = lngDetector.detect(description);
 
     const sql = `
@@ -69,10 +69,11 @@ multimediaController.createImage = (request, response) => {
 
   if (token) {
     const path = request.file.filename;
-    const { title, type } = request.body;
+    const { type } = request.body;
     const price = request.body.price ? request.body.price : 0;
     // console.log(price)
     const category = request.body.category? request.body.category : "other";
+    let title = request.body.title.replace(/'/g, "1!1");
     let description = request.body.description.replace(/'/g, "1!1");
     
     console.log(description)
@@ -119,8 +120,10 @@ multimediaController.createVideo = (request, response) => {
   const token = request.headers.authorization.replace("Bearer ", "");
   const { id } = jwt.verify(token, myPrivateKey);
   if (token) {
-    const { title, category, type, description, path } = request.body;
+    const { category, type, path } = request.body;
     const price = request.body.price ? request.body.price : 0;
+    let description = request.body.description.replace(/'/g, "1!1");
+    let title = request.body.title.replace(/'/g, "1!1");
     const [language] = lngDetector.detect(description);
     connection.query(
       `

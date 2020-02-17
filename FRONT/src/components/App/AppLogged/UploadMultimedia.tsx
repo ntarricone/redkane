@@ -249,7 +249,7 @@ class AploadMultimedia extends React.PureComponent<TProps, IState> {
           </button>
           <button
             type="button"
-            className="btn btn-primary"
+            className="btn btn-success"
             onClick={this.uploadFile}
             data-dismiss="modal"
           >
