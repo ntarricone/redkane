@@ -127,20 +127,23 @@ class MultimediaView extends React.Component<TProps, IState> {
         <div
           className="card-body text-light"
           style={{
-            backgroundColor: "#fafafa"
+            backgroundColor: !this.isRedkaneLive? "#fafafa": "#101010"
           }}
         >
           <Link
             to={`/singleMultimedia/${multimediaId}`}
             onClick={() => this.settingFile(file)}
           >
-            <h5 className={"card-text text-dark webLinks"}>
+            <h5 className={
+              !this.isRedkaneLive? "card-text text-dark webLinks":
+              "card-text text-light webLinks"}>
               {type === "image" && <i className="fas fa-camera"></i>}
               {type === "article" && <i className="far fa-newspaper"></i>}
               {title?.length >= 28? " " + title.substring(0, 28) + "...": " " + title }
             </h5>
 
-            <p className={"card-text text-dark"} style={{ minHeight: "8vh" }}>
+            <p className={!this.isRedkaneLive? "card-text text-dark webLinks":
+              "card-text text-light webLinks"} style={{ minHeight: "8vh" }}>
               {" "}
               {description?.substring(0, 100) + "..."}
             </p>
@@ -164,11 +167,11 @@ class MultimediaView extends React.Component<TProps, IState> {
                   </Link>
                 </div>
               ) : (
-                <div className="col-2">
+                <div className="col-2 mt-4">
                   <img
                     data-toggle="tooltip"
                     data-placement="top"
-                    title={`${name} ${surname}`}
+                    title={`RedKane`}
                     className="cardAvatarRK"
                     src={logoSolo}
                     alt="not found"

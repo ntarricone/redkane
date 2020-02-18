@@ -108,6 +108,7 @@ class UploadArticle extends React.PureComponent {
     const { title, price, category, description } = this.state;
     const token = localStorage.getItem("token");
 
+
     if (this.fileInputRef.current?.files?.length) {
       const path = this.fileInputRef.current.files[0];
       const formData = new FormData();

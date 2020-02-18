@@ -131,7 +131,7 @@ class Home extends React.PureComponent<TProps, IState> {
   settingMoreFiles() {
 
     //HERE WE CAN CHANGE TO THE AMOUNT OF FILES WE WANT!
-    if (this.props.files.order.length >= 30) {
+    if (this.props.files.order.length >= 15) {
       this.setState({ hasMore: false });
       return;
     }

@@ -25,7 +25,7 @@
 }
 .cardStyleDark:hover{
     transform: scale(1.020);
-    box-shadow: 5px 5px 7px 0px #980000eb;
+    box-shadow: 0px 0px 16px 2px #6b0909cc;
 }
 
 @media only screen and (max-width: 361px) {
