@@ -247,7 +247,7 @@ multimediaController.getMultimediaByType = (request, response) => {
 };
 
 // GET ALL MULTIMEDIA FILES BY USER AND TYPE.
-//TODO IF/ELSE PARA QUE MUELSTRE TODOS LOS ARTÏCULOS
+
 multimediaController.getMultimediaByUserAndType = (request, response) => {
   console.log("entraaaa");
   const { authorization } = request.headers;
