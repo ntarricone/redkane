@@ -6,8 +6,8 @@ import history from "../../../history";
 import { connect } from "react-redux";
 import { SetChosenFileAction } from "../../../redux/actions";
 import { API_URL_MULTIMEDIA } from "../../../constants";
-import {decode} from 'jsonwebtoken';
-import "./UploadArticle.css"
+import { decode } from "jsonwebtoken";
+import "./UploadArticle.css";
 
 import YouTube from "react-youtube";
 
@@ -107,6 +107,7 @@ class UploadArticle extends React.PureComponent {
     const textArea = this.state.data;
     const { title, price, category, description } = this.state;
     const token = localStorage.getItem("token");
+
 
     if (this.fileInputRef.current?.files?.length) {
       const path = this.fileInputRef.current.files[0];
@@ -228,9 +229,9 @@ class UploadArticle extends React.PureComponent {
       type,
       file
     } = this.state;
-    const token = localStorage.getItem("token")
-    const { isAdmin } = decode(token)
-    
+    const token = localStorage.getItem("token");
+    const { isAdmin } = decode(token);
+
     //youtube video configuration
     const opts = {
       height: "400",
@@ -302,58 +303,61 @@ class UploadArticle extends React.PureComponent {
                 />
               )}
               <div className="  mt-4 pl-1.8">
-              
                 {/* Show Preview Image */}
                 {file == null ? (
                   ""
                 ) : (
-                 
-                  <img className="multimediaImage" src={this.state.file} style={{width: "400px", height: "30vh"}} />
-                  
+                  <img
+                    className="multimediaImage"
+                    src={this.state.file}
+                    style={{ width: "400px", height: "30vh" }}
+                  />
                 )}
-              
               </div>
 
               {/* Category */}
             </div>
             <div className="col-sm-3 col-8 mt-2 ">
-            {isAdmin === true ?  <select
-                className="form-control  categoryPriceResponsive"
-                data-spy="scroll"
-                value={category}
-                onChange={e => this.setState({ category: e.target.value })}
-              >
-                <option defaultValue>Category...</option>
-                <option value="environment">environment</option>
-                <option value="politics">politics</option>
-                <option value="sports">sports</option>
-                <option value="tech">tech</option>
-                <option value="world_news">world news</option>
-                <option value="business">business</option>
-                <option value="culture">culture</option>
-                <option value="fashion">fashion</option>
-                <option value="travel">travel</option>
-                <option value="other">other</option>
-                <option value="redkaneLive">redkaneLive</option>
-              </select> :
-              <select
-              className="form-control categoryPriceResponsive"
-              data-spy="scroll"
-              value={category}
-              onChange={e => this.setState({ category: e.target.value })}
-            >
-              <option defaultValue>Category...</option>
-              <option value="environment">environment</option>
-              <option value="politics">politics</option>
-              <option value="sports">sports</option>
-              <option value="tech">tech</option>
-              <option value="world_news">world news</option>
-              <option value="business">business</option>
-              <option value="culture">culture</option>
-              <option value="fashion">fashion</option>
-              <option value="travel">travel</option>
-              <option value="other">other</option>
-            </select>}
+              {isAdmin === true ? (
+                <select
+                  className="form-control  categoryPriceResponsive"
+                  data-spy="scroll"
+                  value={category}
+                  onChange={e => this.setState({ category: e.target.value })}
+                >
+                  <option defaultValue>Category...</option>
+                  <option value="environment">environment</option>
+                  <option value="politics">politics</option>
+                  <option value="sports">sports</option>
+                  <option value="tech">tech</option>
+                  <option value="world_news">world news</option>
+                  <option value="business">business</option>
+                  <option value="culture">culture</option>
+                  <option value="fashion">fashion</option>
+                  <option value="travel">travel</option>
+                  <option value="other">other</option>
+                  <option value="redkaneLive">redkaneLive</option>
+                </select>
+              ) : (
+                <select
+                  className="form-control categoryPriceResponsive"
+                  data-spy="scroll"
+                  value={category}
+                  onChange={e => this.setState({ category: e.target.value })}
+                >
+                  <option defaultValue>Category...</option>
+                  <option value="environment">environment</option>
+                  <option value="politics">politics</option>
+                  <option value="sports">sports</option>
+                  <option value="tech">tech</option>
+                  <option value="world_news">world news</option>
+                  <option value="business">business</option>
+                  <option value="culture">culture</option>
+                  <option value="fashion">fashion</option>
+                  <option value="travel">travel</option>
+                  <option value="other">other</option>
+                </select>
+              )}
             </div>
             {/* Price */}
             <div className="col-sm-2 col-5 mt-2">
@@ -397,32 +401,54 @@ class UploadArticle extends React.PureComponent {
               <div className="col-1"></div>
             </div>
           </div>
-        ): ""}
+        ) : (
+          ""
+        )}
         {/* Upload / Update button */}
         <div className="container">
           <div className="row">
             <div className="col-1"></div>
-            <div className="col-4 mt-3">
+            <div className="col-4 mt-3 mb-3">
               {this.id_multimedia === "0" ? (
-                <button
-                  disabled={
-                    !this.state.data | !this.state.category | !this.state.title
-                  }
-                  onClick={this.uploadFile}
-                >
-                  Upload
-                </button>
+                <div>
+                  <button
+                    disabled={
+                      !this.state.data |
+                      !this.state.category |
+                      !this.state.title
+                    }
+                    onClick={this.uploadFile}
+                  >
+                    Upload
+                  </button>
+                  {!this.state.data |
+                  !this.state.category |
+                  !this.state.title ? (
+                    <i className="fas fa-lock ml-2"></i>
+                  ) : (
+                    <i className="fas fa-lock-open ml-2"></i>
+                  )}
+                </div>
               ) : (
-                <button
-                  disabled={
-                    (!this.state.data && type === "article") |
-                    !this.state.category |
-                    !this.state.title
-                  }
-                  onClick={this.updateFile}
-                >
-                  Update
-                </button>
+                <div>
+                  <button
+                    disabled={
+                      (!this.state.data && type === "article") |
+                      !this.state.category |
+                      !this.state.title
+                    }
+                    onClick={this.updateFile}
+                  >
+                    Update
+                  </button>
+                  {!this.state.data |
+                  !this.state.category |
+                  !this.state.title ? (
+                    <i className="fas fa-lock ml-2"></i>
+                  ) : (
+                    <i className="fas fa-lock-open ml-2"></i>
+                  )}
+                </div>
               )}
             </div>
           </div>

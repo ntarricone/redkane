@@ -59,7 +59,8 @@ class AploadMultimedia extends React.PureComponent<TProps, IState> {
       price: "",
       category: "",
       description: "",
-      file: null
+      file: null,
+      path: ""
     };
     const { account, type } = this.props;
     const { title, price, description } = this.state;
@@ -110,7 +111,8 @@ class AploadMultimedia extends React.PureComponent<TProps, IState> {
             timer: 2000
           });
           this.props.addFile(json);
-        }
+          this.setState(initialState);
+       }
       });
     }
     else{
@@ -249,7 +251,7 @@ class AploadMultimedia extends React.PureComponent<TProps, IState> {
           </button>
           <button
             type="button"
-            className="btn btn-primary"
+            className="btn btn-success"
             onClick={this.uploadFile}
             data-dismiss="modal"
           >

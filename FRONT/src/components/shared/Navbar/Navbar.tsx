@@ -10,7 +10,6 @@ import history from "../../../history";
 import { decode } from "jsonwebtoken";
 import redkaneNav from "../../../images/redkaneNav.png";
 import redkaneLive from "../../../images/kanelive.png";
-import defaultAvatar from "../../../images/Foto-de-Perfil-en-WhatsApp.jpg";
 
 interface IProps {}
 interface IGlobalStateProps {
@@ -79,7 +78,7 @@ class Navbar extends React.PureComponent<TProps> {
                   data-toggle="dropdown"
                   aria-haspopup="true"
                   aria-expanded="false"
-                  src={defaultAvatar}
+                  src={`${API_URL_IMAGES}avatar.png`}
                   alt="default"
                 />
               ) : (

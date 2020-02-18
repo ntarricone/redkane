@@ -65,8 +65,7 @@ class BecomeCreator extends React.Component<TProps, IState> {
             swal(
                 {title: 'You´ve successfully applied to be a creator!',
                 text: 'We´ll shortly confirm your account',
-                icon: "success",
-                timer: 4000
+                icon: "success"
               });
               myFetch({ method: 'POST', path: `/users/updateSocialMedia/${id}`, json:{youtube, linkedin}
             });
@@ -183,7 +182,7 @@ class BecomeCreator extends React.Component<TProps, IState> {
                   Close
                 </button>
                 <button
-                  className="btn btn-block buttonColor"
+                  className="btn btn-success "
                   style={{ width: "20%" }}
                   onClick={this.sendEmail}
                   data-dismiss="modal"

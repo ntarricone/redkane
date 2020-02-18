@@ -2,10 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { IStore } from "../../../../interfaces/IStore";
 import { IFile } from "../../../../interfaces/IFile";
-import {
-  API_URL_MULTIMEDIA,
-  API_URL_IMAGES
-} from "../../../../constants";
+import { API_URL_MULTIMEDIA, API_URL_IMAGES } from "../../../../constants";
 import { myFetch, getYoutubeId } from "../../../../utils";
 import "./MultimediaView.css";
 import { Link } from "react-router-dom";
@@ -13,7 +10,7 @@ import { SetChosenFileAction } from "../../../../redux/actions";
 import paid from "../../../../icons/money.png";
 import free from "../../../../icons/free.png";
 import history from "../../../../history";
-import logoSolo from "../../../../images/logoSolo.png"
+import logoSolo from "../../../../images/logoSolo.png";
 
 interface IGlobalStateProps {}
 
@@ -89,12 +86,12 @@ class MultimediaView extends React.Component<TProps, IState> {
     const { multimediaId, price, type } = file;
     let { path, title, description } = file;
     description = description?.replace(/1!1/g, "'");
+    title = title?.replace(/1!1/g, "'");
     const { name, surname, userId, isPurchased } = this.state;
     let { avatar } = this.state;
     path = path ? path : "defaultBanner.jpg";
-    avatar = avatar ? avatar : "defaultAvatar.jpg";
+    avatar = avatar ? avatar : "avatar.png";
     title = title ? title : "TITLE";
-
 
     return (
       <div
@@ -105,12 +102,12 @@ class MultimediaView extends React.Component<TProps, IState> {
         }
         style={{
           height: "62vh",
-          backgroundColor: this.isRedkaneLive ? "#00000000" : ""
+          backgroundColor: this.isRedkaneLive ? "#121212" : ""
         }}
       >
         {path?.includes("youtube") ? (
           <iframe
-          title={this.state.name}
+            title={this.state.name}
             style={{ height: "59%", border: "none" }}
             src={`https://www.youtube.com/embed/${getYoutubeId(
               path
@@ -130,44 +127,32 @@ class MultimediaView extends React.Component<TProps, IState> {
         <div
           className="card-body text-light"
           style={{
-            backgroundColor: !this.isRedkaneLive ? "#fafafa" : "#101010"
+            backgroundColor: !this.isRedkaneLive? "#fafafa": "#101010"
           }}
         >
-                  <Link
+          <Link
             to={`/singleMultimedia/${multimediaId}`}
             onClick={() => this.settingFile(file)}
           >
-
-            <h5
-              className={
-                !this.isRedkaneLive
-                  ? "card-text text-dark webLinks"
-                  : "card-text text-light webLinks"
-              }
-              style={{ color: this.isRedkaneLive ? "white" : "" }}
-            >
+            <h5 className={
+              !this.isRedkaneLive? "card-text text-dark webLinks":
+              "card-text text-light webLinks"}>
               {type === "image" && <i className="fas fa-camera"></i>}
               {type === "article" && <i className="far fa-newspaper"></i>}
-              {" " + title}
+              {title?.length >= 28? " " + title.substring(0, 28) + "...": " " + title }
             </h5>
 
-          <p
-            className={
-              !this.isRedkaneLive
-                ? "card-text text-dark"
-                : "card-text text-light"
-            }
-            style={{ minHeight: "8vh" }}
-          >
-            {" "}
-            {description?.substring(0, 100) + "..."}
-          </p>
+            <p className={!this.isRedkaneLive? "card-text text-dark webLinks":
+              "card-text text-light webLinks"} style={{ minHeight: "8vh" }}>
+              {" "}
+              {description?.substring(0, 100) + "..."}
+            </p>
           </Link>
           {/* AVATAR. LIINK TO USERS MULTIMEDIA */}
           <div className="container-fluid">
             <div className="row" style={{ fontSize: "1.5rem" }}>
               {!this.isRedkaneLive ? (
-                <div className="col-2">
+                <div className="col-2 mt-4">
                   <Link to={`/updateProfile/${userId}`}>
                     {
                       <img
@@ -182,29 +167,31 @@ class MultimediaView extends React.Component<TProps, IState> {
                   </Link>
                 </div>
               ) : (
-                <div className="col-2">
-                <img
-                  data-toggle="tooltip"
-                  data-placement="top"
-                  title={`${name} ${surname}`}
-                  className="cardAvatarRK"
-                  src={logoSolo}
-                  alt="not found"
-                />
+                <div className="col-2 mt-4">
+                  <img
+                    data-toggle="tooltip"
+                    data-placement="top"
+                    title={`RedKane`}
+                    className="cardAvatarRK"
+                    src={logoSolo}
+                    alt="not found"
+                  />
                 </div>
               )}
 
               <div className="col-6"></div>
 
               <div className="col-2"></div>
-              <div className="col-2">
+              <div className="col-2 mt-4">
                 {price !== 0 && !isPurchased && (
                   <img className="iconsSize" src={paid} alt="" />
                 )}
                 {price !== 0 && isPurchased && (
                   <i className="far fa-check-circle text-success"></i>
                 )}
-                {price === 0 && !this.isRedkaneLive && <img className="iconsSize" src={free} alt="" />}
+                {price === 0 && !this.isRedkaneLive && (
+                  <img className="iconsSize" src={free} alt="" />
+                )}
               </div>
             </div>
           </div>
@@ -215,10 +202,7 @@ class MultimediaView extends React.Component<TProps, IState> {
             </small>
           </p>
         </div>
-
-
       </div>
-      
     );
   }
 }

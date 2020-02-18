@@ -9,6 +9,17 @@ import swal from "sweetalert";
 import youtubeIcon from "../../../../icons/youtube2.png";
 import linkedinIcon from "../../../../icons/linkedin2.png";
 
+interface IProps {
+  updateInFather({
+    name,
+    surname,
+    profession
+  }: {
+    name: string;
+    surname: string;
+    profession: string;
+  }): void;
+}
 interface IGlobalStateProps {
   account: IAccount;
 }
@@ -31,7 +42,7 @@ interface IState {
   updatedMessage: string;
 }
 
-type TProps = IGlobalStateProps & IGlobalActionProps;
+type TProps = IGlobalStateProps & IGlobalActionProps & IProps;
 
 class UpdateProfileForm extends React.Component<TProps, IState> {
   constructor(props: any) {
@@ -73,9 +84,13 @@ class UpdateProfileForm extends React.Component<TProps, IState> {
         this.setState({
           passwordMessage: "Wrong password, please insert the right one"
         });
-        setTimeout(() =>  this.setState({
-          passwordMessage: ""
-        }), 3000)
+        setTimeout(
+          () =>
+            this.setState({
+              passwordMessage: ""
+            }),
+          3000
+        );
       }
     });
   }
@@ -99,9 +114,11 @@ class UpdateProfileForm extends React.Component<TProps, IState> {
           timer: 4000
         });
       } else {
-        this.setState({ passwordMessage: "There has been a problem, please try again" });
+        this.setState({
+          passwordMessage: "There has been a problem, please try again"
+        });
       }
-      this.setState({oldPassword: "", newPassword: ""})
+      this.setState({ oldPassword: "", newPassword: "" });
     });
   }
 
@@ -159,10 +176,13 @@ class UpdateProfileForm extends React.Component<TProps, IState> {
           linkedin,
           isCreator
         });
+        console.log("entru")
+        this.props.updateInFather({name, surname, profession});
       } else {
         this.setState({
           updatedMessage: "Error updating details, please try again"
         });
+        setTimeout(() => this.setState({ updatedMessage: "" }), 3000);
       }
     });
   }

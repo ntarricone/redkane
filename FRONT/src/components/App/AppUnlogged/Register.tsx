@@ -116,11 +116,9 @@ class Register extends React.PureComponent<TProps, IState> {
         });
       } else {
         this.setState({
-          name: "",
-          surname: "",
           password: "",
           passwordControl: "",
-          error: "Incorrect email format"
+          error: "Incorrect email or already exists"
         });
         setTimeout(() => this.setState({ error: "", email: "" }), 6000);
       }
