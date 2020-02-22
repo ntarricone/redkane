@@ -47,19 +47,19 @@ class AppUnlogged extends React.PureComponent<TProps, IState> {
           </div>
         </div>
         <div className="container-fluid">
-          <div className="row footerSpacing" >
+          <div className="row " >
             <div className="col-12"></div>
           </div>
         </div>
-        <div className="container-fluid">
+        {/* <div className="container-fluid footerSpacing">
           <div className="row">
-            <div className="col-12" style={{ backgroundColor: "#212121" }}>
+            <div className="col-12 " style={{ backgroundColor: "#212121" }}>
               <p className="text-light text-center pt-2">
                 Redkane © 2020 Copyright
               </p>
             </div>
           </div>
-        </div>
+        </div> */}
       </>
     );
   }

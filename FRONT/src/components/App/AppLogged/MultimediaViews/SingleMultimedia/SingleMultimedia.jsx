@@ -207,7 +207,7 @@ class SingleMultimedia extends React.PureComponent {
       setTimeout(() => {
         event.target.stopVideo();
         this.setState({ isVideoTimeUp: true });
-      }, 15000);
+      }, 5000);
     }
   }
 

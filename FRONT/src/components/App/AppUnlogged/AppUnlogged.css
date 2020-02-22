@@ -11,13 +11,7 @@
     align-items: center;
 }
 
-.appFooter {
-    background-color:  #212121;
-    width: 100%;
-    height: 5vh;
-  
-  } 
-  
+
   .footer-copyright{
     display: flex;
     text-align: center;
@@ -27,7 +21,8 @@
   }
 
   .footerSpacing{
-      height: 20vh;
+    position: sticky;
+    bottom: 0;
   }
 
 
@@ -41,6 +36,7 @@
 
       .footerSpacing{
         height: 5vh;
+        margin-top: 20px;
     }
   }
 
