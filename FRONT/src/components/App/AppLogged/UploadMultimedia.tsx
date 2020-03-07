@@ -8,9 +8,6 @@ import { IFile } from "../../../interfaces/IFile";
 import swal from "sweetalert";
 import {decode} from 'jsonwebtoken';
 import './UploadMultimedia.css';
-import preview from '../../../images/preview.png'
-import photo from '../../../icons/photo.png';
-
 
 interface IState {
   title: string;
@@ -150,7 +147,7 @@ class AploadMultimedia extends React.PureComponent<TProps, IState> {
             {file ==null ? 
               ("")
             :
-            <img className="preview" src={this.state.file}/>
+            <img className="preview" src={this.state.file} alt=""/>
             }
             </div>
             

@@ -41,7 +41,6 @@ class Filter extends React.PureComponent<TProps, IState> {
   }
 
   search() {
-    const initialState = { key: "" };
     this.props.unsetFiles();
     const token: any = localStorage.getItem("token");
     const { key } = this.state;

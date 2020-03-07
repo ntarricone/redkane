@@ -1,10 +1,8 @@
 import React from "react";
-import { decode } from "jsonwebtoken";
 import { IAccount } from "../../../../interfaces/IAccount";
 import { IFiles } from "../../../../interfaces/IFiles";
 import { IFile } from "../../../../interfaces/IFile";
 import { myFetch } from "../../../../utils";
-import Filter from "../../../shared/Filter/Filter";
 import { IStore } from "../../../../interfaces/IStore";
 import { SetFilesAction, UnsetFilesAction } from "../../../../redux/actions";
 import { connect } from "react-redux";
@@ -52,7 +50,6 @@ class UserPurchases extends React.PureComponent<TProps, IState> {
 
   componentDidMount() {
     this.props.unsetFiles();
-    const token = localStorage.getItem("token");
     this.getPurchases(this.state.type);
   }
 
@@ -87,9 +84,6 @@ class UserPurchases extends React.PureComponent<TProps, IState> {
   }
   render() {
     const { files } = this.props;
-    const { type } = this.state;
-    const token: any = localStorage.getItem("token");
-    const { id: loggedId }: any = decode(token);
 
     return (
       <>

@@ -71,7 +71,6 @@ class settingFiles extends React.PureComponent<TProps, IState> {
         }).then(files => {
           if (files) {
             setFiles(files);
-            console.log(files);
             this.props.changeIsFoundToTrue();
           } else {
             this.props.changeIsFoundToFalse();

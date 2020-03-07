@@ -19,7 +19,6 @@ import { decode } from "jsonwebtoken";
 import BecomeCreator from "./BecomeCreator/BecomeCreator";
 import MultimediaView from "../MultimediaViews/MultimediaView";
 import UserPurchases from "./UserPurchases";
-import defaultAvatar from "../../../../images/Foto-de-Perfil-en-WhatsApp.jpg";
 
 interface IProps {}
 interface IGlobalStateProps {

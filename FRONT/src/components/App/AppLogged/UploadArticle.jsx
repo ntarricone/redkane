@@ -311,6 +311,7 @@ class UploadArticle extends React.PureComponent {
                     className="multimediaImage"
                     src={this.state.file}
                     style={{ width: "400px", height: "30vh" }}
+                    alt=""
                   />
                 )}
               </div>
